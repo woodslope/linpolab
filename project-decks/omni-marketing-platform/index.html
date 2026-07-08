@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>全域营销平台体验升级 - BWC Xixi</title>
+  <link rel="icon" type="image/png" href="../../assets/generated/linpo-hero-avatar.png">
+  <style>
+@font-face{font-family:"BaiWuchangKeke";src:url("assets/fonts/BaiWuchangKeke-Thin.ttf") format("truetype");font-weight:200;font-style:normal;font-display:swap}
+@font-face{font-family:"BaiWuchangKeke";src:url("assets/fonts/BaiWuchangKeke-Regular.ttf") format("truetype");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"BaiWuchangKeke";src:url("assets/fonts/BaiWuchangKeke-Bold.ttf") format("truetype");font-weight:800;font-style:normal;font-display:swap}
+:root{--paper:#000;--ink:#f8f8f4;--muted:rgba(248,248,244,.60);--faint:rgba(248,248,244,.10);--line:rgba(248,248,244,.16);--grid:rgba(248,248,244,.07);--panel:rgba(248,248,244,.04);--panel2:rgba(248,248,244,.075);--lime:#b7ff00;--slide-w:1672;--slide-h:941;--font:"BaiWuchangKeke",sans-serif}
+*{box-sizing:border-box;letter-spacing:0}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--paper);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}button{font:inherit}.deck{position:fixed;inset:0;display:grid;place-items:center;overflow:hidden}.slide-shell{position:absolute;left:50%;top:50%;opacity:0;pointer-events:none;transform:translate(-50%,-50%);transition:opacity 160ms ease}.slide-shell.is-active{z-index:2;opacity:1;pointer-events:auto}.slide{position:absolute;left:0;top:0;width:calc(var(--slide-w)*1px);height:calc(var(--slide-h)*1px);overflow:hidden;transform-origin:top left;background:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px),var(--paper);background-size:28px 28px;border:1px solid var(--line)}
+.slide-header{position:absolute;left:0;top:0;z-index:8;display:grid;grid-template-columns:250px 1fr 1fr auto auto;align-items:center;gap:32px;width:100%;height:82px;padding:0 52px;border-bottom:1px solid var(--line);font-family:var(--font);letter-spacing:.16em}.brand{display:grid;gap:5px;line-height:1}.brand strong{font-size:34px;font-weight:500;letter-spacing:.02em}.brand span,.meta,.topic{color:var(--muted);font-size:9px;font-weight:400;line-height:1.2;text-transform:uppercase}.meta{display:grid;grid-template-columns:repeat(2,minmax(112px,1fr));gap:32px}.meta b{display:block;color:var(--ink);font-size:10px;font-weight:500}.topic{justify-self:end;max-width:280px;overflow:hidden;text-align:right;text-overflow:ellipsis;white-space:nowrap}.year{font-size:50px;font-weight:700;line-height:.86}.page-chip{display:inline-grid;grid-template-columns:58px auto;align-items:center;gap:10px;min-width:126px;height:36px;padding:0 13px 0 5px;border-radius:999px;background:var(--lime);box-shadow:0 0 20px rgba(183,255,0,.28)}.page-arrow{position:relative;display:block;width:54px;height:28px}.page-arrow:before,.page-arrow:after{content:"";position:absolute;display:block}.page-arrow:before{left:10px;top:13px;width:31px;height:2px;background:#fff}.page-arrow:after{right:9px;top:8px;width:10px;height:10px;border-top:2px solid #fff;border-right:2px solid #fff;transform:rotate(45deg)}.page-number{color:#000;font-size:14px;font-weight:700;line-height:1;letter-spacing:.02em}.slide-footer{position:absolute;left:52px;right:52px;bottom:28px;z-index:8;display:grid;grid-template-columns:96px 1fr 260px;align-items:center;gap:20px;min-height:28px;color:var(--ink);font-size:12px;font-weight:400;letter-spacing:.18em;text-transform:uppercase}.slide-footer span:last-child{color:var(--muted);text-align:right}.progress-dots{display:flex;justify-content:center;gap:14px}.progress-dot{appearance:none;width:13px;height:13px;padding:0;border:2px solid var(--muted);border-radius:999px;background:transparent;cursor:pointer}.progress-dot.is-filled{border-color:var(--lime);background:var(--lime);box-shadow:0 0 16px rgba(183,255,0,.56)}
+.content{position:absolute;inset:118px 76px 94px;z-index:3;font-family:var(--font)}h1,h2,h3,p{margin:0}.kicker{margin:0 0 22px;color:var(--muted);font-size:16px;font-weight:400;line-height:1;letter-spacing:.16em;text-transform:uppercase}.kicker:after{content:"";display:block;width:72px;height:3px;margin-top:14px;background:var(--lime)}.title{font-size:82px;font-weight:200;line-height:1.08;max-width:760px}.title.small{font-size:64px}.lead{color:var(--muted);font-size:25px;font-weight:800;line-height:1.45}.caption{color:var(--muted);font-size:18px;font-weight:800;line-height:1.35}.tag{display:inline-flex;align-items:center;min-height:38px;margin-top:34px;padding:0 20px;border-radius:999px;background:var(--lime);color:#000;font-size:14px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}.reveal{opacity:0;transform:translate3d(0,24px,0);transition:opacity 520ms ease var(--delay,0ms),transform 640ms cubic-bezier(.16,1,.3,1) var(--delay,0ms)}.slide-shell.is-active .reveal{opacity:1;transform:translate3d(0,0,0)}
+.cover-grid{display:grid;grid-template-columns:minmax(0,.42fr) minmax(0,.58fr);gap:54px;align-items:center}.hero-title{font-size:78px;font-weight:200;line-height:1.1}.hero-sub{margin-top:30px;max-width:540px}.visual-slot{position:relative;display:grid;place-items:center;overflow:hidden;border:1px solid rgba(183,255,0,.44);border-radius:22px;background:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px),rgba(248,248,244,.035);background-size:18px 18px;color:var(--muted);min-height:220px}.visual-slot:before{content:"";position:absolute;inset:14px;border:1px dashed rgba(248,248,244,.22);border-radius:16px;pointer-events:none}.visual-slot.has-image{display:flex;align-items:center;justify-content:center;align-self:center;min-height:0;padding:0;border:0;border-radius:18px;background:transparent;box-shadow:0 0 0 1px rgba(183,255,0,.32)}.visual-slot.has-image:before{display:none}.slot-image{position:relative;z-index:2;display:block;width:100%;height:100%;object-fit:contain;object-position:center;border-radius:18px}.visual-slot.image-crop-top .slot-image{object-fit:cover;object-position:top center}.slot-inner{position:relative;z-index:2;text-align:center;padding:32px}.slot-id{color:var(--lime);font-size:28px;font-weight:800;line-height:1.1}.slot-desc{margin-top:18px;max-width:680px;font-size:20px;font-weight:800;line-height:1.36}.slot-ratio{margin-top:18px;color:var(--ink);font-size:14px;letter-spacing:.14em;text-transform:uppercase}.slot-hero{height:620px}.slot-board{height:100%}.slot-showcase{height:100%}
+.challenge-grid,.strategy-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}.page-with-title{display:grid;grid-template-rows:auto 1fr;gap:38px}.page-head{display:flex;align-items:end;justify-content:space-between;gap:40px}.page-head .lead{max-width:640px}.info-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px}.info-item,.card{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:22px}.info-item b,.card b{display:block;color:var(--lime);font-size:13px;letter-spacing:.12em;text-transform:uppercase}.info-item span{display:block;margin-top:9px;color:var(--ink);font-size:22px;font-weight:800}.card{min-height:182px}.card .icon{color:var(--lime);font-size:28px;font-weight:800}.line-icon{display:block;width:54px;height:54px;color:var(--lime)}.line-icon svg{display:block;width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round}.card h3{margin-top:22px;font-size:30px;font-weight:800;line-height:1.1}.card p{margin-top:14px;color:var(--muted);font-size:18px;font-weight:800;line-height:1.35}.strategy-card{display:grid;grid-template-rows:auto 1fr auto;min-height:250px;padding:24px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,rgba(248,248,244,.065),rgba(248,248,244,.025))}.strategy-top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}.strategy-index{color:var(--lime);font-size:42px;font-weight:200;line-height:.9}.strategy-icon{width:58px;height:58px;color:var(--lime)}.strategy-icon svg{display:block;width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round}.strategy-card h3{align-self:end;margin-top:34px;font-size:29px;font-weight:800;line-height:1.08}.strategy-card p{margin-top:14px;color:var(--muted);font-size:17px;font-weight:800;line-height:1.35}.strategy-points{list-style:none;margin:28px 0 0;padding:0;display:grid;gap:10px;color:var(--ink);font-size:14px;font-weight:800;line-height:1.15}.strategy-points li{display:flex;align-items:center;gap:9px}.strategy-points li:before{content:"";flex:0 0 6px;width:6px;height:6px;border-radius:999px;background:var(--lime);box-shadow:0 0 10px rgba(183,255,0,.52)}.strategy-meta{padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.split{display:grid;grid-template-columns:35% 65%;gap:42px;align-items:stretch}.split-30{display:grid;grid-template-rows:30% 70%;gap:28px}.split-brand{display:grid;grid-template-columns:35% 65%;gap:42px}.logic{display:flex;flex-direction:column;justify-content:center;gap:24px;min-width:0}.logic h1{font-size:56px;font-weight:200;line-height:1.1}.logic .lead{font-size:22px}.logic-groups{display:grid;gap:16px}.logic-box{border-left:3px solid var(--lime);padding:4px 0 4px 18px}.logic-box b{display:block;color:var(--lime);font-size:14px;letter-spacing:.12em;text-transform:uppercase}.logic-box ul{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:8px;color:var(--muted);font-size:19px;font-weight:800;line-height:1.24}.logic-box li:before{content:"- ";color:var(--lime)}.top-logic{display:grid;grid-template-columns:1fr 1fr;gap:20px}.top-logic .logic-box{border:1px solid var(--line);border-left:3px solid var(--lime);border-radius:16px;background:var(--panel);padding:20px}.impact-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.cap-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}.impact-grid .card{min-height:150px}.cap-grid .card{min-height:236px;padding:20px}.cap-grid .card h3{font-size:24px}.cap-grid .card p{font-size:16px}.closing-layout{display:grid;grid-template-rows:38% 62%;gap:28px}.mobile-title{z-index:4}.immersive{padding-top:62px}.two-device{display:grid;grid-template-columns:60% 40%;gap:32px}.two-device .visual-slot{height:100%}.visual-only{display:grid;grid-template-rows:42px 1fr;gap:20px}.safe-note{position:absolute;right:0;bottom:0;color:rgba(248,248,244,.38);font-size:12px;letter-spacing:.1em;text-transform:uppercase}@media (prefers-reduced-motion:reduce){.slide-shell,.reveal{transition:none!important}}
+  </style>
+</head>
+<body>
+<main class="deck" aria-label="全域营销平台体验升级">
+  <section class="slide-shell is-active" id="slide-01" data-layout="CUSTOM" data-code="COVER" aria-label="封面主视觉">
+    <article class="slide">
+      <header class="slide-header"></header>
+      <div class="content cover-grid"><div><p class="kicker reveal">PORTFOLIO / CASE STUDY</p><h1 class="hero-title reveal" style="--delay:120ms">全域营销平台<br>体验升级</h1><p class="lead hero-sub reveal" style="--delay:220ms">Unified Design System × Business Reconstruction × Brand Experience × Multi-Platform Collaboration</p><span class="tag reveal" style="--delay:320ms">BWC BLACK</span></div><div class="visual-slot slot-hero reveal" data-slot-id="hero-cover-visual" data-alt="封面主视觉拼版" data-image-mode="fit_full" style="--delay:180ms"><div class="slot-inner"><div class="slot-id">hero-cover-visual</div><div class="slot-desc">Dashboard + Mobile Dashboard + 登录页拼版</div><div class="slot-ratio">主视觉 90% + 标题信息 10% / 16:9</div></div></div></div>
+      <footer class="slide-footer"></footer>
+    </article>
+  </section>
+
+  <section class="slide-shell" id="slide-02" data-layout="CUSTOM" data-code="CONTEXT" aria-label="背景挑战">
+    <article class="slide">
+      <header class="slide-header"></header>
+      <div class="content page-with-title"><div><div class="info-strip reveal"><div class="info-item"><b>Role</b><span>UX/UI Designer</span></div><div class="info-item"><b>Platform</b><span>Web + Mobile</span></div><div class="info-item"><b>Scope</b><span>Marketing Platform</span></div><div class="info-item"><b>Duration</b><span>X Months</span></div></div><div class="page-head"><div><p class="kicker">CONTEXT / CHALLENGE</p><h1 class="title small">项目背景与<br>现状挑战</h1></div><p class="lead">平台规模扩张导致体验、视觉、品牌与跨端协同出现明显断层。</p></div></div><div class="challenge-grid reveal" style="--delay:180ms"><div class="card"><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0 0 18"/><path d="M12 3a9 9 0 0 1 0 18"/><circle cx="8" cy="10" r="1.2"/><circle cx="12" cy="7" r="1.2"/><circle cx="15" cy="11" r="1.2"/><path d="M16 16h1.5"/></svg></span><h3>视觉割裂</h3><p>缺少统一设计语言</p></div><div class="card"><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 17l4-4 3 3 5-7 4 5"/><path d="M4 20h16"/><path d="M4 4v16"/></svg></span><h3>体验低效</h3><p>关键任务链路复杂</p></div><div class="card"><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 21V4"/><path d="M6 5h11l-2 4 2 4H6"/><path d="M4 4l16 16"/></svg></span><h3>品牌弱化</h3><p>产品缺少品牌识别</p></div><div class="card"><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="12" height="8" rx="1.5"/><rect x="17" y="9" width="4" height="9" rx="1.2"/><path d="M7 18h5"/><path d="M9.5 13v5"/><path d="M4 4l16 16"/></svg></span><h3>多端断层</h3><p>Web 与 Mobile 协同不足</p></div></div></div>
+      <footer class="slide-footer"></footer>
+    </article>
+  </section>
+
+  <section class="slide-shell" id="slide-03" data-layout="CUSTOM" data-code="STRATEGY" aria-label="设计策略">
+    <article class="slide">
+      <header class="slide-header"></header>
+      <div class="content page-with-title"><div class="page-head"><div><p class="kicker">STRATEGY / FRAMEWORK</p><h1 class="title small">设计策略</h1></div><p class="lead">通过四个维度的系统化策略，全面解决平台的现有痛点。</p></div><div class="strategy-grid reveal" style="--delay:160ms"><div class="strategy-card"><div class="strategy-top"><span class="strategy-index">01</span><span class="strategy-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14v9H5z"/><path d="M8 5h8"/><path d="M8 20h8"/></svg></span></div><div><h3>统一设计系统</h3><p>建立统一视觉与交互规范</p><ul class="strategy-points"><li>Design Token</li><li>Component Library</li><li>Interaction Rules</li></ul></div><div class="strategy-meta">SYSTEM / TOKEN / COMPONENT</div></div><div class="strategy-card"><div class="strategy-top"><span class="strategy-index">02</span><span class="strategy-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M8.5 6h7"/><path d="M7.3 8.2l3.5 7.5"/><path d="M16.7 8.2l-3.5 7.5"/></svg></span></div><div><h3>重构核心体验</h3><p>优化关键业务流程</p><ul class="strategy-points"><li>Task Flow</li><li>State Model</li><li>Batch Action</li></ul></div><div class="strategy-meta">WORKFLOW / TASK / EFFICIENCY</div></div><div class="strategy-card"><div class="strategy-top"><span class="strategy-index">03</span><span class="strategy-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l1.4 4.2L17.6 9l-4.2 1.8L12 15l-1.4-4.2L6.4 9l4.2-1.8z"/><path d="M5 16v4"/><path d="M3 18h4"/><path d="M19 4v3"/><path d="M17.5 5.5h3"/></svg></span></div><div><h3>构建品牌体验</h3><p>增强产品品牌感知</p><ul class="strategy-points"><li>Visual Language</li><li>Brand Touchpoint</li><li>Scene Expression</li></ul></div><div class="strategy-meta">BRAND / SCENE / MEMORY</div></div><div class="strategy-card"><div class="strategy-top"><span class="strategy-index">04</span><span class="strategy-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M10 6h4"/><path d="M11.5 18h1"/></svg></span></div><div><h3>打通多端协同</h3><p>形成跨端体验闭环</p><ul class="strategy-points"><li>Web Config</li><li>Mobile Review</li><li>Realtime Feedback</li></ul></div><div class="strategy-meta">WEB / MOBILE / FEEDBACK</div></div></div></div>
+      <footer class="slide-footer"></footer>
+    </article>
+  </section>
+
+  <section class="slide-shell" id="slide-04" data-layout="CUSTOM" data-code="SYSTEM" aria-label="统一设计体系">
+    <article class="slide">
+      <header class="slide-header"></header>
+      <div class="content split"><div class="logic"><p class="kicker">DESIGN SYSTEM</p><h1>统一设计体系</h1><p class="lead">构建全面规范的设计体系，保障多端体验一致性并提升研发效率。</p><div class="logic-groups"><div class="logic-box"><b>Design Token</b><ul><li>Color / Typography / Spacing / Radius</li></ul></div><div class="logic-box"><b>基础规范</b><ul><li>Grid / Layout / Icon</li></ul></div><div class="logic-box"><b>核心组件</b><ul><li>Button / Form / Table / Card</li></ul></div></div></div><div class="visual-slot slot-board reveal" data-slot-id="design-system-board" data-alt="设计系统组件与 Token 拼版图" data-image-mode="fit_full"><div class="slot-inner"><div class="slot-id">design-system-board</div><div class="slot-desc">Figma 风格组件与 Token 拼版图</div><div class="slot-ratio">说明 20% + 视觉拼版 80%</div></div></div></div>
+      <footer class="slide-footer"></footer>
+    </article>
+  </section>
+
+  <section class="slide-shell" id="slide-05" data-layout="CUSTOM" data-code="LIST" aria-label="活动列表重构">
+    <article class="slide">
+      <header class="slide-header"></header>
+      <div class="content split"><div class="logic"><p class="kicker">LIST / OPERATION ENTRY</p><h1>营销活动<br>列表重构</h1><p class="lead">作为营销运营入口，提升活动查找、状态判断与批量处理效率。</p><div class="logic-groups"><div class="logic-box"><b>背景/问题</b><ul><li>活动数量增长</li><li>信息密度高</li><li>查找效率低</li><li>状态管理混乱</li></ul></div><div class="logic-box"><b>设计决策</b><ul><li>重构信息层级</li><li>优化筛选体系</li><li>强化状态管理</li><li>提升批量操作效率</li></ul></div></div></div><div class="visual-slot has-image reveal" data-slot-id="campaign-list-visual" data-asset="assets/images/campaign-list-page.png" data-alt="活动列表页完整截图" data-image-mode="fit_full"><img class="slot-image" src="assets/images/campaign-list-page.png" alt="活动列表页完整截图"></div></div>
+      <footer class="slide-footer"></footer>
+    </article>
+  </section>
+
+  <section class="slide-shell" id="slide-06" data-layout="CUSTOM" data-code="CANVAS" aria-label="营销画布">
+    <article class="slide">
+      <header class="slide-header"></header>
+      <div class="content split"><div class="logic"><p class="kicker">FLOW CANVAS</p><h1>营销活动<br>画布设计</h1><p class="lead">将复杂营销流程转化为可视化节点画布，降低配置成本。</p><div class="logic-groups"><div class="logic-box"><b>背景/问题</b><ul><li>营销流程复杂</li><li>节点关系不清晰</li><li>配置成本高</li></ul></div><div class="logic-box"><b>设计决策</b><ul><li>流程可视化</li><li>节点模块化</li><li>统一配置逻辑</li></ul></div></div></div><div class="visual-slot reveal" data-slot-id="campaign-canvas-visual" data-alt="营销画布界面全景及节点配置模块" data-image-mode="fit_full"><div class="slot-inner"><div class="slot-id">campaign-canvas-visual</div><div class="slot-desc">营销画布界面全景及节点配置模块</div><div class="slot-ratio">左侧文字 35% + 右侧视觉 65%</div></div></div></div>
+      <footer class="slide-footer"></footer>
+    </article>
+  </section>
+
+  <section class="slide-shell" id="slide-07" data-layout="CUSTOM" data-code="CONFIG" aria-label="精细化营销">
+    <article class="slide">
+      <header class="slide-header"></header>
+      <div class="content split"><div class="logic"><p class="kicker">OPERATION CONFIG</p><h1>精细化营销</h1><p class="lead">模块化重组繁杂配置项，提升策略配置的操作效率和易用性。</p><div class="logic-groups"><div class="logic-box"><b>背景/问题</b><ul><li>配置项繁多</li><li>学习成本高</li><li>运营效率低</li></ul></div><div class="logic-box"><b>设计决策</b><ul><li>策略模块化</li><li>配置分组</li><li>渐进式信息展示</li></ul></div></div></div><div class="visual-slot reveal" data-slot-id="strategy-config-visual" data-alt="营销配置页、策略配置与运营场景" data-image-mode="fit_full"><div class="slot-inner"><div class="slot-id">strategy-config-visual</div><div class="slot-desc">营销配置页、策略配置与运营场景</div><div class="slot-ratio">左侧文字 35% + 右侧视觉 65%</div></div></div></div>
+      <footer class="slide-footer"></footer>
+    </article>
+  </section>
+
+  <section class="slide-shell" id="slide-08" data-layout="CUSTOM" data-code="SEGMENT" aria-label="客户分组">
+    <article class="slide">
+      <header class="slide-header"></header>
+      <div class="content split"><div class="logic"><p class="kicker">USER SEGMENT</p><h1>客户分组与<br>人群标签</h1><p class="lead">标准化复杂标签体系，提供可视化规则配置提升人群管理效率。</p><div class="logic-groups"><div class="logic-box"><b>背景/问题</b><ul><li>用户规则复杂</li><li>标签体系分散</li><li>人群管理成本高</li></ul></div><div class="logic-box"><b>设计决策</b><ul><li>标签体系标准化</li><li>规则可视化</li><li>人群圈选结构化</li></ul></div></div></div><div class="visual-slot reveal" data-slot-id="user-segmentation-visual" data-alt="标签管理、规则配置及客户分组界面" data-image-mode="fit_full"><div class="slot-inner"><div class="slot-id">user-segmentation-visual</div><div class="slot-desc">标签管理、规则配置及客户分组界面</div><div class="slot-ratio">左侧文字 35% + 右侧视觉 65%</div></div></div></div>
+      <footer class="slide-footer"></footer>
+    </article>
+  </section>
+
+  <section class="slide-shell" id="slide-09" data-layout="CUSTOM" data-code="ANALYTICS" aria-label="效果分析">
+    <article class="slide">
+      <header class="slide-header"></header>
+      <div class="content split"><div class="logic"><p class="kicker">ANALYTICS / REPORT CENTER</p><h1>效果分析<br>报告</h1><p class="lead">作为营销效果评估中心，聚焦关键指标并提升运营决策效率。</p><div class="logic-groups"><div class="logic-box"><b>背景/问题</b><ul><li>数据分散</li><li>指标层级不清晰</li><li>决策效率低</li></ul></div><div class="logic-box"><b>设计决策</b><ul><li>数据分层</li><li>指标聚焦</li><li>可视化表达</li></ul></div></div></div><div class="visual-slot reveal" data-slot-id="analytics-dashboard-visual" data-alt="效果分析报告完整截图" data-image-mode="fit_full"><div class="slot-inner"><div class="slot-id">analytics-dashboard-visual</div><div class="slot-desc">效果分析报告完整截图，包含 Dashboard、分析报告和趋势图表</div><div class="slot-ratio">左侧文字 35% + 右侧完整数据报告截图 65%</div></div></div></div>
+      <footer class="slide-footer"></footer>
+    </article>
+  </section>
+
+  <section class="slide-shell" id="slide-10" data-layout="CUSTOM" data-code="BRAND" aria-label="品牌体验">
+    <article class="slide">
+      <header class="slide-header"></header>
+      <div class="content split-brand"><div class="logic"><p class="kicker">BRAND EXPERIENCE</p><h1>品牌体验升级</h1><p class="lead">贯彻统一品牌视觉语言到各个场景触点，提升产品记忆点。</p><div class="logic-groups"><div class="logic-box"><b>背景/问题</b><ul><li>缺乏统一品牌识别</li><li>产品记忆点不足</li></ul></div><div class="logic-box"><b>设计决策</b><ul><li>统一设计系统</li><li>品牌视觉语言</li><li>场景化品牌触点</li></ul></div></div></div><div class="visual-slot reveal" data-slot-id="brand-experience-visual" data-alt="品牌体验场景拼版" data-image-mode="fit_full"><div class="slot-inner"><div class="slot-id">brand-experience-visual</div><div class="slot-desc">登录页 A/B、空状态、品牌插画、品牌图形与品牌色应用</div><div class="slot-ratio">左侧 35% 品牌策略 + 右侧 65% 品牌场景展示</div></div></div></div>
+      <footer class="slide-footer"></footer>
+    </article>
+  </section>
+
+  <section class="slide-shell" id="slide-11" data-layout="CUSTOM" data-code="SHOWCASE" aria-label="Interface Showcase">
+    <article class="slide">
+      <header class="slide-header"></header>
+      <div class="content visual-only"><div class="mobile-title"><p class="kicker">INTERFACE SHOWCASE</p></div><div class="visual-slot slot-showcase reveal" data-slot-id="interface-showcase-visual" data-alt="多界面合集展示" data-image-mode="fit_full"><div class="slot-inner"><div class="slot-id">interface-showcase-visual</div><div class="slot-desc">Landing Page、运营活动页、营销专题页、Dashboard 局部、品牌场景页、Mobile 局部</div><div class="slot-ratio">主视觉 95% + 标题信息 5%</div></div></div></div>
+      <footer class="slide-footer"></footer>
+    </article>
+  </section>
+
+  <section class="slide-shell" id="slide-12" data-layout="CUSTOM" data-code="WEB MOBILE" aria-label="跨端协同">
+    <article class="slide">
+      <header class="slide-header"></header>
+      <div class="content visual-only"><div class="mobile-title"><p class="kicker">WEB × MOBILE FLOW</p></div><div class="visual-slot slot-showcase reveal" data-slot-id="cross-platform-visual" data-alt="Web 与 Mobile 跨端协同展示" data-image-mode="fit_full"><div class="slot-inner"><div class="slot-id">cross-platform-visual</div><div class="slot-desc">Web 运营后台界面与 Mobile 数据看板对应展示</div><div class="slot-ratio">Web 60% + Mobile 40% / 整图替换</div></div></div><div class="safe-note">Web 配置 → 数据同步 → Mobile 查看 → 实时反馈</div></div>
+      <footer class="slide-footer"></footer>
+    </article>
+  </section>
+
+  <section class="slide-shell" id="slide-13" data-layout="CUSTOM" data-code="MOBILE" aria-label="Mobile Dashboard">
+    <article class="slide">
+      <header class="slide-header"></header>
+      <div class="content visual-only"><div class="mobile-title"><p class="kicker">MOBILE DATA DASHBOARD EXPERIENCE</p></div><div class="visual-slot slot-showcase reveal" data-slot-id="mobile-immersive-visual" data-alt="移动端数据看板与运营页拼版" data-image-mode="fit_full"><div class="slot-inner"><div class="slot-id">mobile-immersive-visual</div><div class="slot-desc">移动端数据看板、移动端分析页、移动端运营页</div><div class="slot-ratio">主视觉 95% + 标题信息 5%</div></div></div></div>
+      <footer class="slide-footer"></footer>
+    </article>
+  </section>
+
+  <section class="slide-shell" id="slide-14" data-layout="CUSTOM" data-code="IMPACT" aria-label="成果沉淀">
+    <article class="slide">
+      <header class="slide-header"></header>
+      <div class="content closing-layout">
+        <div><p class="kicker">PROJECT IMPACT</p><h1 class="title small">项目成果与<br>能力沉淀</h1></div>
+        <div>
+          <div class="impact-grid">
+            <div class="card"><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14v9H5z"/><path d="M8 5h8"/><path d="M8 20h8"/></svg></span><h3>统一设计体系</h3></div>
+            <div class="card"><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M8.5 6h7"/><path d="M7.3 8.2l3.5 7.5"/><path d="M16.7 8.2l-3.5 7.5"/></svg></span><h3>优化核心体验</h3></div>
+            <div class="card"><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l1.4 4.2L17.6 9l-4.2 1.8L12 15l-1.4-4.2L6.4 9l4.2-1.8z"/><path d="M5 16v4"/><path d="M3 18h4"/></svg></span><h3>强化品牌认知</h3></div>
+            <div class="card"><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M10 6h4"/><path d="M11.5 18h1"/></svg></span><h3>实现跨端协同</h3></div>
+          </div>
+          <div class="cap-grid" style="margin-top:18px">
+            <div class="card"><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.2"/><circle cx="18" cy="6" r="2.2"/><circle cx="12" cy="18" r="2.2"/><path d="M8.2 6h7.6"/><path d="M7.2 8l3.6 7.6"/><path d="M16.8 8l-3.6 7.6"/></svg></span><h3>复杂业务抽象</h3><p>从业务规则到产品结构设计</p></div>
+            <div class="card"><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14v9H5z"/><path d="M8 5h8"/><path d="M8 20h8"/></svg></span><h3>设计系统建设</h3><p>从规范到组件体系建设</p></div>
+            <div class="card"><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l1.4 4.2L17.6 9l-4.2 1.8L12 15l-1.4-4.2L6.4 9l4.2-1.8z"/><path d="M5 16v4"/><path d="M3 18h4"/></svg></span><h3>品牌产品融合</h3><p>将品牌表达融入业务场景</p></div>
+            <div class="card"><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20h16"/><path d="M4 20V5"/><path d="M8 16v-4"/><path d="M12 16V9"/><path d="M16 16V7"/></svg></span><h3>数据产品设计</h3><p>支持运营决策的数据体验</p></div>
+            <div class="card"><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M10 6h4"/><path d="M11.5 18h1"/></svg></span><h3>跨端体验设计</h3><p>构建 Web 与 Mobile 协同体验</p></div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-footer"></footer>
+    </article>
+  </section>
+
+</main>
+<script>
+(function(){
+  const SLIDE_W=1672, SLIDE_H=941;
+  const slides=Array.from(document.querySelectorAll('.slide-shell'));
+  const state={slide:0};
+  function pad(n){return String(n).padStart(2,'0')}
+  function buildChrome(){const total=slides.length;slides.forEach((shell,index)=>{const page=`${pad(index+1)}/${pad(total)}`;const header=shell.querySelector('.slide-header');const footer=shell.querySelector('.slide-footer');const code=shell.dataset.code||'DESIGN';if(header){header.innerHTML=`<div class="brand"><strong>LINPO LAB</strong><span>XIXI STYLE / BLACK</span></div><div class="meta"><span><b>01</b> PORTFOLIO</span><span><b>02</b> MARKETING PLATFORM</span></div><div class="topic">${code}</div><div class="year">2026</div><div class="page-chip" aria-label="Slide ${page}"><span class="page-arrow" aria-hidden="true"></span><span class="page-number">${page}</span></div>`}if(footer){footer.innerHTML=`<span>${page}</span><div class="progress-dots" aria-label="Slide progress"></div><span>DESIGN / ${code}</span>`;const dots=footer.querySelector('.progress-dots');for(let dotIndex=0;dotIndex<total;dotIndex++){const dot=document.createElement('button');dot.type='button';dot.className='progress-dot';dot.setAttribute('aria-label',`Go to slide ${pad(dotIndex+1)}`);if(dotIndex<=index)dot.classList.add('is-filled');dot.addEventListener('click',e=>{e.stopPropagation();setSlide(dotIndex)});dots.appendChild(dot)}}})}
+  function resize(){const scale=Math.min(window.innerWidth/SLIDE_W,window.innerHeight/SLIDE_H);slides.forEach(shell=>{const slide=shell.querySelector('.slide');if(slide)slide.style.transform=`scale(${scale})`;shell.style.width=`${SLIDE_W*scale}px`;shell.style.height=`${SLIDE_H*scale}px`})}
+  function hydrateVisualSlots(){document.querySelectorAll('.visual-slot[data-asset]').forEach(slot=>{const mode=slot.dataset.imageMode||'fit_full';const applyMode=()=>{slot.classList.add('has-image');slot.classList.toggle('image-crop-top',mode==='crop_top')};const existing=slot.querySelector('img.slot-image');if(existing){applyMode();return}const asset=slot.dataset.asset;if(!asset)return;const img=new Image();img.className='slot-image';img.alt=slot.dataset.alt||slot.dataset.slotId||'';img.onload=()=>{applyMode();slot.replaceChildren(img)};img.onerror=()=>{slot.classList.remove('has-image','image-crop-top')};img.src=asset})}
+  function setSlide(index){state.slide=Math.max(0,Math.min(slides.length-1,index));slides.forEach((shell,slideIndex)=>shell.classList.toggle('is-active',slideIndex===state.slide));const url=new URL(window.location.href);url.searchParams.set('slide',String(state.slide+1));history.replaceState(null,'',url)}
+  function next(){setSlide(state.slide+1)} function prev(){setSlide(state.slide-1)}
+  buildChrome();hydrateVisualSlots();resize();window.addEventListener('resize',resize);document.addEventListener('click',next);document.addEventListener('keydown',event=>{const key=event.key.toLowerCase();if(['arrowright','pagedown',' ','enter'].includes(key)){event.preventDefault();next()}if(['arrowleft','pageup','backspace'].includes(key)){event.preventDefault();prev()}if(key==='home')setSlide(0);if(key==='end')setSlide(slides.length-1)});const m=window.location.href.match(/[?&#]slide=(\d+)/);if(m)setSlide(Number(m[1])-1);window.__BWC_XIXI_DECK__={getState(){return{slide:state.slide,total:slides.length,mode:'quanyu-bwc-black'}}};
+})();
+</script>
+</body>
+</html>

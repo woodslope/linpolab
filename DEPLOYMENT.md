@@ -23,6 +23,21 @@
 - `project-decks/omni-marketing-platform/assets/fonts/`
 - `project-decks/omni-marketing-platform/assets/images/campaign-list-page.png`
 
+当前首页已接入的实验页：
+
+- `experiments/moreimg-v2/index.html`
+- `experiments/prompthub-v2/index.html`
+- `experiments/leekquant-v2/index.html`
+- `experiments/dailyglance-v2/index.html`
+- `assets/exploration-page-system.css`
+- `assets/exploration-default-layout.css`
+- `assets/exploration-page-style-base.css`
+- `assets/exploration-default-style.css`
+- `assets/cases/moreimg/`
+- `assets/cases/prompthub/`
+- `assets/cases/leek-strategy/`
+- `assets/cases/dailyglance/`
+
 说明：
 
 - 首页只引用 `assets/optimized/`。
@@ -31,6 +46,7 @@
 - 当前 canonical、Open Graph 和 Twitter Card URL 使用已确认正式域名 `https://linpolab.com/`。
 - 当前项目页需要 `BaiWuchangKeke` 三个字体文件，否则项目页字体会退回系统字体。
 - 当前项目页只启用一张真实项目图：`campaign-list-page.png`。
+- 四个探索实验页只发布 HTML、共享 CSS 与页面引用图片，不发布 Cards、Prompts、production 记录或截图 manifest。
 
 ## 建议一起保留的维护文档
 
@@ -86,6 +102,7 @@ python3 -m http.server 4173
 
 - `http://localhost:4173/` 返回 `200`
 - `http://localhost:4173/project-decks/omni-marketing-platform/index.html?v=20260708-4` 返回 `200`
+- 四个 `experiments/*-v2/index.html` 返回 `200`，并能返回首页 `#experiments`
 - `assets/optimized/` 中所有首页图片返回 `200`
 - `assets/optimized/linpo-og-image-1200x630.jpg` 尺寸为 `1200 x 630`
 - 项目页字体文件和 `campaign-list-page.png` 返回 `200`

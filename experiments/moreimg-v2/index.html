@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="一文多图（MoreImg）是一次从中文长文到卡片内容规格与视觉提示词的工作流实验。" />
+    <meta name="author" content="Linpo Wu" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:site_name" content="LINPO LAB" />
+    <meta property="og:title" content="一文多图（MoreImg）工作流实验 | LINPO LAB" />
+    <meta property="og:description" content="验证中文长文能否先形成可检查的卡片内容规格，再生成一一对应的中文视觉提示词。" />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="../../assets/cases/moreimg/02-card-content.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/png" href="../../assets/optimized/linpo-hero-avatar-192.png" />
+    <link rel="stylesheet" href="../../assets/exploration-page-system.css" />
+    <link rel="stylesheet" href="../../assets/exploration-default-layout.css" />
+    <link rel="stylesheet" href="../../assets/exploration-page-style-base.css" />
+    <link rel="stylesheet" href="../../assets/exploration-default-style.css" />
+    <title>一文多图（MoreImg）工作流实验 | LINPO LAB</title>
+    <style>
+      :root {
+        --paper: #f5f3ed;
+        --surface: #fffefa;
+        --ink: #20241f;
+        --text: #5a625c;
+        --line: #d9ded7;
+        --accent: #39775a;
+        --accent-2: #b94f72;
+        --dark: #1f2923;
+        --nav-line: rgba(217, 222, 215, .9);
+        --nav-background: rgba(245, 243, 237, .96);
+        --chip-border: rgba(57, 119, 90, .24);
+        --chip-text: #506158;
+        --project-link-color: #56625b;
+        --band-summary: #e9efea;
+        --band-evidence: #fffefa;
+        --band-scope: #edf0ed;
+        --band-system: #f5f3ed;
+        --band-finding: #1f2923;
+        --band-next: #f5f3ed;
+        --finding-accent: #a8d7b9;
+        --finding-text: #cad8cf;
+        --finding-card-line: rgba(168, 215, 185, .22);
+        --figure-background: #eef0ed;
+        --flow-columns: 3;
+        --flow-line: #39775a;
+      }
+
+      .moreimg-v2-theme .hero {
+        background: #f5f3ed;
+      }
+
+      .moreimg-v2-theme .hero::before {
+        width: min(760px, 76vw);
+        height: 80px;
+        left: 50%;
+        top: 48%;
+        opacity: .58;
+        background:
+          radial-gradient(circle at 7% 50%, rgba(185, 79, 114, .72) 0 4px, transparent 5px),
+          radial-gradient(circle at 50% 50%, rgba(57, 119, 90, .64) 0 5px, transparent 6px),
+          radial-gradient(circle at 93% 50%, rgba(35, 145, 155, .55) 0 4px, transparent 5px),
+          linear-gradient(90deg, transparent 7%, rgba(185, 79, 114, .22) 18%, rgba(57, 119, 90, .28) 50%, rgba(35, 145, 155, .2) 82%, transparent 93%);
+        transform: translate(-50%, 28px) scaleX(.9);
+        animation: moreimg-rail-breathe 9s ease-in-out infinite alternate;
+      }
+
+      .moreimg-v2-theme .hero::after {
+        width: 10px;
+        height: 10px;
+        left: calc(50% - min(300px, 30vw));
+        top: calc(48% + 63px);
+        border-radius: 50%;
+        background: #b94f72;
+        opacity: .62;
+        animation: moreimg-stage-marker 8s ease-in-out infinite alternate;
+      }
+
+      @keyframes moreimg-rail-breathe {
+        to { opacity: .34; transform: translate(-50%, 28px) scaleX(1); }
+      }
+
+      @keyframes moreimg-stage-marker {
+        to { opacity: .32; transform: translateX(min(600px, 60vw)) scale(.75); }
+      }
+
+      .evidence-stage + .evidence-stage {
+        margin-top: clamp(48px, 7vw, 84px);
+        padding-top: clamp(38px, 5vw, 58px);
+        border-top: 1px solid var(--line);
+      }
+
+      .stage-index {
+        display: inline-flex;
+        margin-bottom: 12px;
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+      }
+
+      .evidence-bridge {
+        max-width: 720px;
+        margin: 36px 0 0;
+        padding-left: 18px;
+        border-left: 3px solid var(--accent-2);
+        color: var(--text);
+      }
+
+      .runtime-evidence {
+        display: grid;
+        gap: 42px;
+      }
+
+      .mobile-proof {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(260px, 390px);
+        align-items: center;
+        gap: clamp(28px, 5vw, 64px);
+        padding-top: 42px;
+        border-top: 1px solid var(--line);
+      }
+
+      .mobile-proof-copy h3 {
+        margin-bottom: 10px;
+        font-size: 24px;
+      }
+
+      .mobile-proof-copy p {
+        max-width: 600px;
+        color: var(--text);
+      }
+
+      .mobile-proof-media {
+        width: min(260px, 100%);
+        justify-self: center;
+        background: #fff;
+      }
+
+      .mobile-proof-media img {
+        width: 100%;
+        height: auto;
+      }
+
+      .decision-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 38px;
+      }
+
+      .decision-note {
+        padding: 22px;
+        border: 1px solid var(--line);
+        border-radius: var(--exploration-radius-card);
+        background: var(--surface);
+      }
+
+      .decision-note strong {
+        display: block;
+        margin-bottom: 7px;
+        color: var(--accent);
+      }
+
+      .decision-note p,
+      .limitation-note p {
+        margin-bottom: 0;
+        color: var(--text);
+      }
+
+      .limitation-note {
+        max-width: 840px;
+        margin-bottom: 28px;
+        padding: 18px 20px;
+        border-left: 3px solid var(--accent-2);
+        background: rgba(255, 255, 255, .58);
+      }
+
+      .next-band .cards {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      @media (max-width: 720px) {
+        .moreimg-v2-theme .hero::before { top: 46%; width: 92vw; opacity: .32; }
+        .moreimg-v2-theme .hero::after { top: calc(46% + 63px); }
+        .mobile-proof,
+        .decision-grid,
+        .next-band .cards,
+        .moreimg-v2-theme .flow { grid-template-columns: 1fr; }
+        .mobile-proof { align-items: start; }
+        .mobile-proof-copy h3 { font-size: 20px; }
+        .mobile-proof-media { width: min(190px, 60vw); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .moreimg-v2-theme .hero::before,
+        .moreimg-v2-theme .hero::after { animation: none; }
+      }
+    </style>
+  </head>
+  <body class="exploration-page moreimg-v2-theme" data-layout-dna="exploration-default-layout" data-style-dna="exploration-default-style" data-style-lock="exploration-default" data-calibration-state="production">
+    <nav class="nav" aria-label="页面导航">
+      <a class="brand" href="../../index.html#experiments" aria-label="返回 LINPO LAB 首页探索实验"><strong>LINPO LAB</strong><span>Exploration Lab</span></a>
+      <div class="nav-links"><a href="#screens">核心证据</a><a href="#flow">六阶段流程</a><a href="#next">下一步</a><a class="back-link" href="../../index.html#experiments">返回探索实验</a></div>
+    </nav>
+
+    <header class="hero" id="overview">
+      <div class="hero-grid">
+        <p class="eyebrow">Article-to-visual prompt workflow</p>
+        <h1>一文多图</h1>
+        <p class="hero-lead">验证一篇中文长文能否先形成可检查的卡片内容规格，再生成一一对应的中文视觉提示词。</p>
+        <div class="hero-actions"><a class="button" href="#screens">查看核心证据</a><a class="button ghost" href="#flow">查看六阶段流程</a></div>
+        <div class="chips"><span class="chip">本地运行</span><span class="chip">六阶段处理</span><span class="chip">不直接生图</span></div>
+        <div class="project-links"><a href="https://woodslope.github.io/MoreImg/" target="_blank" rel="noreferrer">线上演示</a><span aria-hidden="true">·</span><a href="https://github.com/WoodSlope/MoreImg" target="_blank" rel="noreferrer">GitHub 仓库</a></div>
+      </div>
+    </header>
+
+    <main>
+      <section class="section summary-band" id="summary">
+        <div>
+          <div class="section-head"><p class="section-label">01 / 实验速览</p><h2>核心不是“多生几张图”，而是把内容和视觉的责任分开。</h2></div>
+          <div class="scan-grid">
+            <article class="scan"><strong>输入</strong><p>一篇有完整观点和结构的中文长文。</p></article>
+            <article class="scan"><strong>核心产物</strong><p>卡片内容规格，以及一一对应的中文视觉提示词。</p></article>
+            <article class="scan"><strong>当前状态</strong><p>真实 API 处理、历史记录与复制入口已跑通。</p></article>
+            <article class="scan"><strong>关键边界</strong><p>模型输出仍需人工审查，提示词不等于最终图片。</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section evidence-band" id="screens">
+        <div>
+          <div class="section-head"><p class="section-label">02 / 核心界面证据</p><h2>先锁定卡片内容规格，再把视觉表达作为独立产物。</h2><p class="section-intro">两张真实结果截图是页面的主证据。它们证明产物已被分层展示和复制，不证明事实或出图质量会自动正确。</p></div>
+          <div class="screens">
+            <article class="screen evidence-stage">
+              <div class="screen-copy"><span class="stage-index">Stage A / 内容层</span><h3>重构文章与卡片内容包可以分别检查</h3><p>页面同时保留精修文章重构和三张知识卡片的内容责任，让顺序、标题、要点和不可误读关系先被固定。</p></div>
+              <figure><img src="../../assets/cases/moreimg/02-card-content.jpg" alt="一文多图的文章重构与知识卡片内容包结果" /></figure>
+              <p class="evidence-bridge">内容层先回答“每张卡讲什么”；只有这一层可检查，视觉层才不会反过来改写事实。</p>
+            </article>
+            <article class="screen evidence-stage">
+              <div class="screen-copy"><span class="stage-index">Stage B / 视觉层</span><h3>三条视觉提示词与三张卡片一一对应</h3><p>提示词被单独呈现并提供复制入口，证明视觉构图、色彩和字体气质可以在不改写卡片内容的前提下继续生产。</p></div>
+              <figure><img src="../../assets/cases/moreimg/03-visual-prompts.jpg" alt="一文多图生成的三条中文视觉提示词与复制入口" /></figure>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section scope-band" id="runtime">
+        <div>
+          <div class="section-head"><p class="section-label">03 / 运行证据与运行边界</p><h2>配置让流程开始，窄屏只先证明入口可用。</h2><p class="section-intro">这两张图证明运行条件，不与核心产物证据平级。</p></div>
+          <div class="runtime-evidence">
+            <article class="screen">
+              <div class="screen-copy"><h3>模型、Endpoint 与系统指令由使用者配置</h3><p>API Key 保持遮罩，配置保存在当前浏览器；这只证明个人运行入口。</p></div>
+              <figure><img src="../../assets/cases/moreimg/01-config-masked.jpg" alt="一文多图的 API、模型和系统指令配置，密钥已遮罩" /></figure>
+            </article>
+            <article class="mobile-proof">
+              <div class="mobile-proof-copy"><span class="stage-index">390 × 844 / 窄屏入口</span><h3>输入、主操作与历史入口保持可见</h3><p>只证明入口可扫读，不代表全部结果视图已完成移动优化。</p></div>
+              <figure class="mobile-proof-media"><a href="../../assets/cases/moreimg/04-mobile-entry.jpg" target="_blank" rel="noreferrer" aria-label="查看一文多图移动入口原始截图"><img src="../../assets/cases/moreimg/04-mobile-entry.jpg" alt="一文多图在 390 乘 844 视口下的长文输入与历史记录入口" /></a></figure>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section system-band" id="flow">
+        <div>
+          <div class="section-head"><p class="section-label">04 / 六阶段闭环</p><h2>从准入判型到对应质检，每一步都保留独立责任。</h2><p class="section-intro">六阶段顺序来自应用对模型输出的真实解析契约，不是为了页面展示追加的装饰流程。</p></div>
+          <div class="flow">
+            <div class="step"><b>01 · 准入判型</b><span>判断文章是否适合拆成知识卡片。</span></div>
+            <div class="step"><b>02 · 事实与骨架</b><span>标出不确定点，提取观点与结构。</span></div>
+            <div class="step"><b>03 · 文章重构</b><span>调整主线和表达，保留可追溯内容。</span></div>
+            <div class="step"><b>04 · 卡片内容包</b><span>固定页面顺序、标题、要点与关系。</span></div>
+            <div class="step"><b>05 · 视觉提示词</b><span>为每张卡片生成对应的中文视觉指令。</span></div>
+            <div class="step"><b>06 · 对应质检</b><span>检查卡片与提示词是否一一对应。</span></div>
+          </div>
+          <div class="decision-grid">
+            <article class="decision-note"><strong>浏览器本地存储</strong><p>API 配置、系统指令和最多 50 条历史记录写入 localStorage。这适合个人工具，不是团队数据层。</p></article>
+            <article class="decision-note"><strong>同源 CORS 转发</strong><p>本地服务只把 `/v1/chat/completions` 转发到上游，不记录密钥或请求正文。它解决浏览器限制，不构成公共代理。</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section finding-band" id="finding">
+        <div>
+          <div class="section-head"><p class="section-label">05 / 实验结论</p><h2>双层产物闭环已经成立，输出稳定性和发布可靠性还没有。</h2></div>
+          <div class="cards">
+            <article class="card"><h3>已成立</h3><p>中文长文可以经过分阶段处理，生成可分别检查和复制的卡片内容包与视觉提示词。</p></article>
+            <article class="card"><h3>仍薄弱</h3><p>模型输出格式、事实审查、公开部署和团队级密钥管理仍未闭环。</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section next-band" id="next">
+        <div>
+          <div class="section-head"><p class="section-label">06 / 限制与下一步</p><h2>先固化输出契约，再扩大文章和模型样本。</h2></div>
+          <div class="limitation-note"><p><strong>当前限制：</strong>一次成功运行只证明闭环可执行，不代表所有文章、模型和图像模型都稳定，也不代表事实审查可以省略。</p></div>
+          <div class="cards">
+            <article class="card"><h3>P0 · 输出契约</h3><p>固化六阶段格式、异常结构和失败状态，让解析错误可被定位。</p></article>
+            <article class="card"><h3>P1 · 发布与配置</h3><p>降低公开页运行依赖，补齐密钥使用、错误恢复与部署边界。</p></article>
+            <article class="card"><h3>P2 · 样本记录</h3><p>用不同文章类型、模型和提示词风格建立可比较的生产记录。</p></article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">© 2026 LINPO LAB · 一文多图（MoreImg）工作流实验</footer>
+  </body>
+</html>

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="DailyGlance 是一次围绕大盘环境、个股走势、技术依据与策略设置的每日观察路径实验。" />
+  <meta name="author" content="Linpo Wu" />
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="LINPO LAB" />
+  <meta property="og:title" content="DailyGlance 每日观察实验 | LINPO LAB" />
+  <meta property="og:description" content="验证新手能否沿着市场环境、个股走势、关键依据与策略设置形成一条可解释的每日观察路径。" />
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="../../assets/cases/dailyglance/02-market-dashboard.png" />
+  <meta property="og:image:width" content="1440" />
+  <meta property="og:image:height" content="900" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/png" href="../../assets/optimized/linpo-hero-avatar-192.png" />
+  <link rel="stylesheet" href="../../assets/exploration-page-system.css" />
+  <link rel="stylesheet" href="../../assets/exploration-default-layout.css" />
+  <link rel="stylesheet" href="../../assets/exploration-page-style-base.css" />
+  <link rel="stylesheet" href="../../assets/exploration-default-style.css" />
+  <title>DailyGlance 每日观察实验 | LINPO LAB</title>
+  <style>
+    :root {
+      --paper:#f5f3ed; --surface:#fffefa; --ink:#202622; --text:#5a645d; --line:#d9dfda;
+      --accent:#347052; --accent-2:#466fd6; --dark:#1d2822;
+      --nav-line:rgba(217,223,218,.92); --nav-background:rgba(245,243,237,.96);
+      --chip-border:rgba(52,112,82,.24); --chip-text:#536159; --project-link-color:#58645d;
+      --band-summary:#e9edf2; --band-evidence:#fffefa; --band-scope:#edf0f3; --band-system:#f5f3ed;
+      --band-finding:#1d2822; --band-next:#f5f3ed; --finding-accent:#a9d5b7; --finding-text:#cbd8cf;
+      --finding-card-line:rgba(169,213,183,.2); --figure-background:#11161c; --flow-columns:3; --flow-line:#347052;
+    }
+    .dailyglance-v2-theme .hero { background:var(--paper); }
+    .dailyglance-v2-theme .hero::before {
+      width:min(860px,86vw); height:180px; left:50%; top:42%; opacity:.52;
+      background:
+        radial-gradient(circle at 8% 38%,rgba(70,111,214,.58) 0 3px,transparent 4px),
+        radial-gradient(circle at 20% 64%,rgba(52,112,82,.52) 0 4px,transparent 5px),
+        radial-gradient(circle at 36% 32%,rgba(70,111,214,.38) 0 3px,transparent 4px),
+        radial-gradient(circle at 50% 50%,rgba(52,112,82,.72) 0 6px,transparent 7px),
+        radial-gradient(circle at 64% 34%,rgba(70,111,214,.38) 0 3px,transparent 4px),
+        radial-gradient(circle at 80% 66%,rgba(52,112,82,.52) 0 4px,transparent 5px),
+        radial-gradient(circle at 92% 40%,rgba(70,111,214,.58) 0 3px,transparent 4px);
+      transform:translate(-50%,12px) scaleX(.94); animation:dg-focus 9s ease-in-out infinite alternate;
+    }
+    .dailyglance-v2-theme .hero::after {
+      width:min(720px,72vw); height:1px; left:50%; top:calc(42% + 90px); opacity:.36;
+      background:linear-gradient(90deg,transparent,rgba(70,111,214,.34),rgba(52,112,82,.46),rgba(70,111,214,.34),transparent);
+      transform:translateX(-50%) scaleX(.86); animation:dg-rail 11s ease-in-out infinite alternate;
+    }
+    @keyframes dg-focus { to { opacity:.32; transform:translate(-50%,12px) scaleX(1); } }
+    @keyframes dg-rail { to { opacity:.2; transform:translateX(-50%) scaleX(1); } }
+    .evidence-stage + .evidence-stage { margin-top:clamp(48px,7vw,84px); padding-top:clamp(38px,5vw,58px); border-top:1px solid var(--line); }
+    .stage-index { display:inline-flex; margin-bottom:12px; color:var(--accent); font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+    .stage-index.blue { color:var(--accent-2); }
+    .verification-note { display:block; margin-top:10px; color:#7a6842; font-size:12px; font-weight:700; }
+    .support-band { background:#f3f1eb; }
+    .support-band .screen-copy h3 { font-size:20px; }
+    .boundary-note { margin:0 0 30px; padding:18px 20px; border:1px solid rgba(128,104,46,.25); border-top:3px solid #a17e28; background:#f7f1df; color:var(--text); }
+    .boundary-note p { margin:0; }
+    .decision-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:38px; }
+    .decision-note { padding:22px; border:1px solid var(--line); border-radius:var(--exploration-radius-card); background:var(--surface); }
+    .decision-note strong { display:block; margin-bottom:7px; color:var(--accent); }
+    .decision-note p { margin:0; color:var(--text); }
+    .next-band .cards { grid-template-columns:repeat(3,minmax(0,1fr)); }
+    @media (max-width:720px) {
+      .dailyglance-v2-theme .hero::before { top:43%; width:96vw; opacity:.28; }
+      .dailyglance-v2-theme .hero::after { top:calc(43% + 90px); width:88vw; }
+      .dailyglance-v2-theme .scan-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .dailyglance-v2-theme .flow,.decision-grid,.next-band .cards { grid-template-columns:1fr; }
+    }
+    @media (max-width:430px) { .dailyglance-v2-theme .scan-grid { grid-template-columns:1fr; } }
+    @media (prefers-reduced-motion:reduce) { html{scroll-behavior:auto}.dailyglance-v2-theme .hero::before,.dailyglance-v2-theme .hero::after{animation:none} }
+  </style>
+</head>
+<body class="exploration-page dailyglance-v2-theme" data-layout-dna="exploration-default-layout" data-style-dna="exploration-default-style" data-style-lock="exploration-default" data-calibration-state="production">
+  <nav class="nav" aria-label="页面导航"><a class="brand" href="../../index.html#experiments"><strong>LINPO LAB</strong><span>Exploration Lab</span></a><div class="nav-links"><a href="#screens">界面证据</a><a href="#flow">观察流程</a><a href="#next">下一步</a><a class="back-link" href="../../index.html#experiments">返回探索实验</a></div></nav>
+  <header class="hero" id="overview"><div class="hero-grid"><p class="eyebrow">Market observation and explainable decision prototype</p><h1>DailyGlance</h1><p class="hero-lead">验证新手能否沿着大盘环境、个股走势、技术依据和策略设置，形成一条每天可重复、可解释的观察路径。</p><div class="hero-actions"><a class="button" href="#screens">查看界面证据</a><a class="button ghost" href="#flow">查看观察流程</a></div><div class="chips"><span class="chip">桌面观察</span><span class="chip">解释优先</span><span class="chip">不执行交易</span></div><div class="project-links"><a href="https://woodslope.github.io/DailyGlance/" target="_blank" rel="noreferrer">线上演示</a></div></div></header>
+  <main>
+    <section class="section summary-band" id="summary"><div><div class="section-head"><p class="section-label">01 / 实验速览</p><h2>先建立观察顺序，再解释结论从哪里来。</h2></div><div class="scan-grid"><article class="scan"><strong>验证对象</strong><p>从市场环境到个股依据的每日观察闭环。</p></article><article class="scan"><strong>当前状态</strong><p>面向电脑端使用的网页量化观察工具。</p></article><article class="scan"><strong>数据边界</strong><p>依赖外部行情、本地缓存与当前浏览器状态。</p></article><article class="scan"><strong>证据结构</strong><p>市场、个股、系统说明和策略设置四类界面。</p></article></div></div></section>
+    <section class="section evidence-band" id="screens"><div><div class="section-head"><p class="section-label">02 / 主界面证据</p><h2>先看市场环境，再进入一只股票的走势与依据。</h2><p class="section-intro">两张主证据证明观察路径的主体，不证明行情永远实时或结论可以直接执行。</p></div><div class="screens">
+      <article class="screen evidence-stage"><div class="screen-copy"><span class="stage-index">Stage A / 市场环境</span><h3>价格轨道、技术指标与每日结论在同一观察面</h3><p>三栏结构让用户先选择指数，再看图表，最后阅读仓位、风险和关键推导依据。</p><span class="verification-note">真实截图 · 2026-07-13 · revision ae50972b</span></div><figure><img src="../../assets/cases/dailyglance/02-market-dashboard.png" alt="DailyGlance 市场总览、价格轨道和每日结论界面" /></figure></article>
+      <article class="screen evidence-stage"><div class="screen-copy"><span class="stage-index blue">Stage B / 个股聚焦</span><h3>自选股下钻保留走势、仓位、风险和失效条件</h3><p>个股详情把“看到一只股票”变成可解释的观察：结论旁边保留仓位上限、防守位、压力区和关键依据。</p><span class="verification-note">真实截图 · 2026-07-13 · revision ae50972b</span></div><figure><img src="../../assets/cases/dailyglance/03-watchlist-stock-detail.png" alt="DailyGlance 自选股贵州茅台的走势与观察结论界面" /></figure></article>
+    </div></div></section>
+    <section class="section support-band" id="explain"><div><div class="section-head"><p class="section-label">03 / 解释与配置证据</p><h2>阅读路径被说明，策略条件也可以被看见。</h2><p class="section-intro">这两张图只证明系统提供解释和配置入口，不与市场总览主证据平级。</p></div><div class="screens">
+      <article class="screen evidence-stage"><div class="screen-copy"><span class="stage-index">Guide / 阅读方式</span><h3>系统说明把选择、看盘和决策串成明确路径</h3><p>帮助层解释左侧导航、中间图表和右侧面板各自承担什么责任，降低第一次使用的理解成本。</p><span class="verification-note">真实截图 · 2026-07-13 · revision ae50972b</span></div><figure><img src="../../assets/cases/dailyglance/01-system-guide-overlay.png" alt="DailyGlance 系统说明与阅读路径弹窗" /></figure></article>
+      <article class="screen evidence-stage"><div class="screen-copy"><span class="stage-index blue">Settings / 规则配置</span><h3>策略类型与信号积分条件被显式暴露</h3><p>设置面板允许用户查看和调整策略类型、买入信号与风险条件；可配置不代表策略已经被充分验证。</p><span class="verification-note">真实截图 · 2026-07-13 · revision ae50972b</span></div><figure><img src="../../assets/cases/dailyglance/04-strategy-settings-panel.png" alt="DailyGlance 策略类型与信号积分设置界面" /></figure></article>
+    </div></div></section>
+    <section class="section scope-band" id="boundary"><div><div class="section-head"><p class="section-label">04 / 运行边界</p><h2>它组织观察，不替代数据校验和独立判断。</h2><p class="section-intro">完整项目在本地维护，GitHub Pages 只部署必要页面资源；工具以电脑端为主，移动端不承诺完整交易终端体验。</p></div><div class="boundary-note"><p><strong>关键限制：</strong>行情依赖外部接口与缓存，策略结论只用于观察、研究和复盘，不构成买卖建议，也不执行任何账户操作。</p></div></div></section>
+    <section class="section system-band" id="flow"><div><div class="section-head"><p class="section-label">05 / 六步观察流程</p><h2>从环境到记录，每一步都保留判断依据。</h2></div><div class="flow"><div class="step"><b>01 · 选择环境</b><span>先看核心指数与市场温度。</span></div><div class="step"><b>02 · 查看轨道</b><span>阅读 K 线、均线和技术指标。</span></div><div class="step"><b>03 · 聚焦候选</b><span>进入自选股或目标个股。</span></div><div class="step"><b>04 · 阅读依据</b><span>检查仓位、风险和失效条件。</span></div><div class="step"><b>05 · 调整策略</b><span>查看策略类型与评分规则。</span></div><div class="step"><b>06 · 留下观察</b><span>把当天状态用于后续复盘。</span></div></div><div class="decision-grid"><article class="decision-note"><strong>历史与实时叠加</strong><p>历史 K 线和实时行情共同服务图表最后一根与右侧报价，任一来源异常都会影响观察可信度。</p></article><article class="decision-note"><strong>浏览器本地状态</strong><p>自选、缓存和部分偏好保留在当前浏览器，适合个人工具，不等于跨设备数据仓库。</p></article></div></div></section>
+    <section class="section finding-band" id="finding"><div><div class="section-head"><p class="section-label">06 / 实验结论</p><h2>观察路径已经成立，数据与策略可信度仍需持续证明。</h2></div><div class="cards"><article class="card"><h3>已成立</h3><p>市场、图表、结论与解释形成了稳定的三栏阅读顺序，个股下钻也保留风险和依据。</p></article><article class="card"><h3>仍薄弱</h3><p>外部数据稳定性、实时状态一致性和策略样本验证仍会直接限制结论可信度。</p></article></div></div></section>
+    <section class="section next-band" id="next"><div><div class="section-head"><p class="section-label">07 / 限制与下一步</p><h2>先提高状态可信度，再扩展更多观察功能。</h2></div><div class="cards"><article class="card"><h3>P0 · 数据状态</h3><p>让历史、实时、缓存和降级状态始终可见、可诊断。</p></article><article class="card"><h3>P1 · 策略证据</h3><p>扩大样本验证，记录信号、仓位和失效条件的稳定性。</p></article><article class="card"><h3>P2 · 观察记录</h3><p>把每日状态和关键依据沉淀为可比较的复盘记录。</p></article></div></div></section>
+  </main>
+  <footer class="footer">© 2026 LINPO LAB · DailyGlance 每日观察实验</footer>
+</body>
+</html>

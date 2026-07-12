@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="韭菜策略（LeekQuant）是一次验证策略配置、收盘扫描、信号检查、模拟记录与历史回看的收盘复盘原型。" />
+    <meta name="author" content="Linpo Wu" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:site_name" content="LINPO LAB" />
+    <meta property="og:title" content="韭菜策略（LeekQuant）收盘复盘实验 | LINPO LAB" />
+    <meta property="og:description" content="验证收盘复盘与策略验证能否形成一条可检查的双回路，同时保留数据与回测可信度的质疑入口。" />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="../../assets/cases/leek-strategy/cover-1200x630.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="韭菜策略收盘复盘与策略验证实验封面" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="韭菜策略（LeekQuant）收盘复盘实验 | LINPO LAB" />
+    <meta name="twitter:description" content="验证收盘复盘与策略验证能否形成一条可检查的双回路，同时保留数据与回测可信度的质疑入口。" />
+    <meta name="twitter:image" content="../../assets/cases/leek-strategy/cover-1200x630.jpg" />
+    <link rel="icon" type="image/png" href="../../assets/optimized/linpo-hero-avatar-192.png" />
+    <link rel="stylesheet" href="../../assets/exploration-page-system.css" />
+    <link rel="stylesheet" href="../../assets/exploration-default-layout.css" />
+    <link rel="stylesheet" href="../../assets/exploration-page-style-base.css" />
+    <link rel="stylesheet" href="../../assets/exploration-default-style.css" />
+    <title>韭菜策略（LeekQuant）收盘复盘实验 | LINPO LAB</title>
+    <style>
+      :root {
+        --paper: #f5f3ed;
+        --surface: #fffefa;
+        --ink: #202820;
+        --text: #5b655c;
+        --line: #d8ded7;
+        --accent: #347052;
+        --accent-2: #416b8a;
+        --risk: #a57616;
+        --dark: #1d2922;
+        --nav-line: rgba(216, 222, 215, .92);
+        --nav-background: rgba(245, 243, 237, .96);
+        --chip-border: rgba(52, 112, 82, .25);
+        --chip-text: #526159;
+        --project-link-color: #58645d;
+        --band-summary: #e8eee8;
+        --band-evidence: #fffefa;
+        --band-scope: #edf0ec;
+        --band-system: #f5f3ed;
+        --band-finding: #1d2922;
+        --band-next: #f5f3ed;
+        --finding-accent: #acd4b8;
+        --finding-text: #cad8ce;
+        --finding-card-line: rgba(172, 212, 184, .2);
+        --figure-background: #edf0ed;
+        --flow-columns: 5;
+        --flow-line: #347052;
+      }
+
+      .leekquant-v2-theme .hero { background: var(--paper); }
+      .leekquant-v2-theme .hero::before,
+      .leekquant-v2-theme .hero::after {
+        left: 50%;
+        width: min(820px, 82vw);
+        height: 54px;
+        opacity: .55;
+        transform: translateX(-50%);
+        background-repeat: no-repeat;
+      }
+      .leekquant-v2-theme .hero::before {
+        top: 42%;
+        background:
+          radial-gradient(circle at 10% 50%, rgba(52,112,82,.85) 0 4px, transparent 5px),
+          radial-gradient(circle at 90% 50%, rgba(52,112,82,.65) 0 4px, transparent 5px),
+          linear-gradient(90deg, transparent 9%, rgba(52,112,82,.22) 20%, rgba(52,112,82,.22) 80%, transparent 91%) center / 100% 1px no-repeat;
+        animation: review-path 9s ease-in-out infinite alternate;
+      }
+      .leekquant-v2-theme .hero::after {
+        top: calc(42% + 54px);
+        background:
+          radial-gradient(circle at 16% 50%, rgba(65,107,138,.75) 0 4px, transparent 5px),
+          radial-gradient(circle at 84% 50%, rgba(165,118,22,.65) 0 4px, transparent 5px),
+          linear-gradient(90deg, transparent 15%, rgba(65,107,138,.2) 26%, rgba(65,107,138,.2) 74%, transparent 85%) center / 100% 1px no-repeat;
+        animation: validation-path 11s ease-in-out infinite alternate;
+      }
+      @keyframes review-path { to { opacity: .3; transform: translateX(-50%) scaleX(.9); } }
+      @keyframes validation-path { to { opacity: .28; transform: translateX(-50%) scaleX(.94); } }
+
+      .evidence-stage + .evidence-stage {
+        margin-top: clamp(48px, 7vw, 84px);
+        padding-top: clamp(38px, 5vw, 58px);
+        border-top: 1px solid var(--line);
+      }
+      .stage-index {
+        display: inline-flex;
+        margin-bottom: 12px;
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+      }
+      .validation-loop .stage-index { color: var(--accent-2); }
+      .evidence-bridge {
+        max-width: 760px;
+        margin: 28px 0 0;
+        padding: 16px 18px;
+        border-top: 1px solid rgba(52,112,82,.28);
+        background: rgba(232,238,232,.52);
+        color: var(--text);
+      }
+      .verification-note {
+        display: block;
+        margin-top: 10px;
+        color: var(--risk);
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .risk-note,
+      .limitation-note {
+        max-width: 860px;
+        padding: 18px 20px;
+        border: 1px solid rgba(165,118,22,.28);
+        border-top: 3px solid var(--risk);
+        background: #f8f2df;
+        color: var(--text);
+      }
+      .risk-note { margin: 0 0 30px; }
+      .limitation-note { margin: 0 0 28px; }
+      .risk-note p,
+      .limitation-note p { margin: 0; }
+      .decision-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 38px;
+      }
+      .decision-note {
+        padding: 22px;
+        border: 1px solid var(--line);
+        border-radius: var(--exploration-radius-card);
+        background: var(--surface);
+      }
+      .decision-note strong { display: block; margin-bottom: 7px; color: var(--accent); }
+      .decision-note p { margin: 0; color: var(--text); }
+      .next-band .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+      @media (max-width: 720px) {
+        .leekquant-v2-theme .hero::before { top: 43%; width: 94vw; opacity: .3; }
+        .leekquant-v2-theme .hero::after { top: calc(43% + 48px); width: 94vw; opacity: .25; }
+        .leekquant-v2-theme .scan-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .leekquant-v2-theme .flow,
+        .decision-grid,
+        .next-band .cards { grid-template-columns: 1fr; }
+      }
+      @media (max-width: 430px) {
+        .leekquant-v2-theme .scan-grid { grid-template-columns: 1fr; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        .leekquant-v2-theme .hero::before,
+        .leekquant-v2-theme .hero::after { animation: none; }
+      }
+    </style>
+  </head>
+  <body class="exploration-page leekquant-v2-theme" data-layout-dna="exploration-default-layout" data-style-dna="exploration-default-style" data-style-lock="exploration-default" data-calibration-state="production">
+    <nav class="nav" aria-label="页面导航">
+      <a class="brand" href="../../index.html#experiments" aria-label="返回 LINPO LAB 首页探索实验"><strong>LINPO LAB</strong><span>Exploration Lab</span></a>
+      <div class="nav-links"><a href="#screens">界面证据</a><a href="#flow">复盘流程</a><a href="#next">下一步</a><a class="back-link" href="../../index.html#experiments">返回探索实验</a></div>
+    </nav>
+
+    <header class="hero" id="overview">
+      <div class="hero-grid">
+        <p class="eyebrow">Closing review and strategy validation prototype</p>
+        <h1>韭菜策略</h1>
+        <p class="hero-lead">验证策略配置、收盘扫描、信号检查、模拟记录与历史回看能否组成一条可检查的复盘路径，并为策略可信度保留质疑入口。</p>
+        <div class="hero-actions"><a class="button" href="#screens">查看界面证据</a><a class="button ghost" href="#flow">查看复盘流程</a></div>
+        <div class="chips"><span class="chip">本地原型</span><span class="chip">收盘后观察</span><span class="chip">流程验证</span></div>
+        <div class="project-links"><a href="https://woodslope.github.io/leekquant/" target="_blank" rel="noreferrer">线上演示</a><span aria-hidden="true">·</span><a href="https://github.com/WoodSlope/leekquant" target="_blank" rel="noreferrer">GitHub 仓库</a></div>
+      </div>
+    </header>
+
+    <main>
+      <section class="section summary-band" id="summary">
+        <div>
+          <div class="section-head"><p class="section-label">01 / 实验速览</p><h2>先确认复盘流程成立，再讨论策略是否可信。</h2></div>
+          <div class="scan-grid">
+            <article class="scan"><strong>验证对象</strong><p>策略配置到历史回看的收盘后复盘闭环。</p></article>
+            <article class="scan"><strong>当前状态</strong><p>可演示的本地原型与 GitHub 收盘静态版。</p></article>
+            <article class="scan"><strong>数据边界</strong><p>收盘或样本数据，不是盘中实时行情。</p></article>
+            <article class="scan"><strong>证据结构</strong><p>监控、历史、策略与回测四个界面阶段。</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section evidence-band daily-loop" id="screens">
+        <div>
+          <div class="section-head"><p class="section-label">02 / 日常复盘证据</p><h2>从收盘检查进入候选信号，再回看模拟动作。</h2><p class="section-intro">监控页是第一主证据，历史页完成动作回看；两张界面共同说明模拟复盘记录如何被检查与追溯。</p></div>
+          <div class="screens">
+            <article class="screen evidence-stage">
+              <div class="screen-copy"><span class="stage-index">Stage A / 收盘检查</span><h3>策略漏斗、收盘信号和模拟持仓同时可见</h3><p>监控页把规则筛选结果、候选信号和当前模拟持仓放在同一检查面，证明复盘动作正在发生。</p><span class="verification-note">线上截图 · 2026-07-13 · ?tab=监控 · revision 4ae82bff</span></div>
+              <figure><img src="../../assets/cases/leek-strategy/recaptured-20260713-monitor.png" alt="韭菜策略监控页，展示策略漏斗、收盘信号和模拟持仓" /></figure>
+              <p class="evidence-bridge">这张图只证明收盘检查的界面流程可见，不证明信号准确、数据实时或策略盈利。</p>
+            </article>
+            <article class="screen evidence-stage">
+              <div class="screen-copy"><span class="stage-index">Stage B / 动作回看</span><h3>模拟动作保留收益、纪律和离场原因</h3><p>历史页让一次模拟记录可以被复查，帮助用户讨论规则是否被执行。</p><span class="verification-note">线上截图 · 2026-07-13 · ?tab=历史 · revision 4ae82bff</span></div>
+              <figure><img src="../../assets/cases/leek-strategy/recaptured-20260713-history.png" alt="韭菜策略历史页，展示模拟动作、纪律状态和离场原因" /></figure>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section evidence-band validation-loop" id="validation">
+        <div>
+          <div class="section-head"><p class="section-label">03 / 策略验证证据</p><h2>规则可以讨论，回测可信度仍需单独成立。</h2><p class="section-intro">策略配置解释信号从何而来；回测页只证明验证入口存在，不能被称为结果证明。</p></div>
+          <div class="screens">
+            <article class="screen evidence-stage">
+              <div class="screen-copy"><span class="stage-index">Stage C / 规则来源</span><h3>发现、确认与离场条件被拆成可配置规则</h3><p>策略页将大盘环境、发现阶段、入场确认和离场规则显式展开，使规则能够被讨论和修改。</p><span class="verification-note">线上截图 · 2026-07-13 · ?tab=策略 · revision 4ae82bff</span></div>
+              <figure><img src="../../assets/cases/leek-strategy/recaptured-20260713-strategy.png" alt="韭菜策略配置页，展示市场、发现、确认和离场规则" /></figure>
+            </article>
+            <article class="screen evidence-stage">
+              <div class="screen-copy"><span class="stage-index">Stage D / 验证缺口</span><h3>回测任务与导入入口已经存在，严格验证尚未成立</h3><div class="risk-note"><p><strong>验证边界：</strong>当前回测尚未完整覆盖滑点、手续费、停牌、涨跌停、复权与逐日持仓，不能据此宣称策略收益成立。</p></div><span class="verification-note">线上截图 · 2026-07-13 · ?tab=回测 · revision 4ae82bff</span></div>
+              <figure><img src="../../assets/cases/leek-strategy/recaptured-20260713-backtest.png" alt="韭菜策略回测页，展示回测任务和策略导入入口" /></figure>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section scope-band" id="runtime">
+        <div>
+          <div class="section-head"><p class="section-label">04 / 运行边界</p><h2>本地完整交互与 GitHub 收盘静态版是两种不同形态。</h2><p class="section-intro">本地版通过 <code>/api/*</code> 使用 Python API、SQLite 和浏览器存储；GitHub 版由 Actions 收盘后生成静态 JSON，只提供只读复盘。</p></div>
+          <div class="scope-grid">
+            <p class="scope-copy"><strong>数据源会降级。</strong>系统按 AKShare → BaoStock → 新浪 → mock 尝试。免费源失败后，页面仍可能显示样本数据，因此数据源状态必须与结果一起阅读。</p>
+            <div class="risk-note"><p><strong>运行范围：</strong>GitHub 版只读；本地原型不接入真实账户、不执行订单，也不提供盘中实时扫描。</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section system-band" id="flow">
+        <div>
+          <div class="section-head"><p class="section-label">05 / 五步复盘流程</p><h2>把规则、信号、模拟动作和回看串成一条可检查路径。</h2></div>
+          <div class="flow">
+            <div class="step"><b>01 · 配置</b><span>明确市场、发现、确认和离场规则。</span></div>
+            <div class="step"><b>02 · 收盘扫描</b><span>在收盘数据上生成候选结果。</span></div>
+            <div class="step"><b>03 · 信号检查</b><span>查看漏斗、候选与数据源状态。</span></div>
+            <div class="step"><b>04 · 模拟记录</b><span>记录模拟买入、持仓和离场动作。</span></div>
+            <div class="step"><b>05 · 历史回看</b><span>复查纪律执行与离场原因。</span></div>
+          </div>
+          <div class="decision-grid">
+            <article class="decision-note"><strong>数据来源降级</strong><p>真实免费源不可用时继续降级，最终可能使用 mock；warning 必须保留，样本不能伪装成真实行情。</p></article>
+            <article class="decision-note"><strong>本地与浏览器存储</strong><p>SQLite 缓存行情；IndexedDB 恢复扫描记录；localStorage 保存策略和历史。这些都不是跨设备长期数据库。</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section finding-band" id="finding">
+        <div>
+          <div class="section-head"><p class="section-label">06 / 实验结论</p><h2>产品流程已经成立，数据和回测可信度还没有。</h2></div>
+          <div class="cards">
+            <article class="card"><h3>已成立</h3><p>策略规则可以被配置和讨论，收盘检查、模拟记录与历史回看形成了可演示的产品路径。</p></article>
+            <article class="card"><h3>仍薄弱</h3><p>免费数据源、真实指标计算、逐日回测、交易成本与长期存储尚不足以支撑真实交易判断。</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section next-band" id="next">
+        <div>
+          <div class="section-head"><p class="section-label">07 / 限制与下一步</p><h2>先明确产品定位，再补规则、指标和数据基础。</h2></div>
+          <div class="limitation-note"><p><strong>当前限制：</strong>本页截图已于 2026-07-13 从公开 Pages 重新采集；截图证明当前界面状态，但原型完成度仍不能等同于交易产品完成度。</p></div>
+          <div class="cards">
+            <article class="card"><h3>P0 · 定位与可信度</h3><p>明确继续做产品演示还是辅助交易工具，并建立截图、数据源和版本证据链。</p></article>
+            <article class="card"><h3>P1 · 规则与指标</h3><p>收敛前后端策略规则，基于历史 K 线计算真实 MA、MACD、RSI、突破与止损。</p></article>
+            <article class="card"><h3>P2 · 数据与持久化</h3><p>重做逐日回测数据流，把策略、回测和交易历史迁移到可靠的本地数据层。</p></article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">© 2026 LINPO LAB · 韭菜策略（LeekQuant）收盘复盘实验</footer>
+  </body>
+</html>

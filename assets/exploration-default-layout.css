@@ -1,0 +1,50 @@
+/* 默认探索实验布局 DNA：信息排布、阅读节奏与响应式密度。 */
+
+:root {
+  --exploration-page-max: 1120px;
+  --exploration-nav-height: 64px;
+  --exploration-page-x: 24px;
+  --exploration-section-y: 76px;
+  --exploration-hero-min-height: clamp(430px, 56vh, 610px);
+  --exploration-hero-padding-top: 96px;
+  --exploration-hero-padding-bottom: 72px;
+  --exploration-hero-content-max: 760px;
+  --exploration-title-max: 720px;
+  --exploration-lead-max: 630px;
+  --exploration-section-head-max: 760px;
+  --exploration-copy-max: 720px;
+  --exploration-scope-copy-max: 660px;
+  --exploration-nav-gap: 18px;
+  --exploration-action-gap: 10px;
+  --exploration-card-gap: 12px;
+  --exploration-evidence-gap: 44px;
+  --exploration-flow-columns: 3;
+}
+
+.exploration-page .nav-links { gap: var(--exploration-nav-gap); }
+.exploration-page .hero { min-height: var(--exploration-hero-min-height); padding: var(--exploration-hero-padding-top) var(--exploration-page-x) var(--exploration-hero-padding-bottom); }
+.exploration-page .hero-grid { width: min(var(--exploration-hero-content-max), 100%); }
+.exploration-page h1 { max-width: var(--exploration-title-max); }
+.exploration-page .hero-lead { max-width: var(--exploration-lead-max); }
+.exploration-page .hero-actions,
+.exploration-page .project-links,
+.exploration-page .chips { gap: var(--exploration-action-gap); }
+.exploration-page .section { padding: var(--exploration-section-y) var(--exploration-page-x); }
+.exploration-page .section > div { width: min(var(--exploration-page-max), 100%); }
+.exploration-page .section-head { max-width: var(--exploration-section-head-max); }
+.exploration-page .section-intro { max-width: var(--exploration-copy-max); }
+.exploration-page .scan-grid,
+.exploration-page .cards,
+.exploration-page .flow { gap: var(--exploration-card-gap); }
+.exploration-page .screens { gap: var(--exploration-evidence-gap); }
+.exploration-page .scope-copy { max-width: var(--exploration-scope-copy-max); }
+.exploration-page .flow { grid-template-columns: repeat(var(--flow-columns, var(--exploration-flow-columns)), minmax(0, 1fr)); }
+
+@media (max-width: 720px) {
+  :root { --exploration-page-x: 20px; --exploration-section-y: 54px; }
+  .exploration-page .hero { min-height: 0; padding: 76px 20px 52px; }
+  .exploration-page .nav-links { gap: 10px; }
+  .exploration-page .scan-grid,
+  .exploration-page .cards,
+  .exploration-page .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

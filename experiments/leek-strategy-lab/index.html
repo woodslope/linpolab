@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="韭菜策略是一次收盘复盘流程原型实验，关注策略条件、信号筛选、模拟持仓与回测入口能否被清晰组织。" />
+    <meta name="author" content="Linpo Wu" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:site_name" content="LINPO LAB" />
+    <meta property="og:title" content="韭菜策略原型实验 | LINPO LAB" />
+    <meta property="og:description" content="一个用于验证 A 股收盘后策略复盘流程的本地工具原型，关注流程、证据和运行边界。" />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="../../assets/cases/leek-strategy/cover-1200x630.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="韭菜策略原型实验封面，展示收盘复盘工具原型截图和标题。" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="韭菜策略原型实验 | LINPO LAB" />
+    <meta name="twitter:description" content="A 股收盘后策略复盘工具原型，验证策略条件、信号筛选、模拟持仓与回测入口。" />
+    <meta name="twitter:image" content="../../assets/cases/leek-strategy/cover-1200x630.jpg" />
+    <link rel="icon" type="image/png" href="../../assets/optimized/linpo-hero-avatar-192.png" />
+    <link rel="stylesheet" href="../../assets/exploration-page-system.css" />
+    <link rel="stylesheet" href="../../assets/exploration-default-layout.css" />
+    <link rel="stylesheet" href="../../assets/exploration-page-style-base.css" />
+    <link rel="stylesheet" href="../../assets/exploration-default-style.css" />
+    <title>韭菜策略原型实验 | LINPO LAB</title>
+    <style>
+      :root { --paper:#f7f8f4; --surface:#fff; --ink:#18221d; --text:#57655d; --line:#dce4dd; --accent:#0d9562; --accent-2:#b3df4d; --dark:#101512; --nav-line:rgba(220,228,221,.9); --nav-background:rgba(247,248,244,.96); --chip-border:rgba(13,149,98,.24); --chip-text:#456458; --project-link-color:#52665a; --band-summary:#f3f8f2; --band-evidence:#fff; --band-scope:#edf6ee; --band-system:#f8faf7; --band-finding:#101512; --band-next:#f7f9f6; --finding-accent:#b3df4d; --finding-text:#c7d8cc; --finding-card-line:rgba(179,223,77,.24); --figure-line:#242b27; --figure-background:#101512; --footer-text:#bcd0c1; --flow-columns:5; --flow-line-width:2px; --flow-line:#0d9562; --subsection-line:rgba(24,34,29,.14); --system-panel-line:rgba(13,149,98,.16); --system-panel-background:#f3f8f2; }
+      .leek-strategy-theme .hero { background:#f6f9f3; }
+      .leek-strategy-theme .hero::before { inset:-18%; opacity:.62; background:radial-gradient(ellipse 34% 28% at 16% 30%,rgba(179,223,77,.22),transparent 72%),radial-gradient(ellipse 28% 34% at 84% 68%,rgba(13,149,98,.15),transparent 74%),radial-gradient(ellipse 24% 20% at 68% 20%,rgba(13,149,98,.1),transparent 76%); transform:translate3d(-1%,1%,0) scale(1.02); }
+      .leek-strategy-theme .hero::after { inset:-12%; opacity:.38; background:radial-gradient(ellipse 40% 30% at 76% 36%,rgba(179,223,77,.13),transparent 76%),radial-gradient(ellipse 34% 32% at 28% 76%,rgba(13,149,98,.1),transparent 78%); transform:translate3d(1%,-1%,0) scale(.98); }
+      @media (prefers-reduced-motion:no-preference) { .leek-strategy-theme .hero::before { animation:closing-fields 11s ease-in-out infinite alternate; } .leek-strategy-theme .hero::after { animation:review-fields 8s ease-in-out infinite alternate; } }
+      @keyframes closing-fields { to { transform:translate3d(1.5%,-1%,0) scale(.98); opacity:.42; } }
+      @keyframes review-fields { to { transform:translate3d(-1%,1%,0) scale(1.03); opacity:.58; } }
+    </style>
+  </head>
+  <body class="exploration-page leek-strategy-theme" data-layout-dna="exploration-default-layout" data-style-dna="exploration-default-style">
+    <nav class="nav" aria-label="页面导航"><a class="brand" href="../../index.html#experiments" aria-label="返回 LINPO LAB 首页探索实验"><strong>LINPO LAB</strong><span>Exploration Lab</span></a><div class="nav-links"><a href="#overview">概览</a><a href="#screens">证据</a><a href="#boundary">边界</a><a href="#next">下一步</a><a class="back-link" href="../../index.html#experiments">返回探索实验</a></div></nav>
+    <header class="hero" id="overview"><div class="hero-grid"><p class="eyebrow">Closing review prototype</p><h1>韭菜策略</h1><p class="hero-lead">把收盘后的策略条件、候选信号、模拟持仓与回测入口组织成可检查的复盘路径，验证流程能否先于结果被清楚地跑通。</p><div class="hero-actions"><a class="button" href="#screens">查看界面证据</a><a class="button ghost" href="#flow">查看复盘流程</a></div><div class="chips"><span class="chip">本地原型</span><span class="chip">收盘复盘</span><span class="chip">不做真实执行</span></div><div class="project-links"><a href="https://woodslope.github.io/leekquant/" target="_blank" rel="noreferrer">线上演示</a><span>·</span><a href="https://github.com/WoodSlope/leekquant" target="_blank" rel="noreferrer">GitHub 仓库</a></div></div></header>
+    <main>
+      <section class="section summary-band" id="summary"><div><div class="section-head"><p class="section-label">Experiment summary</p><h2>先确认原型验证的是复盘闭环，不是策略结果。</h2></div><div class="scan-grid"><article class="scan"><strong>验证对象</strong><p>收盘后从条件到记录的复盘工作流是否可追溯。</p></article><article class="scan"><strong>当前状态</strong><p>包含监控、历史、策略和回测四个界面入口。</p></article><article class="scan"><strong>运行边界</strong><p>原型在本地与展示环境中使用样本化数据。</p></article><article class="scan"><strong>证据类型</strong><p>四组界面状态对应五个连续复盘动作。</p></article></div></div></section>
+      <section class="section evidence-band" id="screens"><div><div class="section-head"><p class="section-label">Interface evidence</p><h2>先看界面证据：它们显示流程已经被拆到什么粒度。</h2><p class="section-intro">每张截图说明一个可观察动作，不把界面当成产品包装素材。</p></div><div class="screens"><article class="screen"><div class="screen-copy"><h3>监控页把市场条件、候选信号和持仓风险放在一次收盘检查里</h3><p>左侧漏斗展示筛选阶段，右侧候选与持仓同时出现，验证复盘不是只看一个买卖提示。</p></div><figure><img src="../../assets/cases/leek-strategy/01-monitor.jpg" alt="韭菜策略收盘监控界面" /></figure></article><article class="screen"><div class="screen-copy"><h3>历史页为模拟动作留下可复查的时间线</h3><p>它验证的是“为什么当时会出现这条记录”能否回看，而不是模拟结果本身是否有代表性。</p></div><figure><img src="../../assets/cases/leek-strategy/02-history.jpg" alt="韭菜策略历史记录界面" /></figure></article><article class="screen"><div class="screen-copy"><h3>策略页把主观想法拆成可讨论的条件与阈值</h3><p>策略不再只是一个名称；条件被显示为可以逐项检查、修改和复盘的配置。</p></div><figure><img src="../../assets/cases/leek-strategy/03-strategy.jpg" alt="韭菜策略配置界面" /></figure></article><article class="screen"><div class="screen-copy"><h3>回测页保留验证入口，也明确它尚未构成严格验证</h3><p>入口的价值是暴露下一阶段需要补足的数据与评价逻辑，而不是制造完成错觉。</p></div><figure><img src="../../assets/cases/leek-strategy/04-backtest.jpg" alt="韭菜策略回测界面" /></figure></article></div></div></section>
+      <section class="section scope-band" id="boundary"><div><article class="subsection" id="question"><div class="section-head"><p class="section-label">Experiment question</p><h2>一套收盘复盘流程，能否先被组织成可检查的动作，再讨论它是否可信？</h2></div><div class="cards"><article class="card"><h3>要验证什么</h3><p>用户能否从市场开关进入条件判断、候选观察、持仓记录与后续复盘。</p></article><article class="card"><h3>为什么做它</h3><p>复盘常被压缩成结果陈述；本实验尝试保留每个判断阶段的可追溯关系。</p></article></div></article><article class="subsection"><div class="section-head"><p class="section-label">Runtime boundary</p><h2>原型可以跑流程，但没有资格替代数据校验、真实执行或收益判断。</h2></div><div class="cards"><article class="card"><h3>可验证的范围</h3><p>本地界面、步骤关系、样本化信号和模拟记录能否形成一次完整的复盘体验。</p></article><article class="card"><h3>不验证的范围</h3><p>实时行情准确性、策略收益、严谨回测与任何真实交易或账户执行能力。</p></article></div></article></div></section>
+      <section class="section mechanics-band" id="flow"><div><article class="subsection"><div class="section-head"><p class="section-label">Review flow</p><h2>五个阶段，把“看到信号”变成一条可以回看的链路。</h2></div><div class="flow"><div class="step"><b>01 环境</b><span>读取市场开关与前置条件。</span></div><div class="step"><b>02 筛选</b><span>确认候选是否通过漏斗。</span></div><div class="step"><b>03 观察</b><span>检查信号出现的来由。</span></div><div class="step"><b>04 记录</b><span>保存模拟持仓与变化。</span></div><div class="step"><b>05 回看</b><span>为后续验证保留入口。</span></div></div></article><article class="subsection system-subsection" id="data"><div class="section-head"><p class="section-label">System decision</p><h2>流程原型需要把数据等级与回测缺口一起显示出来。</h2></div><div class="cards"><article class="card"><h3>数据决策</h3><p>当前以样本和半自动刷新场景验证流程；数据层级必须被看作原型条件而非真实基础设施。</p></article><article class="card"><h3>回测决策</h3><p>回测入口用于确认后续需要什么验证能力，尚未定义为可比较、可复现实验结果。</p></article></div></article></div></section>
+      <section class="section finding-band" id="conclusion"><div><div class="section-head"><p class="section-label">Experiment finding</p><h2>流程能跑通，但可信度不会因为页面完整就自动成立。</h2></div><div class="cards"><article class="card"><h3>已成立</h3><p>从策略条件到记录的流程可以被界面拆解、检查并作为复盘共同语言。</p></article><article class="card"><h3>仍薄弱</h3><p>数据质量、指标定义与回测方法还不足以支撑结果层面的判断。</p></article></div></div></section>
+      <section class="section future-band" id="limits"><div><article class="subsection"><div class="section-head"><p class="section-label">Limitations</p><h2>这是流程原型，不是完整的策略产品。</h2></div><div class="cards"><article class="card"><h3>样本限制</h3><p>截图与样本数据说明界面能力，不能代表长期市场环境。</p></article><article class="card"><h3>验证限制</h3><p>缺少严格数据回放、参数对照与长期观察，无法推出策略层结论。</p></article></div></article><article class="subsection" id="next"><div class="section-head"><p class="section-label">Next</p><h2>下一轮先做可信度基建，再增加新的策略表达。</h2></div><div class="cards"><article class="card"><h3>P0 · 数据与指标</h3><p>明确数据来源、更新规则和每个条件的定义与测试方式。</p></article><article class="card"><h3>P1 · 回放与记录</h3><p>让历史状态可重放、可比较，并把模拟记录与条件关联起来。</p></article></div></article></div></section>
+    </main>
+    <footer class="footer">© 2026 LINPO LAB · 韭菜策略原型实验</footer>
+  </body>
+</html>

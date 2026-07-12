@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="DailyGlance 是一次量化观察终端的界面组织实验。" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:site_name" content="LINPO LAB" />
+    <meta property="og:title" content="DailyGlance 量化观察终端实验 | LINPO LAB" />
+    <meta property="og:description" content="一个浏览器里的 A 股观察与复盘工具实验，验证信息组织、观察路径和界面解释。" />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="../../assets/cases/dailyglance/02-market-dashboard.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="../../assets/cases/dailyglance/02-market-dashboard.png" />
+    <link rel="icon" type="image/png" href="../../assets/optimized/linpo-hero-avatar-192.png" />
+    <link rel="stylesheet" href="../../assets/exploration-page-system.css" />
+    <link rel="stylesheet" href="../../assets/exploration-default-layout.css" />
+    <link rel="stylesheet" href="../../assets/exploration-page-style-base.css" />
+    <link rel="stylesheet" href="../../assets/exploration-default-style.css" />
+    <title>DailyGlance 量化观察终端实验 | LINPO LAB</title>
+    <style>
+      :root { --paper:#f6f8fc; --surface:#fff; --ink:#15213b; --text:#53627c; --line:#d8e1f0; --accent:#356cf2; --accent-2:#08a4c7; --dark:#121c34; --nav-line:rgba(216,225,240,.9); --nav-background:rgba(246,248,252,.96); --chip-border:rgba(53,108,242,.22); --chip-text:#465779; --project-link-color:#52627d; --band-summary:#eef7fb; --band-evidence:#fff; --band-scope:#eef7fb; --band-system:#f7f8fa; --band-finding:#121c34; --band-next:#f7f8fa; --finding-accent:#a7c0ff; --finding-text:#c7d2eb; --figure-line:#d8deeb; --figure-background:#101726; --footer-text:#b8c5e4; --flow-columns:3; }
+      .dailyglance-theme .hero { background:#f7f9ff; }
+      .dailyglance-theme .hero::before { inset:-18%; opacity:.78; background:radial-gradient(circle at 13% 22%,rgba(53,108,242,.38) 0 3px,transparent 3.8px),radial-gradient(circle at 24% 68%,rgba(8,164,199,.28) 0 2px,transparent 2.8px),radial-gradient(circle at 40% 30%,rgba(112,103,232,.30) 0 3px,transparent 3.8px),radial-gradient(circle at 63% 76%,rgba(53,108,242,.24) 0 2px,transparent 2.8px),radial-gradient(circle at 78% 24%,rgba(8,164,199,.34) 0 3px,transparent 3.8px),radial-gradient(circle at 90% 59%,rgba(112,103,232,.27) 0 2px,transparent 2.8px),radial-gradient(ellipse 32% 28% at 14% 53%,rgba(53,108,242,.12),transparent 74%),radial-gradient(ellipse 30% 34% at 86% 48%,rgba(8,164,199,.1),transparent 75%); transform:translate3d(-1%,1%,0) scale(1.02); }
+      .dailyglance-theme .hero::after { inset:-13%; opacity:.52; background:radial-gradient(ellipse 42% 36% at 50% 48%,rgba(255,255,255,.92),transparent 70%),radial-gradient(ellipse 24% 20% at 68% 19%,rgba(112,103,232,.1),transparent 74%),radial-gradient(ellipse 24% 22% at 29% 79%,rgba(8,164,199,.1),transparent 75%); transform:translate3d(1%,-1%,0) scale(.98); }
+      @media (prefers-reduced-motion:no-preference) { .dailyglance-theme .hero::before { animation:point-cloud-breathe 11s ease-in-out infinite alternate; } .dailyglance-theme .hero::after { animation:focus-breathe 9s ease-in-out infinite alternate; } }
+      @keyframes point-cloud-breathe { to { transform:translate3d(1.5%,-1%,0) scale(1.05); opacity:.96; } }
+      @keyframes focus-breathe { to { transform:translate3d(-1%,1%,0) scale(1.04); opacity:.32; } }
+    </style>
+  </head>
+  <body class="exploration-page dailyglance-theme" data-layout-dna="exploration-default-layout" data-style-dna="exploration-default-style">
+    <nav class="nav" aria-label="页面导航"><a class="brand" href="../../index.html#experiments" aria-label="返回 LINPO LAB 首页探索实验"><strong>LINPO LAB</strong><span>Exploration Lab</span></a><div class="nav-links"><a href="#overview">概览</a><a href="#screens">证据</a><a href="#scope">边界</a><a href="#next">下一步</a><a class="back-link" href="../../index.html#experiments">返回探索实验</a></div></nav>
+    <header class="hero" id="overview"><div class="hero-grid"><p class="eyebrow">Observation interface experiment</p><h1>DailyGlance</h1><p class="hero-lead">把每日市场信息、观察依据和复盘动作排进同一条可解释路径，验证“先看什么、为什么看、下一步做什么”能否被清楚表达。</p><div class="hero-actions"><a class="button" href="#screens">查看界面证据</a><a class="button ghost" href="#system">查看观察流程</a></div><div class="chips"><span class="chip">界面组织实验</span><span class="chip">每日观察</span><span class="chip">不执行交易</span></div><div class="project-links"><a href="https://woodslope.github.io/DailyGlance/" target="_blank" rel="noreferrer">线上演示</a><span>·</span><a href="https://github.com/WoodSlope/DailyGlance" target="_blank" rel="noreferrer">GitHub 仓库</a></div></div></header>
+    <main>
+      <section class="section summary-band" id="summary"><div><div class="section-head"><p class="section-label">Experiment summary</p><h2>先确认这不是预测工具，而是一次解释密度的整理实验。</h2></div><div class="scan-grid"><article class="scan"><strong>验证对象</strong><p>把行情、指标和判断顺序排成可扫读的信息结构。</p></article><article class="scan"><strong>当前状态</strong><p>有完整界面路径与四组关键界面证据。</p></article><article class="scan"><strong>关键边界</strong><p>显示观察信号，不替代研究、判断或执行。</p></article><article class="scan"><strong>证据类型</strong><p>系统说明、行情总览、个股观察与配置界面。</p></article></div></div></section>
+      <section class="section evidence-band" id="screens"><div><div class="section-head"><p class="section-label">Interface evidence</p><h2>界面先出现：每一张都对应一个需要被解释的观察动作。</h2><p class="section-intro">截图不是展示装饰，而是检验信息能否在一屏里被读懂的证据。</p></div><div class="screens"><article class="screen"><div class="screen-copy"><h3>从系统说明开始，先建立“如何阅读”的共识</h3><p>引导层把观察步骤与界面角色放到同一入口，避免用户直接面对一组无上下文的指标。</p></div><figure><img src="../../assets/cases/dailyglance/01-system-guide-overlay.png" alt="DailyGlance 系统说明与使用引导界面" /></figure></article><article class="screen"><div class="screen-copy"><h3>市场总览让环境、图表和观察结论同时可见</h3><p>左侧环境概览、中部价格轨道、右侧解释结果形成一次从大盘到判断的连续阅读。</p></div><figure><img src="../../assets/cases/dailyglance/02-market-dashboard.png" alt="DailyGlance 市场总览与价格图表界面" /></figure></article><article class="screen"><div class="screen-copy"><h3>个股详情把标记、仓位与解释放进相邻语境</h3><p>验证单一标记不会脱离上下文出现，让观察者能追溯它来自哪一层条件。</p></div><figure><img src="../../assets/cases/dailyglance/03-watchlist-stock-detail.png" alt="DailyGlance 自选股详情界面" /></figure></article><article class="screen"><div class="screen-copy"><h3>策略设置把抽象规则变为可检查的配置</h3><p>用可阅读的开关与评分逻辑呈现策略条件，方便复盘“这个信号为什么出现”。</p></div><figure><img src="../../assets/cases/dailyglance/04-strategy-settings-panel.png" alt="DailyGlance 策略设置面板" /></figure></article></div></div></section>
+      <section class="section scope-band" id="scope"><div><div class="section-head"><p class="section-label">实验问题 / 运行边界</p><h2>复杂市场信息，能否被压缩成仍然保留来由的每日观察？</h2></div><div class="scope-grid"><div class="scope-copy"><p><strong>这次只验证信息表达。</strong>用户从全局环境进入个体观察时，是否始终看得见判断链路，而不是只接收结论。行情工具常在数据密度和可解释性之间失衡；这个实验尝试把两者组织在同一个终端里。</p></div><div class="cards"><article class="card"><h3>当前能够验证</h3><p>每日观察入口、图表关联、信号解释和策略配置是否能形成连续阅读。</p></article><article class="card"><h3>当前不验证</h3><p>实时数据稳定性、收益表现、策略有效性和任何真实交易执行能力。</p></article></div></div></div></section>
+      <section class="section system-band" id="system"><div><div class="section-head"><p class="section-label">Flow & system decision</p><h2>把每日观察变成一条可回看的顺序，也把输入显示为有边界的条件。</h2></div><div class="flow"><div class="step"><b>01 环境</b><span>先看市场整体状态。</span></div><div class="step"><b>02 轨道</b><span>读取价格与周期位置。</span></div><div class="step"><b>03 候选</b><span>进入自选观察对象。</span></div><div class="step"><b>04 来由</b><span>追溯信号触发条件。</span></div><div class="step"><b>05 配置</b><span>核对策略约束。</span></div><div class="step"><b>06 记录</b><span>保留下一次复盘线索。</span></div></div><div class="system-note"><strong>数据与策略口径：</strong>界面采用样本化观察数据来检验展示与解释层；策略参数被视为可讨论的条件集合，不能据此推断实时准确性或自动决策能力。</div></div></section>
+      <section class="section finding-band" id="conclusion"><div><div class="section-head"><p class="section-label">Experiment finding</p><h2>成立的是观察路径；仍然薄弱的是输入可信度与长期反馈。</h2></div><div class="cards"><article class="card"><h3>已成立</h3><p>信息由环境到个体、由图表到解释的阅读次序可以被界面承接。</p></article><article class="card"><h3>待验证</h3><p>数据刷新、参数校验与真实复盘记录还没有形成稳定的长期样本。</p></article></div></div></section>
+      <section class="section next-band" id="next"><div><div class="section-head"><p class="section-label">Limits & next</p><h2>界面完成度不等于观察结论可靠；下一轮先补“为什么可信”。</h2></div><div class="cards"><article class="card"><h3>当前限制</h3><p>截图只能证明界面状态与路径，无法证明多周期数据表现；信号解释也不能替代独立判断。</p></article><article class="card"><h3>P0 · 输入校验</h3><p>建立数据更新时间、异常与口径的可见提示，再把每日观察与后续结果关联为可回看的样本。</p></article></div></div></section>
+    </main>
+    <footer class="footer">© 2026 LINPO LAB · DailyGlance 量化观察终端实验</footer>
+  </body>
+</html>

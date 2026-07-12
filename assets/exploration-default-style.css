@@ -1,0 +1,27 @@
+/* 默认探索实验 Style Lock：无衬线研究感的 token。 */
+
+:root {
+  --exploration-font-sans: Inter, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+  --exploration-font-brand: "Arial Black", Arial, sans-serif;
+  --exploration-body-leading: 1.72;
+  --exploration-label-size: 12px;
+  --exploration-brand-size: 14px;
+  --exploration-brand-meta-size: 10px;
+  --exploration-title-size: clamp(40px, 7vw, 78px);
+  --exploration-title-leading: 1.03;
+  --exploration-title-tracking: -.065em;
+  --exploration-lead-size: 18px;
+  --exploration-section-title-size: clamp(27px, 4vw, 46px);
+  --exploration-section-title-leading: 1.15;
+  --exploration-section-title-tracking: -.045em;
+  --exploration-card-title-size: 18px;
+  --exploration-screen-title-size: 22px;
+  --exploration-card-copy-size: 14px;
+  --exploration-meta-size: 13px;
+  --exploration-radius-control: 999px;
+  --exploration-radius-card: 12px;
+  --exploration-button-padding: 11px 16px;
+  --exploration-card-padding: 20px;
+  --exploration-screen-padding: 24px;
+  --exploration-footer-padding-y: 32px;
+}

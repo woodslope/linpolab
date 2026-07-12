@@ -1,0 +1,38 @@
+/*
+  Shared case-page tokens for LINPO LAB experiments and research cases.
+  Keep this file small: page-specific layout still lives in each HTML file.
+*/
+
+:root {
+  --lab-page-bg-light: #f4f4f1;
+  --lab-page-bg-light-soft: #fafaf8;
+  --lab-surface-light: #ffffff;
+  --lab-surface-light-soft: #f0f1ee;
+  --lab-text-primary-light: #111214;
+  --lab-text-secondary-light: #414346;
+  --lab-text-muted-light: #74777c;
+  --lab-line-soft-light: rgba(0, 0, 0, 0.08);
+  --lab-line-strong-light: rgba(0, 0, 0, 0.14);
+  --lab-accent-light: #236f52;
+  --lab-accent-soft-light: rgba(35, 111, 82, 0.1);
+  --lab-code-bg-light: #10141c;
+
+  --lab-page-bg-dark: #07090d;
+  --lab-page-bg-dark-soft: #0b0e15;
+  --lab-surface-dark: #10141c;
+  --lab-surface-dark-soft: #0d1017;
+  --lab-text-primary-dark: #e9edf4;
+  --lab-text-secondary-dark: #98a1b3;
+  --lab-text-muted-dark: #5f6878;
+  --lab-line-soft-dark: rgba(255, 255, 255, 0.07);
+  --lab-line-strong-dark: rgba(255, 255, 255, 0.13);
+  --lab-accent-dark: #3ddc97;
+  --lab-accent-soft-dark: rgba(61, 220, 151, 0.14);
+  --lab-code-bg-dark: #0a0d12;
+
+  --lab-radius-panel: 12px;
+  --lab-radius-control: 7px;
+  --lab-radius-compact: 8px;
+  --lab-container-case: 1180px;
+  --lab-container-doc: 1020px;
+}

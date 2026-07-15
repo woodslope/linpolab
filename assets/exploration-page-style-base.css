@@ -16,20 +16,33 @@ body.exploration-page { font-family: var(--exploration-font-sans); line-height: 
 .exploration-page h1 { font-size: var(--exploration-title-size); line-height: var(--exploration-title-leading); letter-spacing: var(--exploration-title-tracking); }
 .exploration-page .hero-lead { font-size: var(--exploration-lead-size); }
 .exploration-page .button { padding: var(--exploration-button-padding); border-radius: var(--exploration-radius-control); font-weight: 700; }
-.exploration-page .chip { padding: 4px 9px; border-radius: var(--exploration-radius-control); font-size: 12px; }
+.exploration-page .chip { padding: 0; border-radius: 0; font-size: 12px; font-weight: 700; line-height: 1.4; }
 .exploration-page h2 { font-size: var(--exploration-section-title-size); line-height: var(--exploration-section-title-leading); letter-spacing: var(--exploration-section-title-tracking); }
-.exploration-page .card,
-.exploration-page .scan { padding: var(--exploration-card-padding); border-radius: var(--exploration-radius-card); }
+.exploration-page .card { padding: var(--exploration-card-padding); border-radius: var(--exploration-radius-card); }
+.exploration-page .scan { padding: 18px 0 0; border-radius: 0; }
+.exploration-page .scope-card { border-radius: 6px; }
 .exploration-page .scan strong { font-size: 16px; }
 .exploration-page .card h3 { font-size: var(--exploration-card-title-size); }
+.exploration-page .system-subsection h3 { font-size: var(--exploration-card-title-size); }
+.exploration-page .finding-kicker { font-size: var(--exploration-label-size); font-weight: 800; }
+.exploration-page .finding-card { border-radius: var(--exploration-radius-card); }
+.exploration-page .finding-card h3,
+.exploration-page .limitation-note h3,
+.exploration-page .roadmap-copy h3 { font-size: var(--exploration-card-title-size); }
+.exploration-page .finding-card p,
+.exploration-page .limitation-note p,
+.exploration-page .roadmap-copy p { font-size: var(--exploration-card-copy-size); }
+.exploration-page .limitation-note { border-radius: 4px; }
+.exploration-page .roadmap-priority { border-radius: 50%; font-size: var(--exploration-label-size); font-weight: 900; letter-spacing: .04em; }
 .exploration-page .scan p,
 .exploration-page .card p { font-size: var(--exploration-card-copy-size); }
 .exploration-page .screen { padding: var(--exploration-screen-padding); border-radius: var(--exploration-radius-card); }
 .exploration-page .screen-copy h3 { font-size: var(--exploration-screen-title-size); }
 .exploration-page .project-links,
 .exploration-page .footer { font-size: var(--exploration-meta-size); }
-.exploration-page figure,
-.exploration-page .system-subsection { border-radius: var(--exploration-radius-card); }
+.exploration-page .project-links { font-weight: 700; }
+.exploration-page figure { border-radius: var(--exploration-radius-card); }
+.exploration-page .system-subsection { border-radius: 4px; }
 .exploration-page .footer { padding-block: var(--exploration-footer-padding-y); }
 
 @media (max-width: 720px) {

@@ -1,0 +1,49 @@
+<!doctype html>
+<!-- GENERATED FILE: update scripts/build-default-exploration-pages.mjs and shared exploration assets, then regenerate. -->
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="验证复杂创作需求能否通过单变量探索，形成可比较、可继续细化的 AI 视觉方向工作流。" />
+  <meta name="author" content="Linpo Wu" />
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:site_name" content="LINPO LAB" />
+  <meta property="og:title" content="VisPath 视觉方向实验 | LINPO LAB" />
+  <meta property="og:description" content="验证复杂创作需求能否通过单变量探索，形成可比较、可继续细化的 AI 视觉方向工作流。" />
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="../../assets/cases/vispath/01-prompt-input.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/png" href="../../assets/optimized/linpo-hero-avatar-192.png" />
+  <link rel="stylesheet" href="../../assets/exploration-page-system.css" />
+  <link rel="stylesheet" href="../../assets/exploration-default-layout.css" />
+  <link rel="stylesheet" href="../../assets/exploration-page-style-base.css" />
+  <link rel="stylesheet" href="../../assets/exploration-default-style.css" />
+  <script src="../../assets/exploration-page-system.js" defer></script>
+  <script src="../../assets/visual-direction-runtime.js" defer></script>
+  <script src="../../assets/hero-canvas-controller.js" defer></script>
+  <title>VisPath 视觉方向实验 | LINPO LAB</title>
+  <style>
+    :root { --paper:#f4f6f1; --surface:#ffffff; --ink:#171b18; --text:#5e6861; --line:#d8dfd7; --accent:#e4572e; --accent-2:#36755d; --dark:#171b18; --hero-background:#0c100e; --hero-ink:#f6f8f2; --hero-text:#cad4cc; --hero-accent:#e4572e; --hero-accent-2:#78c6a3; --nav-line:#29302c; --nav-background:#0c100ef2; --nav-link-color:#cad4cc; --nav-paper-background:#f4f6f1f2; --nav-paper-line:#d8dfd7; --nav-paper-link:#171b18; --chip-border:#d8dfd7; --chip-text:#5e6861; --project-link-color:#5e6861; --card-background:#ffffff; --scan-background:transparent; --band-summary:#f4f6f1; --band-evidence:#ffffff; --band-scope:#f4f6f1; --band-system:#f4f6f1; --band-finding:#171b18; --band-next:#f4f6f1; --system-note-background:#ffffff; --finding-accent:#e4572e; --finding-text:#d5ddd7; --finding-card-line:#e4572e33; --figure-background:#e9ede7; --flow-columns:6; --flow-line:#e4572e; }
+    .vispath-theme .hero { background:#0c100e; }
+    .vispath-theme .hero::before,.vispath-theme .hero::after { inset:0; }
+    .vispath-theme .hero::before { opacity:1; background:linear-gradient(90deg,rgba(5,7,8,.3),transparent 28%,transparent 72%,rgba(5,7,8,.3)); }
+    .vispath-theme .hero::after { opacity:1; background:radial-gradient(circle at 50% 48%,rgba(5,7,8,.68) 0,rgba(5,7,8,.48) 25%,rgba(5,7,8,.12) 58%,rgba(5,7,8,.34) 100%); }
+    .vispath-theme .hero-scene{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none}.vispath-theme .hero-scene-svg{display:block;width:100%;height:100%;overflow:visible}
+    .vispath-theme .hero-canvas-scene{z-index:-2}.vispath-theme .hero-canvas-scene canvas{display:block;width:100%;height:100%}
+    @media (prefers-reduced-motion:reduce) { .vispath-theme .hero::before,.vispath-theme .hero::after,.vispath-theme .hero-scene * { animation:none; } }
+  </style>
+</head>
+<body class="exploration-page vispath-theme" data-layout-dna="exploration-default-layout" data-style-dna="exploration-default-style" data-system-revision="default-20260714" data-hero-preset="dark-liquid-state" data-hero-motion="liquid-state" data-hero-scene="liquidGradient" data-hero-edge-policy="contained" data-calibration-state="production">
+  <nav class="nav" aria-label="页面导航"><a class="brand" href="../../index.html#experiments" aria-label="返回 LINPO LAB 首页探索实验"><strong>LINPO LAB</strong><span>Exploration Lab</span></a><div class="nav-links"><a href="#screens">界面证据</a><a href="#boundary">运行边界</a><a href="#flow">工作流程</a><a href="#next">下一步</a><a class="back-link" href="../../index.html#experiments">返回探索实验</a></div></nav>
+  <header class="hero" id="overview"><div class="hero-scene hero-canvas-scene" aria-hidden="true"><canvas data-hero-canvas="liquidGradient"></canvas></div><div class="hero-grid"><p class="eyebrow">Single-variable visual direction workbench</p><h1>VisPath</h1><p class="hero-lead">验证复杂创作需求能否通过单变量探索，拆成多套结构清晰、可比较、可继续细化的视觉方向。</p><div class="hero-actions"><a class="button" href="#screens">查看界面证据</a><a class="button ghost" href="#flow">查看探索流程</a></div><div class="project-links"><a href="https://woodslope.github.io/vispath/" target="_blank" rel="noreferrer">线上演示</a><span aria-hidden="true">·</span><a href="https://github.com/WoodSlope/vispath" target="_blank" rel="noreferrer">GitHub 仓库</a></div><div class="chips" aria-label="实验边界"><span class="chip">本地优先</span><span class="chip">单变量探索</span><span class="chip">电脑端工作台</span></div></div></header>
+  <main>
+    <section class="section summary-band" id="summary"><div><div class="section-head"><p class="section-label">01 / 实验速览</p><h2>先固定创作约束，再比较视觉变量带来的差异。</h2></div><div class="scan-grid"><article class="scan scan-card"><strong>验证对象</strong><p>输入、方案、生成与比较的视觉探索闭环。</p></article><article class="scan scan-card"><strong>当前状态</strong><p>文本与参考图输入、真实生图和历史已跑通。</p></article><article class="scan scan-card"><strong>关键边界</strong><p>依赖用户配置的文本与生图接口。</p></article><article class="scan scan-card"><strong>证据类型</strong><p>三阶段核心流程与接口配置界面。</p></article></div></div></section>
+    <section class="section evidence-band" id="screens"><div><div class="section-head"><p class="section-label">02 / 界面证据</p><h2>从复杂输入到结果画板，证据沿同一条任务路径展开。</h2><p class="section-intro">截图证明界面、状态和操作闭环已经实现，不代表模型输出始终稳定或视觉判断可以自动完成。</p></div><div class="screens"><article class="screen"><div class="screen-copy"><h3>输入阶段把不变条件与本轮探索变量分开</h3><p>原始提示词、参考图、比例和分辨率保持固定，本轮只选择一个视觉维度。</p></div><figure><img src="../../assets/cases/vispath/01-prompt-input.png" alt="VisPath 原始提示词、生成参数与单一探索变量输入界面" /></figure></article><article class="screen"><div class="screen-copy"><h3>方案阶段生成四套可检查的视觉方向</h3><p>每套方案明确本轮变化和固定条件，支持查看完整提示词并选择多个方向。</p></div><figure><img src="../../assets/cases/vispath/02-prompt-plans.png" alt="VisPath 四套结构化提示词方案比较界面" /></figure></article><article class="screen"><div class="screen-copy"><h3>结果画板保留同批次比较与继续细化入口</h3><p>真实图片、请求参数、返回尺寸和提示词快照被组织在同一个批次中。</p></div><figure><img src="../../assets/cases/vispath/03-result-board.png" alt="VisPath 四张生成结果、状态与继续细化操作界面" /></figure></article><article class="screen"><div class="screen-copy"><h3>文本与生图服务由使用者在浏览器配置</h3><p>接口根地址、Key、模型和生成方式只保存在当前浏览器，不进入仓库。</p></div><figure><img src="../../assets/cases/vispath/04-api-config.png" alt="VisPath 文本 API 与生图 API 配置界面" /></figure></article></div></div></section>
+    <section class="section scope-band" id="boundary"><div><div class="section-head"><p class="section-label">03 / 运行边界</p><h2>它帮助比较方向，不替代接口可靠性与人工视觉判断。</h2></div><div class="cards scope-cards"><article class="card scope-card"><h3>当前可以验证</h3><p>单变量提示词方案、批量生图、结果比较和继续细化能否形成闭环。</p></article><article class="card scope-card"><h3>运行依赖</h3><p>文本与生图服务需兼容指定接口。配置、任务和结果保存在当前浏览器，主要面向宽度 901px 以上的电脑端。</p></article><article class="card scope-card"><h3>当前不验证</h3><p>不验证第三方接口长期稳定、模型审美一致、团队协作和云端资产管理。</p></article></div></div></section>
+    <section class="section system-band" id="flow"><div><div class="section-head"><p class="section-label">04 / 工作流程</p><h2>六个动作把一次模糊尝试变成可比较的方向实验。</h2></div><div class="flow flow-6"><div class="step"><b>01 · 输入</b><span>提交提示词或参考图。</span></div><div class="step"><b>02 · 固定</b><span>锁定主体、场景与输出条件。</span></div><div class="step"><b>03 · 变体</b><span>只选择一个探索维度。</span></div><div class="step"><b>04 · 方案</b><span>生成并选择多套提示词。</span></div><div class="step"><b>05 · 比较</b><span>在同批次查看真实结果。</span></div><div class="step"><b>06 · 细化</b><span>沿选中方向继续迭代。</span></div></div><article class="system-subsection"><h3>系统与数据决策</h3><p>文本服务负责生成结构化 PromptBlueprint 与方案，图片服务负责同步或异步生成。IndexedDB 保存白名单化历史、配置和未完成任务，刷新后可继续轮询。</p></article></div></section>
+    <section class="section finding-band" id="conclusion"><div><div class="section-head"><p class="section-label">05 / 实验结论</p><h2>多方向比较闭环已经成立，判断质量仍依赖人与模型。</h2></div><div class="finding-grid"><article class="finding-card finding-card-established"><span class="finding-kicker">验证结果</span><h3>已成立</h3><p>复杂输入可以被拆成固定条件与单一变量，并形成可选择、可生成、可追溯的多方向结果。</p></article><article class="finding-card finding-card-gap"><span class="finding-kicker">证据缺口</span><h3>仍薄弱</h3><p>不同接口与模型的输出一致性、长期任务恢复和方向质量仍缺少更大样本验证。</p></article></div></div></section>
+    <section class="section next-band" id="next"><div><div class="section-head"><p class="section-label">06 / 限制与下一步</p><h2>先提高生成与恢复的可信度，再扩展资产能力。</h2></div><article class="limitation-note"><h3>当前限制</h3><p>截图采集时间未记录，状态仍标记为“未确认”；远程图片有效期受服务端影响。</p></article><ol class="roadmap" aria-label="下一步优先级路线图"><li class="roadmap-item"><span class="roadmap-priority">P0</span><div class="roadmap-copy"><h3>任务恢复</h3><p>持续验证异步轮询、刷新恢复和失败重试。</p></div></li><li class="roadmap-item"><span class="roadmap-priority">P1</span><div class="roadmap-copy"><h3>方向评估</h3><p>积累不同类型与模型的可比较样本。</p></div></li><li class="roadmap-item"><span class="roadmap-priority">P2</span><div class="roadmap-copy"><h3>资产迁移</h3><p>补足结果导出、链接失效和跨设备边界。</p></div></li></ol></div></section>
+  </main>
+  <footer class="footer">© 2026 LINPO LAB · VisPath 探索实验</footer>
+</body>
+</html>

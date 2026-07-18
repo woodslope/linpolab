@@ -35,6 +35,10 @@
 .exploration-page .section-head h2 { word-break: auto-phrase; text-wrap: balance; }
 .exploration-page .title-phrase { white-space: nowrap; }
 .exploration-page .section-intro { max-width: var(--exploration-copy-max); }
+.exploration-page .summary-band > div { display: grid; grid-template-columns: minmax(390px, .98fr) minmax(0, 1.02fr); align-items: center; gap: clamp(36px, 4.5vw, 64px); }
+.exploration-page .summary-band .section-head { margin-bottom: 0; }
+.exploration-page .summary-band .section-head h2 { max-width: 560px; }
+.exploration-page .summary-band .scan-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .exploration-page .scan-grid,
 .exploration-page .cards,
 .exploration-page .flow { gap: var(--exploration-card-gap); }
@@ -43,19 +47,26 @@
 .exploration-page .scope-copy { max-width: var(--exploration-scope-copy-max); }
 .exploration-page .finding-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .exploration-page .finding-card { padding: 26px 28px 28px; }
-.exploration-page .limitation-note { display: grid; grid-template-columns: minmax(150px, .28fr) minmax(0, 1fr); gap: 28px; align-items: start; margin-bottom: 38px; padding: 24px 26px; }
-.exploration-page .roadmap { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
-.exploration-page .roadmap::before { top: 20px; right: calc(16.666% - 20px); left: calc(16.666% - 20px); height: 1px; }
-.exploration-page .roadmap-item { display: grid; justify-items: center; gap: 17px; text-align: center; }
-.exploration-page .roadmap-priority { width: 42px; height: 42px; }
-.exploration-page .roadmap-copy { max-width: 280px; }
+.exploration-page .next-band > div { display: grid; grid-template-columns: minmax(300px, .88fr) minmax(0, 1.12fr); align-items: stretch; gap: 24px 32px; }
+.exploration-page .next-band .section-head { grid-column: 1 / -1; }
+.exploration-page .limitation-note { display: grid; width: 100%; min-height: 100%; align-content: center; gap: 24px; margin: 0; padding: 34px 38px; }
+.exploration-page .limitation-note p { max-width: 720px; }
+.exploration-page .roadmap { display: grid; grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.exploration-page .roadmap::before { display: none; }
+.exploration-page .roadmap-item { display: grid; grid-template-columns: 52px minmax(0, 1fr); align-items: center; gap: 18px; padding: 16px 20px; }
+.exploration-page .roadmap-priority { width: 52px; height: 52px; }
+.exploration-page .roadmap-copy { max-width: none; padding-top: 0; }
 .exploration-page .flow { grid-template-columns: repeat(6, minmax(0, 1fr)); column-gap: 24px; row-gap: 18px; }
 .exploration-page .flow .step { grid-column: span 2; }
 .exploration-page .flow-5 .step:nth-last-child(-n + 2) { grid-column: span 3; }
 
 @media (max-width: 900px) {
+  .exploration-page .summary-band > div { grid-template-columns: minmax(0, 1fr); gap: 30px; }
+  .exploration-page .summary-band .section-head { margin-bottom: 0; }
+  .exploration-page .summary-band .section-head h2 { max-width: 720px; }
   .exploration-page .scan-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .exploration-page .scope-cards { grid-template-columns: minmax(0, 1fr); }
+  .exploration-page .next-band > div { grid-template-columns: minmax(0, 1fr); gap: 24px; }
 }
 
 @media (max-width: 720px) {
@@ -71,10 +82,8 @@
   .exploration-page .scope-cards { grid-template-columns: minmax(0, 1fr); }
   .exploration-page .finding-grid { grid-template-columns: minmax(0, 1fr); }
   .exploration-page .finding-card { padding: 22px 22px 24px; }
-  .exploration-page .limitation-note { grid-template-columns: minmax(0, 1fr); gap: 8px; margin-bottom: 34px; padding: 21px 20px; }
-  .exploration-page .roadmap { grid-template-columns: minmax(0, 1fr); gap: 0; }
-  .exploration-page .roadmap::before { top: 20px; bottom: 20px; left: 20px; width: 1px; height: auto; }
-  .exploration-page .roadmap-item { grid-template-columns: 42px minmax(0, 1fr); justify-items: start; gap: 16px; padding-bottom: 28px; text-align: left; }
-  .exploration-page .roadmap-item:last-child { padding-bottom: 0; }
-  .exploration-page .roadmap-copy { max-width: none; padding-top: 7px; }
+  .exploration-page .summary-band .scan-grid { grid-template-columns: minmax(0, 1fr); }
+  .exploration-page .limitation-note { min-height: 0; align-content: start; gap: 16px; padding: 22px 20px 24px; }
+  .exploration-page .roadmap-item { padding: 16px; }
+  .exploration-page .roadmap-priority { width: 46px; height: 46px; }
 }

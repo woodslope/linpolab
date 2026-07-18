@@ -7,6 +7,19 @@ function getQuality(state) {
   return Math.max(.45, Math.min(1, state.quality ?? 1));
 }
 
+function parseHexColor(value, fallback) {
+  const source = /^#[0-9a-f]{6}$/i.test(value || "") ? value : fallback;
+  return [1, 3, 5].map((index) => Number.parseInt(source.slice(index, index + 2), 16));
+}
+
+function canvasColor(state, key, fallback) {
+  return parseHexColor(state.canvas?.dataset[key], fallback);
+}
+
+function rgba(color, alpha) {
+  return `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha})`;
+}
+
 
 function drawDots(state, time) {
   const { ctx, width: w, height: h } = state;
@@ -198,8 +211,11 @@ function drawLiquidGlass(state, time) {
 
 function drawReactionDiffusion(state, time) {
   const { ctx, width: w, height: h } = state;
+  const primary = canvasColor(state, "heroColorA", "#56c28e");
+  const secondary = canvasColor(state, "heroColorB", "#78c6a3");
+  const background = canvasColor(state, "heroColorBg", "#0a0f0d");
   clear(state);
-  ctx.fillStyle = "#0a0f0d";
+  ctx.fillStyle = rgba(background, 1);
   ctx.fillRect(0, 0, w, h);
   const phase = time * .00022;
   const quality = getQuality(state);
@@ -219,9 +235,12 @@ function drawReactionDiffusion(state, time) {
       const fieldB = Math.cos(ny * 20 - Math.cos(nx * 9 - phase * .7) * 2.2);
       const reaction = Math.abs(fieldA + fieldB);
       if (reaction > .38 && reaction < .72) {
-        const alpha = .08 + (1 - Math.abs(reaction - .55) / .17) * .32;
+        const centerDistance = Math.abs(nx - .5) * 2;
+        const textSafeFade = Math.min(1, Math.max(0, (centerDistance - .18) / .42));
+        const alpha = (.08 + (1 - Math.abs(reaction - .55) / .17) * .32) * (.08 + textSafeFade * .92);
         const radius = cell * (.24 + alpha * .9);
-        ctx.strokeStyle = `rgba(${90 + Math.round(nx * 70)}, ${188 + Math.round(ny * 42)}, ${139 + Math.round(nx * 68)}, ${alpha})`;
+        const color = primary.map((channel, index) => Math.round(channel + (secondary[index] - channel) * ((nx + ny) * .5)));
+        ctx.strokeStyle = rgba(color, alpha);
         ctx.beginPath();
         ctx.arc(x + Math.sin(ny * 13 + phase) * 2, y + Math.cos(nx * 11 - phase) * 2, radius, 0, Math.PI * 2);
         ctx.stroke();
@@ -231,9 +250,9 @@ function drawReactionDiffusion(state, time) {
   ctx.restore();
 
   const reactionGlow = ctx.createRadialGradient(w * .52, h * .48, 0, w * .52, h * .48, Math.min(w, h) * .48);
-  reactionGlow.addColorStop(0, "rgba(86,194,142,.1)");
-  reactionGlow.addColorStop(.7, "rgba(33,79,61,.03)");
-  reactionGlow.addColorStop(1, "rgba(4,7,6,0)");
+  reactionGlow.addColorStop(0, rgba(primary, .1));
+  reactionGlow.addColorStop(.7, rgba(secondary, .03));
+  reactionGlow.addColorStop(1, rgba(background, 0));
   ctx.fillStyle = reactionGlow;
   ctx.fillRect(0, 0, w, h);
 }

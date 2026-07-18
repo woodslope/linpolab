@@ -6,7 +6,11 @@ body.exploration-page { margin: 0; overflow-x: hidden; background: var(--paper);
 body.exploration-page *,
 body.exploration-page *::before,
 body.exploration-page *::after { box-sizing: border-box; }
-html { background: var(--dark); scroll-behavior: smooth; }
+html { --scrollbar-thumb: rgba(255, 255, 255, .24); background: var(--hero-background, var(--dark)); scroll-behavior: smooth; scrollbar-color: var(--scrollbar-thumb) transparent; }
+html.page-on-paper { --scrollbar-thumb: rgba(24, 32, 27, .24); background: var(--paper); }
+html::-webkit-scrollbar { width: 10px; }
+html::-webkit-scrollbar-track { background: transparent; }
+html::-webkit-scrollbar-thumb { border: 3px solid transparent; border-radius: 999px; background: var(--scrollbar-thumb); background-clip: padding-box; }
 body.exploration-page a { color: inherit; }
 body.exploration-page img { display: block; max-width: 100%; }
 body.exploration-page h1,
@@ -15,7 +19,7 @@ body.exploration-page h3,
 body.exploration-page p { margin-top: 0; }
 body.exploration-page [id] { scroll-margin-top: calc(var(--exploration-nav-height) + 20px); }
 
-.exploration-page .nav { position: sticky; top: 0; z-index: 4; display: flex; align-items: center; justify-content: space-between; min-height: var(--exploration-nav-height); padding: 0 max(var(--exploration-page-x, 20px), calc((100vw - var(--exploration-page-max, 1120px)) / 2)); border-bottom: 1px solid var(--nav-line, var(--line)); background: var(--nav-background, var(--paper)); transition: background-color .2s ease, border-color .2s ease, color .2s ease; }
+.exploration-page .nav { position: sticky; top: 0; z-index: 4; display: flex; align-items: center; justify-content: space-between; min-height: var(--exploration-nav-height); padding: 0 max(var(--exploration-page-x, 20px), calc((100vw - var(--exploration-page-max, 1120px)) / 2)); border-bottom: 1px solid var(--nav-line, var(--line)); background: var(--hero-background, var(--dark)); transition: border-color .15s ease; }
 .exploration-page .brand { display: grid; min-height: 44px; align-content: center; gap: 3px; color: var(--accent); text-decoration: none; }
 .exploration-page .brand strong { line-height: 1; }
 .exploration-page .brand span { color: var(--text); letter-spacing: .08em; }
@@ -25,7 +29,7 @@ body.exploration-page [id] { scroll-margin-top: calc(var(--exploration-nav-heigh
 .exploration-page .nav .brand { color: var(--hero-accent, var(--accent)); }
 .exploration-page .nav .brand span { color: var(--hero-text, var(--text)); }
 .exploration-page .nav-links .back-link { color: var(--hero-accent, var(--accent)); }
-.exploration-page .nav.nav-on-paper { border-color: var(--nav-paper-line, var(--line)); background: var(--nav-paper-background, var(--paper)); }
+.exploration-page .nav.nav-on-paper { border-color: var(--nav-paper-line, var(--line)); background: var(--paper); }
 .exploration-page .nav.nav-on-paper .brand { color: var(--accent); }
 .exploration-page .nav.nav-on-paper .brand span { color: var(--text); }
 .exploration-page .nav.nav-on-paper .nav-links a { color: var(--nav-paper-link, var(--ink)); }
@@ -80,12 +84,12 @@ body.exploration-page [id] { scroll-margin-top: calc(var(--exploration-nav-heigh
 .exploration-page .card,
 .exploration-page .scan { min-width: 0; }
 .exploration-page .card { border: 1px solid var(--line); background: var(--card-background, rgba(255, 255, 255, .74)); }
-.exploration-page .scan { border: 0; border-top: 2px solid var(--accent); background: transparent; }
+.exploration-page .scan { border: 1px solid var(--line); background: var(--surface); }
 .exploration-page .scope-card { border-color: var(--line); background: var(--surface); }
 .exploration-page .scan strong { display: block; margin-bottom: 7px; color: var(--accent); }
 .exploration-page .scan p,
 .exploration-page .card p { margin: 0; color: var(--text); }
-.exploration-page .scan-card p,
+.exploration-page .scan-card p { word-break: auto-phrase; text-wrap: balance; line-break: strict; }
 .exploration-page .scope-card p,
 .exploration-page .system-subsection p { word-break: auto-phrase; text-wrap: pretty; line-break: strict; }
 .exploration-page .card h3 { margin-bottom: 7px; letter-spacing: -.025em; }
@@ -98,13 +102,13 @@ body.exploration-page [id] { scroll-margin-top: calc(var(--exploration-nav-heigh
 .exploration-page .finding-kicker { display: block; margin-bottom: 16px; color: var(--finding-accent, var(--accent)); letter-spacing: .08em; text-transform: uppercase; }
 .exploration-page .finding-card h3 { margin-bottom: 9px; color: var(--finding-ink, #fff); }
 
-.exploration-page .limitation-note { border-left: 3px solid var(--accent); background: var(--surface); }
-.exploration-page .limitation-note h3 { margin-bottom: 8px; color: var(--ink); }
-.exploration-page .limitation-note p { margin: 0; color: var(--text); word-break: auto-phrase; text-wrap: pretty; line-break: strict; }
+.exploration-page .limitation-note { border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+.exploration-page .limitation-note h3 { width: fit-content; margin: 0; padding: 5px 9px; background: var(--accent); color: #fff; letter-spacing: .08em; }
+.exploration-page .limitation-note p { margin: 0; color: var(--ink); font-weight: 650; line-height: 1.55; word-break: auto-phrase; text-wrap: balance; line-break: strict; }
 .exploration-page .roadmap { position: relative; margin: 0; padding: 0; list-style: none; counter-reset: roadmap; }
 .exploration-page .roadmap::before { position: absolute; background: color-mix(in srgb, var(--accent) 38%, var(--line)); content: ""; }
-.exploration-page .roadmap-item { position: relative; min-width: 0; }
-.exploration-page .roadmap-priority { position: relative; z-index: 1; display: grid; place-items: center; border: 1px solid color-mix(in srgb, var(--accent) 58%, var(--line)); background: var(--band-next, var(--paper)); color: var(--accent); }
+.exploration-page .roadmap-item { position: relative; min-width: 0; border: 1px solid var(--line); background: var(--surface); }
+.exploration-page .roadmap-priority { position: relative; z-index: 1; display: grid; place-items: center; background: color-mix(in srgb, var(--accent) 10%, var(--surface)); color: var(--accent); }
 .exploration-page .roadmap-copy h3 { margin-bottom: 7px; color: var(--ink); }
 .exploration-page .roadmap-copy p { margin: 0; color: var(--text); word-break: auto-phrase; text-wrap: pretty; line-break: strict; }
 

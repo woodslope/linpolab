@@ -18,6 +18,8 @@ projects/h5-archive/cases/**/assets/xlink
 **/.gitkeep
 
 # Local production notes and tooling; GitHub is runtime display only.
+regression/
+assets/hero-motion-presets.json
 DEPLOYMENT-REVIEW-*.md
 MAINTENANCE.md
 references/

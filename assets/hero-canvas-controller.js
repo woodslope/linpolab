@@ -84,7 +84,7 @@
       const elapsed = state.lastFrame ? time - state.lastFrame : frameInterval;
       if (elapsed < frameInterval - .5) continue;
       state.lastFrame = time;
-      state.time += Math.min(elapsed, 80) * 1.6;
+      state.time += Math.min(elapsed, 80) * 1.35;
       if (!state.startedAt) state.startedAt = performance.now();
       draw(state, true);
     }

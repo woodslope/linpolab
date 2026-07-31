@@ -1,6 +1,13 @@
 # LINPO LAB Home Design Spec
 
-本文档提炼自 `index.html` 当前首页，用于后续维护首页视觉、文案和响应式规则。它不是全站品牌手册，优先约束 `linpo-lab-home-v1` 首页。
+本文档提炼自 `index.html` 当前首页，用于后续维护首页视觉、文案和响应式规则。它不是全站品牌手册，优先约束 `linpolab` 主项目首页。
+
+补充参考：
+- `references/agent-bridge-layout-notes.md`：AgentBridge 参考沉淀索引。
+- `references/style-dna/agent-bridge-dna.md`：只记录 AgentBridge 风格 DNA。
+- `references/page-patterns/technical-experiment-page.md`：只记录技术实验页结构模式。
+
+后续新页面应先选择页面结构，再选择风格 DNA，不直接覆盖当前首页规范。
 
 ## 1. 设计定位
 

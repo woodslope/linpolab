@@ -1,4 +1,5 @@
 .DS_Store
+project-decks/*/assets/fonts/*.ttf
 output/
 *.bak*
 *backup*

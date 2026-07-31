@@ -19,8 +19,6 @@ Do not overwrite generated source images during homepage tuning. Create an optim
 | `optimized/method-visual-reverse-system-monond-v1-1000.jpg` | Method thumbnail |
 | `optimized/method-ai-framework-monond-v1-1000.jpg` | Method thumbnail |
 | `optimized/method-design-to-code-monond-v1-1000.jpg` | Method thumbnail |
-| `optimized/experiment-ai-workflow-monond-v1-1100.jpg` | Experiment thumbnail |
-| `optimized/experiment-type-light-monond-v2-1100.jpg` | Experiment thumbnail |
 | `optimized/experiment-urban-guide-agent-monond-v1-1100.jpg` | Experiment thumbnail |
 | `optimized/linpo-about-portrait-760.jpg` | About portrait |
 

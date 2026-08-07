@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "project:jifen",
+  "type": "project",
+  "slug": "jifen",
+  "title": "积分系统全链路体验优化",
+  "route": "projects/jifen/index.html",
+  "entry": "index.html",
+  "status": "published",
+  "producer": { "skill": "linpolab-project-workflow", "kind": "project-deck" },
+  "homepage": { "section": "projects", "order": 3, "visible": true },
+  "runtime": null
+}

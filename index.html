@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-media-version="home-18df10809cd1">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -40,11 +40,65 @@
       4. Four methods thumbnails.
       5. Experiment thumbnails.
       6. Share card image.
-      Source visual assets live in assets/generated; optimized homepage cuts live in assets/optimized.
+      Original source visuals are kept outside the deployable site; optimized homepage cuts live in assets/optimized.
       Live text stays in HTML for clarity.
     -->
     <script>
-      document.documentElement.classList.add("motion-ready");
+      (() => {
+        const root = document.documentElement;
+        const sectionHashes = ["#projects", "#methods", "#experiments", "#about"];
+        const navigationType = performance.getEntriesByType("navigation")[0]?.type || "navigate";
+        let returnTarget = "";
+        let returnedFromProject = false;
+
+        try {
+          returnTarget = sessionStorage.getItem("linpo-home-return-target") || "";
+          sessionStorage.removeItem("linpo-home-return-target");
+        } catch {}
+
+        try {
+          const referrer = new URL(document.referrer);
+          returnedFromProject =
+            referrer.origin === location.origin &&
+            /\/(?:projects\/|h5\/)/.test(referrer.pathname);
+        } catch {}
+
+        if (navigationType === "reload") {
+          history.scrollRestoration = "manual";
+          if (sectionHashes.includes(location.hash)) {
+            history.replaceState(history.state, "", `${location.pathname}${location.search}`);
+          }
+          document.addEventListener(
+            "DOMContentLoaded",
+            () => {
+              window.scrollTo(0, 0);
+              requestAnimationFrame(() => {
+                history.scrollRestoration = "auto";
+              });
+            },
+            { once: true }
+          );
+        }
+
+        const entryMode =
+          navigationType === "reload"
+            ? "intro"
+            : navigationType === "back_forward"
+              ? "restore"
+              : location.hash === "#projects" && (returnTarget === "projects" || returnedFromProject)
+                ? "restore"
+                : sectionHashes.includes(location.hash)
+                  ? "target"
+                  : "intro";
+        root.dataset.entryMode = entryMode;
+
+        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          root.classList.add("motion-ready");
+          if (entryMode !== "intro") {
+            root.classList.add("is-page-restored");
+          }
+        }
+      })();
     </script>
     <style>
       :root {
@@ -64,6 +118,7 @@
         --white: #ffffff;
         --violet: #8c6df3;
         --blue: #4078ff;
+        --dark-card-accent: #b7ff00;
         --gold: #e2a733;
         --radius-xs: 5px;
         --radius-sm: 6px;
@@ -142,7 +197,7 @@
         --card-pad-compact-x: 18px;
         --card-pad-compact-y: 20px;
         --card-heading-gap: 8px;
-        --card-sub-gap: 4px;
+        --card-sub-gap: 12px;
         --feature-card-height: 218px;
         --feature-index-gap: 24px;
         --method-card-height: 232px;
@@ -160,6 +215,11 @@
         --footer-height: 52px;
         --footer-mobile-gap: 8px;
         --footer-mobile-padding-y: 16px;
+        --ease-system: cubic-bezier(0.16, 1, 0.3, 1);
+        --ease-soft: cubic-bezier(0.22, 0.8, 0.26, 1);
+        --motion-fast: 180ms;
+        --motion-base: 420ms;
+        --motion-assembly: 720ms;
         color-scheme: light;
       }
 
@@ -201,7 +261,7 @@
         position: relative;
         min-height: var(--hero-height);
         overflow: hidden;
-        background: linear-gradient(180deg, #040404 0%, #080808 100%);
+        background: #000;
         color: var(--white);
       }
 
@@ -304,9 +364,15 @@
       }
 
       .nav-links a:hover::after,
-      .nav-links a:focus-visible::after {
-        opacity: 0.56;
+      .nav-links a:focus-visible::after,
+      .nav-links a.is-active::after {
+        background: var(--dark-card-accent);
+        opacity: 1;
         transform: scaleX(1);
+      }
+
+      .nav-links a.is-active {
+        color: #fff;
       }
 
       .nav-links a:focus-visible {
@@ -330,6 +396,10 @@
         max-width: 560px;
       }
 
+      .hero-title-wrap {
+        overflow: hidden;
+      }
+
       .hero-title {
         margin: 0;
         color: #fff;
@@ -340,11 +410,24 @@
       }
 
       .hero-axis {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0.2em;
         margin: 16px 0 12px;
         color: rgba(255, 255, 255, 0.92);
         font-size: clamp(28px, 3.1vw, 34px);
         font-weight: var(--font-weight-regular);
         line-height: var(--line-height-heading);
+      }
+
+      .hero-axis-word,
+      .hero-axis-node {
+        display: inline-block;
+      }
+
+      .hero-axis-node {
+        color: rgba(255, 255, 255, 0.48);
       }
 
       .hero-cn {
@@ -412,22 +495,31 @@
       }
 
       .hero-visual {
+        position: relative;
+        overflow: hidden;
         display: block;
         justify-self: center;
         width: min(var(--hero-visual-size), 100%);
         height: auto;
         aspect-ratio: 1;
-        border-radius: var(--radius-xl);
-        background: #111;
-        object-fit: cover;
-        object-position: center;
-        box-shadow: 0 26px 80px rgba(0, 0, 0, 0.28);
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
         transform: translate3d(
             calc(var(--hero-enter-x, 0px) + var(--hero-shift-x, 0px)),
             calc(var(--hero-enter-y, 0px) + var(--hero-shift-y, 0px)),
             0
           )
           scale(var(--hero-enter-scale, 1));
+      }
+
+      .hero-visual img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+        object-fit: cover;
+        object-position: center;
       }
 
       .main {
@@ -501,12 +593,14 @@
         overflow: hidden;
         border-radius: var(--radius);
         background-color: #f4f2f8;
-        background-position: center;
-        background-size: cover;
         isolation: isolate;
-        transition:
-          box-shadow 320ms ease,
-          transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+        transition: background-color var(--motion-fast) ease;
+      }
+
+      .feature-card--archive {
+        background:
+          radial-gradient(circle at 78% 32%, rgba(255, 255, 255, 0.82) 0 2px, transparent 3px),
+          linear-gradient(135deg, #d9e2f4 0%, #f0e6d6 54%, #d3d0e7 100%);
       }
 
       a.feature-card {
@@ -518,49 +612,47 @@
         outline-offset: 4px;
       }
 
-      a.feature-card::before,
-      .feature-card.is-soon::before {
-        transition:
-          filter 360ms ease,
-          transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
-      }
-
-      a.feature-card:hover::before,
-      .feature-card.is-soon:hover::before {
-        filter: saturate(1.03) contrast(1.02);
-        transform: scale(1.018);
-      }
-
-      a.feature-card:hover,
-      .feature-card.is-soon:hover {
-        box-shadow: 0 18px 46px rgba(0, 0, 0, 0.1);
-      }
-
-      a.feature-card:hover {
-        transform: translateY(-3px);
-      }
-
-      .feature-card.is-soon:hover {
-        transform: translateY(-1px);
-      }
-
       a.feature-card:active {
-        transform: translateY(-1px) scale(0.998);
+        transform: scale(0.998);
       }
 
-      .feature-card::before {
+      .card-media {
         position: absolute;
         inset: 0;
-        z-index: -2;
-        background-position: center;
-        background-size: cover;
-        content: "";
+        z-index: 0;
+        display: block;
+        overflow: hidden;
+        background: var(--media-fallback, #111);
+      }
+
+      .card-media img,
+      .about-media img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: var(--media-position, center);
+        opacity: 0;
+        transform: scale(1.045);
+        transition:
+          opacity 320ms ease,
+          transform 700ms var(--ease-system);
+      }
+
+      .card-media.is-media-ready img,
+      .about-media.is-media-ready img {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      .feature-card:hover .card-media img {
+        transform: translate3d(8px, 0, 0) scale(1.02);
       }
 
       .feature-card::after {
         position: absolute;
         inset: 0;
-        z-index: -1;
+        z-index: 1;
         background:
           linear-gradient(90deg, rgba(250, 250, 250, 0.97) 0 29%, rgba(250, 250, 250, 0.42) 48%, rgba(250, 250, 250, 0) 100%),
           linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0));
@@ -569,35 +661,15 @@
       }
 
       .feature-card:hover::after {
-        opacity: 0.92;
-      }
-
-      .feature-card:nth-child(1)::before {
-        background-image: url("assets/optimized/project-marketing-dashboard-banner-1400.jpg");
-      }
-
-      .feature-card:nth-child(2)::before {
-        background-image: url("assets/optimized/project-xiaohui-ai-banner-1400.jpg");
-      }
-
-      .feature-card:nth-child(3)::before {
-        background-image: url("assets/optimized/project-loyalty-system-banner-1400.jpg");
+        opacity: 0.82;
       }
 
       .feature-content {
         position: relative;
-        z-index: 1;
+        z-index: 2;
         width: 45%;
         padding: var(--card-pad-y) 0 var(--card-pad-y) var(--card-pad-x);
-        transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
-      }
-
-      a.feature-card:hover .feature-content {
-        transform: translateX(4px);
-      }
-
-      .feature-card.is-soon:hover .feature-content {
-        transform: translateX(2px);
+        transition: opacity var(--motion-base) var(--ease-system);
       }
 
       .feature-index {
@@ -629,48 +701,11 @@
         line-height: 1.7;
       }
 
-      .feature-status {
-        position: absolute;
-        right: 18px;
-        bottom: 16px;
-        z-index: 1;
-        display: inline-flex;
-        align-items: center;
-        min-height: 24px;
-        padding: 0 10px;
-        border: 1px solid rgba(255, 255, 255, 0.46);
-        border-radius: var(--radius-pill);
-        background: rgba(255, 255, 255, 0.72);
-        color: rgba(20, 20, 22, 0.78);
-        font-size: var(--font-size-xs);
-        font-weight: var(--font-weight-semibold);
-        line-height: 1;
-        backdrop-filter: blur(12px);
-        transition:
-          background 260ms ease,
-          color 260ms ease,
-          transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
-      }
-
-      .feature-card.is-live .feature-status {
-        border-color: rgba(64, 120, 255, 0.28);
-        color: var(--blue);
-      }
-
-      .feature-card.is-live:hover .feature-status {
-        background: rgba(255, 255, 255, 0.86);
-        transform: translateX(4px);
-      }
-
-      .feature-card.is-soon:hover .feature-status {
-        background: rgba(255, 255, 255, 0.8);
-        transform: translateY(-1px);
-      }
-
       .feature-art {
         position: absolute;
         inset: 0;
         display: none;
+        z-index: 2;
         pointer-events: none;
         opacity: 0.78;
       }
@@ -767,42 +802,41 @@
         overflow: hidden;
         border-radius: var(--radius);
         background-color: #06070a;
-        background-position: center;
-        background-size: cover;
         color: #fff;
         isolation: isolate;
-        transition:
-          filter 320ms ease,
-          transform 360ms cubic-bezier(0.16, 1, 0.3, 1);
       }
 
       .dark-card::before,
       .experiment-card::before {
         position: absolute;
         inset: 0;
-        z-index: 0;
+        z-index: 1;
         background:
           linear-gradient(135deg, rgba(0, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0.68) 28%, rgba(0, 0, 0, 0.26) 58%, rgba(0, 0, 0, 0) 78%),
           linear-gradient(180deg, rgba(0, 0, 0, 0.62) 0%, rgba(0, 0, 0, 0.22) 46%, rgba(0, 0, 0, 0.1) 100%);
         content: "";
         pointer-events: none;
+        transition: opacity 300ms var(--ease-soft);
       }
 
       .dark-card::after,
       .experiment-card::after {
         position: absolute;
         inset: 0;
-        z-index: 0;
+        z-index: 2;
         border: 1px solid rgba(255, 255, 255, 0.06);
         border-radius: inherit;
         content: "";
         pointer-events: none;
+        transition:
+          border-color var(--motion-fast) ease,
+          opacity var(--motion-fast) ease;
       }
 
       .dark-card h3,
       .experiment-card h3 {
         position: relative;
-        z-index: 1;
+        z-index: 3;
         margin: 0;
         padding: var(--card-pad-compact-y) var(--card-pad-compact-x) 0;
         font-size: 15px;
@@ -811,10 +845,28 @@
         text-shadow: 0 2px 14px rgba(0, 0, 0, 0.52);
       }
 
+      .dark-card h3::after,
+      .experiment-card h3::after {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: var(--card-pad-compact-x);
+        width: 40px;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.64);
+        content: "";
+        opacity: 0.7;
+        transform-origin: 0 50%;
+        transform: scaleX(1);
+        transition:
+          background-color var(--motion-fast) ease,
+          opacity var(--motion-fast) ease,
+          transform 280ms var(--ease-system);
+      }
+
       .dark-card p,
       .experiment-card p {
         position: relative;
-        z-index: 1;
+        z-index: 3;
         margin: var(--card-sub-gap) 0 0;
         padding: 0 var(--card-pad-compact-x);
         color: rgba(255, 255, 255, 0.86);
@@ -822,26 +874,6 @@
         font-weight: var(--font-weight-medium);
         line-height: 1.45;
         text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
-      }
-
-      .dark-card:nth-child(1) {
-        background-image: url("assets/optimized/method-prompt-framework-monond-v1-1000.jpg");
-        background-position: center 58%;
-      }
-
-      .dark-card:nth-child(2) {
-        background-image: url("assets/optimized/method-visual-reverse-system-monond-v1-1000.jpg");
-        background-position: center 54%;
-      }
-
-      .dark-card:nth-child(3) {
-        background-image: url("assets/optimized/method-ai-framework-monond-v1-1000.jpg");
-        background-position: center 52%;
-      }
-
-      .dark-card:nth-child(4) {
-        background-image: url("assets/optimized/method-design-to-code-monond-v1-1000.jpg");
-        background-position: center 50%;
       }
 
       .method-visual {
@@ -961,56 +993,52 @@
         overflow: hidden;
         border-radius: var(--radius);
         background-color: #050507;
-        background-position: center;
-        background-size: cover;
         color: #fff;
         isolation: isolate;
-        transition:
-          filter 320ms ease,
-          transform 360ms cubic-bezier(0.16, 1, 0.3, 1);
+        transition: background-color var(--motion-fast) ease;
       }
 
-      .dark-card:hover,
-      .experiment-card:hover {
-        filter: brightness(1.06) saturate(1.02);
+      a.experiment-card:focus-visible {
+        outline: 2px solid var(--blue);
+        outline-offset: 4px;
       }
 
-      .dark-card:hover {
-        transform: translateY(-3px);
+      a.experiment-card:active {
+        transform: scale(0.99);
       }
 
-      .experiment-card:hover {
-        transform: translateY(-2px);
-      }
+      @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+        .dark-card:hover::before {
+          opacity: 0.7;
+        }
 
-      .experiment-card:nth-child(1) {
-        background-image: url("assets/optimized/experiment-urban-guide-agent-monond-v1-1100.jpg");
-        background-position: center 52%;
-      }
+        .experiment-card:hover::before {
+          opacity: 0.74;
+        }
 
-      .experiment-card:nth-child(2) {
-        background-image: url("assets/cases/leek-strategy/01-monitor.jpg");
-        background-position: center 42%;
-      }
+        .dark-card:hover::after,
+        .experiment-card:hover::after {
+          border-color: rgba(64, 120, 255, 0.68);
+        }
 
-      .experiment-card:nth-child(3) {
-        background-image: url("assets/cases/dailyglance/02-market-dashboard.png");
-        background-position: center 42%;
-      }
+        .dark-card:hover .card-media img {
+          transform: scale(1.035);
+        }
 
-      .experiment-card:nth-child(4) {
-        background-image: url("assets/cases/moreimg/04-real-card-content-pack-1440x900@2x.png");
-        background-position: center 34%;
-      }
+        .experiment-card:hover .card-media img {
+          transform: scale(1.025);
+        }
 
-      .experiment-card:nth-child(5) {
-        background-image: url("assets/cases/prompthub/library-overview.png");
-        background-position: center 36%;
-      }
+        .dark-card:hover h3::after,
+        .experiment-card:hover h3::after {
+          background: var(--dark-card-accent);
+          opacity: 1;
+          transform: scaleX(1.5);
+        }
 
-      .experiment-card:nth-child(6) {
-        background-image: url("assets/cases/vispath/03-result-board.png");
-        background-position: center 34%;
+        .experiment-card:hover p {
+          color: rgba(255, 255, 255, 0.98);
+        }
       }
 
       .about-row {
@@ -1067,15 +1095,21 @@
         min-height: var(--about-row-height);
         border-radius: var(--radius) 0 0 var(--radius);
         border: 0;
-        background-image: url("assets/optimized/linpo-about-portrait-760.jpg");
-        background-position: center 30%;
-        background-size: cover;
         box-shadow: none;
+      }
+
+      .about-media {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        display: block;
+        overflow: hidden;
       }
 
       .about-photo::after {
         position: absolute;
         inset: 0;
+        z-index: 1;
         background: linear-gradient(90deg, transparent 0%, rgba(9, 9, 9, 0.08) 58%, #090909 100%);
         content: "";
         pointer-events: none;
@@ -1199,201 +1233,412 @@
 
       @media (prefers-reduced-motion: no-preference) {
         .motion-ready .nav,
-        .motion-ready .hero-title,
-        .motion-ready .hero-axis,
         .motion-ready .hero-cn,
         .motion-ready .hero-rule,
-        .motion-ready .profile-mini,
-        .motion-ready .hero-visual {
+        .motion-ready .profile-mini {
           opacity: 0;
         }
 
         .motion-ready .nav {
-          transform: translate3d(0, -10px, 0);
+          transform: translate3d(0, -12px, 0);
         }
 
-        .motion-ready .hero-title,
-        .motion-ready .hero-axis,
-        .motion-ready .hero-cn,
-        .motion-ready .hero-rule,
-        .motion-ready .profile-mini {
-          transform: translate3d(0, 18px, 0);
-        }
-
-        .motion-ready.is-loaded .nav,
-        .motion-ready.is-loaded .hero-title,
-        .motion-ready.is-loaded .hero-axis,
-        .motion-ready.is-loaded .hero-cn,
-        .motion-ready.is-loaded .hero-rule,
-        .motion-ready.is-loaded .profile-mini,
-        .motion-ready.is-loaded .hero-visual {
+        .motion-ready .hero-title {
           opacity: 1;
-          transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 112%, 0);
         }
 
-        .motion-ready.is-loaded .hero-visual {
-          transform: translate3d(var(--hero-shift-x, 0px), var(--hero-shift-y, 0px), 0) scale(1);
-        }
-
-        .motion-ready.is-loaded .nav {
-          transition:
-            opacity 480ms ease 60ms,
-            transform 620ms cubic-bezier(0.16, 1, 0.3, 1) 60ms;
-        }
-
-        .motion-ready.is-loaded .hero-title {
-          transition:
-            opacity 620ms ease 120ms,
-            transform 760ms cubic-bezier(0.16, 1, 0.3, 1) 120ms;
-        }
-
-        .motion-ready.is-loaded .hero-axis {
-          transition:
-            opacity 620ms ease 205ms,
-            transform 760ms cubic-bezier(0.16, 1, 0.3, 1) 205ms;
-        }
-
-        .motion-ready.is-loaded .hero-cn {
-          transition:
-            opacity 620ms ease 285ms,
-            transform 760ms cubic-bezier(0.16, 1, 0.3, 1) 285ms;
-        }
-
-        .motion-ready.is-loaded .hero-rule {
-          transition:
-            opacity 520ms ease 350ms,
-            transform 680ms cubic-bezier(0.16, 1, 0.3, 1) 350ms;
-        }
-
-        .motion-ready.is-loaded .profile-mini {
-          transition:
-            opacity 560ms ease 420ms,
-            transform 720ms cubic-bezier(0.16, 1, 0.3, 1) 420ms;
-        }
-
-        .motion-ready.is-loaded .hero-visual {
-          transition:
-            opacity 680ms ease 220ms,
-            transform 260ms ease;
-        }
-
-        .motion-ready.is-loaded.is-hero-interactive .hero-visual {
-          transition: transform 260ms ease;
-        }
-
-        .motion-ready .section {
-          transition: background 520ms ease;
-        }
-
-        .motion-ready .section .side,
-        .motion-ready .feature-card,
-        .motion-ready .dark-card,
-        .motion-ready .experiment-card,
-        .motion-ready .about-row {
+        .motion-ready .hero-axis-word,
+        .motion-ready .hero-axis-node {
           opacity: 0;
-          transform: translate3d(0, 22px, 0);
+          transform: translate3d(0, 16px, 0);
+        }
+
+        .motion-ready .hero-visual {
+          opacity: 0;
+          transform: translate3d(var(--hero-shift-x, 0px), calc(18px + var(--hero-shift-y, 0px)), 0) scale(0.93);
+        }
+
+        .motion-ready .section .side {
+          opacity: 0;
+          transform: translate3d(-10px, 0, 0);
+        }
+
+        .motion-ready #projects .feature-content {
+          opacity: 1;
+          transform: translate3d(-8px, 0, 0);
         }
 
         .motion-ready #projects .feature-card {
-          transform: translate3d(0, 28px, 0);
+          opacity: 0;
+          transform: translate3d(0, 10px, 0);
         }
 
-        .motion-ready #methods .dark-card {
-          transform: translate3d(0, 18px, 0) scale(0.985);
+        .motion-ready #projects .feature-card .card-media {
+          opacity: 1;
+          transform: translate3d(38px, 0, 0) scaleX(0.94);
+          transform-origin: 100% 50%;
+        }
+
+        .motion-ready #methods .dark-card::after {
+          opacity: 0.2;
+        }
+
+        .motion-ready #methods .dark-card .card-media {
+          opacity: 0;
+          transform: scale(1.035);
+        }
+
+        .motion-ready #methods .dark-card h3,
+        .motion-ready #methods .dark-card p {
+          opacity: 0;
+          transform: translate3d(0, 5px, 0);
+        }
+
+        .motion-ready #methods .dark-card h3::after {
+          opacity: 0;
+          transform: scaleX(0);
         }
 
         .motion-ready #experiments .experiment-card {
-          transform: translate3d(0, 14px, 0) scale(0.992);
+          opacity: 0.18;
+          transform: scale(0.994);
         }
 
-        .motion-ready #about .about-row {
-          transform: translate3d(0, 18px, 0);
+        .motion-ready #experiments .experiment-card::after {
+          opacity: 0.12;
         }
 
-        .motion-ready .section.is-visible .side,
-        .motion-ready .section.is-visible .feature-card,
-        .motion-ready .section.is-visible .dark-card,
-        .motion-ready .section.is-visible .experiment-card,
-        .motion-ready .section.is-visible .about-row {
+        .motion-ready #experiments .experiment-card .card-media {
+          opacity: 0;
+          transform: scale(1.035);
+        }
+
+        .motion-ready #experiments .experiment-card h3,
+        .motion-ready #experiments .experiment-card p {
+          opacity: 0;
+          transform: translate3d(0, 5px, 0);
+        }
+
+        .motion-ready #experiments .experiment-card h3::after {
+          opacity: 0;
+          transform: scaleX(0);
+        }
+
+        .motion-ready #about .about-photo {
+          opacity: 0;
+          transform: translate3d(-10px, 0, 0);
+        }
+
+        .motion-ready #about .about-copy,
+        .motion-ready #about .about-details {
+          opacity: 0;
+          transform: translate3d(8px, 0, 0);
+        }
+
+        .motion-ready.is-booted .nav,
+        .motion-ready.is-booted .hero-cn,
+        .motion-ready.is-booted .hero-rule,
+        .motion-ready.is-booted .profile-mini {
+          opacity: 1;
+        }
+
+        .motion-ready.is-booted .nav {
+          transform: translate3d(0, 0, 0);
+          transition: opacity 320ms var(--ease-soft) 30ms, transform 420ms var(--ease-system) 30ms;
+        }
+
+        .motion-ready.is-booted .hero-title {
+          transform: translate3d(0, 0, 0);
+          transition: transform 560ms var(--ease-system) 160ms;
+        }
+
+        .motion-ready.is-booted .hero-axis-word,
+        .motion-ready.is-booted .hero-axis-node {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+          transition: opacity 260ms var(--ease-soft), transform 360ms var(--ease-system);
+        }
+
+        .motion-ready.is-booted .hero-axis-word:nth-of-type(1) {
+          transition-delay: 350ms;
+        }
+
+        .motion-ready.is-booted .hero-axis-node:nth-of-type(2) {
+          transition-delay: 455ms;
+        }
+
+        .motion-ready.is-booted .hero-axis-word:nth-of-type(3) {
+          transition-delay: 525ms;
+        }
+
+        .motion-ready.is-booted .hero-axis-node:nth-of-type(4) {
+          transition-delay: 630ms;
+        }
+
+        .motion-ready.is-booted .hero-axis-word:nth-of-type(5) {
+          transition-delay: 700ms;
+        }
+
+        .motion-ready.is-booted .hero-cn {
+          transform: translate3d(0, 0, 0);
+          transition: opacity 360ms var(--ease-soft) 800ms, transform 420ms var(--ease-system) 800ms;
+        }
+
+        .motion-ready.is-booted .hero-rule {
+          transform: translate3d(0, 0, 0);
+          transition: opacity 280ms var(--ease-soft) 880ms, transform 360ms var(--ease-system) 880ms;
+        }
+
+        .motion-ready.is-booted .profile-mini {
+          transform: translate3d(0, 0, 0);
+          transition: opacity 360ms var(--ease-soft) 980ms, transform 420ms var(--ease-system) 980ms;
+        }
+
+        .motion-ready.is-booted .hero-visual {
+          opacity: 1;
+          transform: translate3d(var(--hero-shift-x, 0px), var(--hero-shift-y, 0px), 0) scale(1);
+          transition: opacity 420ms var(--ease-soft) 500ms, transform 720ms var(--ease-system) 500ms;
+        }
+
+        .motion-ready .section.is-title-visible .side,
+        .motion-ready .section.is-visible .side {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+          transition: opacity 360ms var(--ease-soft), transform 420ms var(--ease-system);
+        }
+
+        .motion-ready #projects .side {
+          opacity: 0;
+          transform: translate3d(-10px, 0, 0);
+        }
+
+        .motion-ready.is-hero-settled #projects.is-title-visible .side {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+          transition: opacity 360ms var(--ease-soft), transform 420ms var(--ease-system);
+        }
+
+        .motion-ready #projects .feature-card:nth-child(1) {
+          --item-delay: 0ms;
+        }
+
+        .motion-ready #projects .feature-card:nth-child(2) {
+          --item-delay: 100ms;
+        }
+
+        .motion-ready #projects .feature-card:nth-child(3) {
+          --item-delay: 200ms;
+        }
+
+        .motion-ready #projects .feature-card:nth-child(4) {
+          --item-delay: 300ms;
+        }
+
+        .motion-ready #projects .feature-card.is-card-visible .feature-content {
           opacity: 1;
           transform: translate3d(0, 0, 0);
           transition:
-            opacity 560ms ease,
-            transform 760ms cubic-bezier(0.16, 1, 0.3, 1),
-            box-shadow 260ms ease,
-            filter 260ms ease;
+            opacity 320ms var(--ease-soft) var(--item-delay),
+            transform 440ms var(--ease-system) var(--item-delay);
         }
 
-        .motion-ready #projects.is-visible .feature-card,
-        .motion-ready #methods.is-visible .dark-card,
-        .motion-ready #experiments.is-visible .experiment-card,
-        .motion-ready #about.is-visible .about-row {
-          transform: translate3d(0, 0, 0) scale(1);
+        .motion-ready #projects .feature-card.is-card-visible .card-media {
+          opacity: 1;
+          transform: translate3d(0, 0, 0) scaleX(1);
+          transition:
+            opacity 480ms var(--ease-soft) calc(var(--item-delay) + 120ms),
+            transform 640ms var(--ease-system) calc(var(--item-delay) + 120ms);
         }
 
-        .motion-ready .section.is-visible a.feature-card:hover,
-        .motion-ready .section.is-visible .feature-card.is-soon:hover,
-        .motion-ready .section.is-visible .dark-card:hover,
-        .motion-ready .section.is-visible .experiment-card:hover {
-          transform: translateY(-2px);
+        .motion-ready.is-hero-settled #projects .feature-card.is-card-visible {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+          transition:
+            opacity 300ms var(--ease-soft) var(--item-delay),
+            transform 440ms var(--ease-system) var(--item-delay);
         }
 
-        .motion-ready #projects.is-visible a.feature-card:hover {
-          transform: translateY(-3px);
+        .motion-ready.is-page-restored #projects.is-title-visible .side,
+        .motion-ready.is-page-restored #projects .feature-card.is-card-visible,
+        .motion-ready.is-page-restored #projects .feature-card.is-card-visible .feature-content,
+        .motion-ready.is-page-restored #projects .feature-card.is-card-visible .card-media {
+          transition: none;
         }
 
-        .motion-ready #projects.is-visible .feature-card.is-soon:hover {
-          transform: translateY(-1px);
+        .motion-ready #methods .dark-card:nth-child(1) {
+          --item-delay: 0ms;
         }
 
-        .motion-ready #methods.is-visible .dark-card:hover {
-          transform: translateY(-3px);
+        .motion-ready #methods .dark-card:nth-child(2) {
+          --item-delay: 90ms;
         }
 
-        .motion-ready #experiments.is-visible .experiment-card:hover {
-          transform: translateY(-2px);
+        .motion-ready #methods .dark-card:nth-child(3) {
+          --item-delay: 180ms;
         }
 
-        .motion-ready .section.is-visible .side {
-          transition-delay: 40ms;
+        .motion-ready #methods .dark-card:nth-child(4) {
+          --item-delay: 270ms;
         }
 
-        .motion-ready .section.is-visible .feature-card:nth-child(1),
-        .motion-ready .section.is-visible .dark-card:nth-child(1),
-        .motion-ready .section.is-visible .experiment-card:nth-child(1) {
-          transition-delay: 140ms;
+        .motion-ready #methods .dark-card.is-card-visible::after {
+          opacity: 1;
+          transition:
+            border-color var(--motion-fast) ease,
+            opacity 240ms var(--ease-soft) var(--item-delay);
         }
 
-        .motion-ready .section.is-visible .feature-card:nth-child(2),
-        .motion-ready .section.is-visible .dark-card:nth-child(2),
-        .motion-ready .section.is-visible .experiment-card:nth-child(2) {
-          transition-delay: 220ms;
+        .motion-ready #methods .dark-card.is-card-visible .card-media {
+          opacity: 1;
+          transform: scale(1);
+          transition:
+            opacity 400ms var(--ease-soft) var(--item-delay),
+            transform 540ms var(--ease-system) var(--item-delay);
         }
 
-        .motion-ready .section.is-visible .feature-card:nth-child(3),
-        .motion-ready .section.is-visible .dark-card:nth-child(3),
-        .motion-ready .section.is-visible .experiment-card:nth-child(3) {
-          transition-delay: 300ms;
+        .motion-ready #methods .dark-card.is-card-visible h3::after {
+          opacity: 0.7;
+          transform: scaleX(1);
+          transition:
+            background-color var(--motion-fast) ease,
+            opacity 260ms var(--ease-soft) calc(var(--item-delay) + 140ms),
+            transform 380ms var(--ease-system) calc(var(--item-delay) + 140ms);
         }
 
-        .motion-ready .section.is-visible .dark-card:nth-child(4) {
-          transition-delay: 380ms;
+        .motion-ready #methods .dark-card.is-card-visible h3 {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+          transition:
+            color var(--motion-fast) ease,
+            opacity 300ms var(--ease-soft) calc(var(--item-delay) + 220ms),
+            transform 380ms var(--ease-system) calc(var(--item-delay) + 220ms);
         }
 
-        .motion-ready .section.is-visible .about-row {
-          transition-delay: 160ms;
+        .motion-ready #methods .dark-card.is-card-visible p {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+          transition:
+            color var(--motion-fast) ease,
+            opacity 300ms var(--ease-soft) calc(var(--item-delay) + 280ms),
+            transform 380ms var(--ease-system) calc(var(--item-delay) + 280ms);
         }
 
-        .motion-ready .section.is-revealed .side,
-        .motion-ready .section.is-revealed .feature-card,
-        .motion-ready .section.is-revealed .dark-card,
-        .motion-ready .section.is-revealed .experiment-card,
-        .motion-ready .section.is-revealed .about-row {
-          transition-delay: 0ms !important;
+        .motion-ready #experiments .experiment-card:nth-child(1) {
+          --item-delay: 0ms;
         }
 
-        .section.is-jump-target {
+        .motion-ready #experiments .experiment-card:nth-child(2) {
+          --item-delay: 60ms;
+        }
+
+        .motion-ready #experiments .experiment-card:nth-child(3) {
+          --item-delay: 120ms;
+        }
+
+        .motion-ready #experiments .experiment-card:nth-child(4) {
+          --item-delay: 180ms;
+        }
+
+        .motion-ready #experiments .experiment-card:nth-child(5) {
+          --item-delay: 240ms;
+        }
+
+        .motion-ready #experiments .experiment-card:nth-child(6) {
+          --item-delay: 300ms;
+        }
+
+        .motion-ready #experiments .experiment-card.is-card-visible {
+          opacity: 1;
+          transform: scale(1);
+          transition:
+            background-color var(--motion-fast) ease,
+            opacity 280ms var(--ease-soft) var(--item-delay),
+            transform 340ms var(--ease-system) var(--item-delay);
+        }
+
+        .motion-ready #experiments .experiment-card.is-card-visible::after {
+          opacity: 1;
+          transition:
+            border-color var(--motion-fast) ease,
+            opacity 220ms var(--ease-soft) var(--item-delay);
+        }
+
+        .motion-ready #experiments .experiment-card.is-card-visible .card-media {
+          opacity: 1;
+          transform: scale(1);
+          transition:
+            opacity 340ms var(--ease-soft) calc(var(--item-delay) + 70ms),
+            transform 440ms var(--ease-system) calc(var(--item-delay) + 70ms);
+        }
+
+        .motion-ready #experiments .experiment-card.is-card-visible h3 {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+          transition:
+            opacity 250ms var(--ease-soft) calc(var(--item-delay) + 140ms),
+            transform 320ms var(--ease-system) calc(var(--item-delay) + 140ms);
+        }
+
+        .motion-ready #experiments .experiment-card.is-card-visible h3::after {
+          opacity: 0.7;
+          transform: scaleX(1);
+          transition:
+            background-color var(--motion-fast) ease,
+            opacity 220ms var(--ease-soft) calc(var(--item-delay) + 180ms),
+            transform 320ms var(--ease-system) calc(var(--item-delay) + 180ms);
+        }
+
+        .motion-ready #experiments .experiment-card.is-card-visible p {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+          transition:
+            color var(--motion-fast) ease,
+            opacity 250ms var(--ease-soft) calc(var(--item-delay) + 210ms),
+            transform 320ms var(--ease-system) calc(var(--item-delay) + 210ms);
+        }
+
+        .motion-ready #about.is-visible .about-photo {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+          transition: opacity 420ms var(--ease-soft), transform 520ms var(--ease-system);
+        }
+
+        .motion-ready #about.is-visible .about-copy {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+          transition: opacity 340ms var(--ease-soft) 140ms, transform 420ms var(--ease-system) 140ms;
+        }
+
+        .motion-ready #about.is-visible .about-details {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+          transition: opacity 340ms var(--ease-soft) 240ms, transform 420ms var(--ease-system) 240ms;
+        }
+
+        .motion-ready .section.is-jump-target {
           background: linear-gradient(90deg, rgba(64, 120, 255, 0.065), transparent 42%);
+        }
+      }
+
+      @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+        .motion-ready #methods.is-visible .dark-card:hover h3::after,
+        .motion-ready #experiments.is-visible .experiment-card:hover h3::after {
+          background: var(--dark-card-accent);
+          opacity: 1;
+          transform: scaleX(1.5);
+          transition-delay: 0ms;
+        }
+
+        .motion-ready #methods.is-visible .dark-card:hover::after,
+        .motion-ready #experiments.is-visible .experiment-card:hover::after,
+        .motion-ready #experiments.is-visible .experiment-card:hover p {
+          transition-delay: 0ms;
+        }
+
+        .motion-ready #experiments.is-visible a.experiment-card:active {
+          transform: scale(0.99);
+          transition-delay: 0ms;
         }
       }
 
@@ -1570,14 +1815,31 @@
         .nav {
           display: flex;
           align-items: center;
-          gap: 12px;
+          gap: 8px;
           padding: 0;
         }
 
+        .brand {
+          gap: 5px;
+          font-size: 11px;
+        }
+
+        .brand-dot {
+          width: 6px;
+          height: 6px;
+        }
+
         .nav-links {
+          min-width: 0;
           flex-wrap: nowrap;
           justify-content: flex-end;
-          gap: 12px;
+          gap: 8px;
+          font-size: 9px;
+        }
+
+        .nav-links a {
+          padding-right: 2px;
+          padding-left: 2px;
         }
 
         .hero {
@@ -1620,6 +1882,12 @@
         .methods-grid,
         .experiments-grid {
           grid-template-columns: 1fr;
+        }
+
+        .motion-ready #projects .feature-card,
+        .motion-ready #methods .dark-card,
+        .motion-ready #experiments .experiment-card {
+          --item-delay: 0ms;
         }
 
         .experiments-grid .experiment-card:last-child {
@@ -1690,7 +1958,7 @@
             </a>
             <div class="nav-links">
               <a href="#projects">项目</a>
-              <a href="#methods">方法</a>
+              <a href="#methods">工作流</a>
               <a href="#experiments">实验</a>
               <a href="#about">关于</a>
             </div>
@@ -1698,8 +1966,16 @@
 
           <div class="hero-grid">
             <div class="hero-copy">
-              <h1 class="hero-title">LINPO LAB</h1>
-              <p class="hero-axis">Design × Method × AI</p>
+              <div class="hero-title-wrap">
+                <h1 class="hero-title">LINPO LAB</h1>
+              </div>
+              <p class="hero-axis" aria-label="Design × Method × AI">
+                <span class="hero-axis-word">Design</span>
+                <span class="hero-axis-node" aria-hidden="true">×</span>
+                <span class="hero-axis-word">Method</span>
+                <span class="hero-axis-node" aria-hidden="true">×</span>
+                <span class="hero-axis-word">AI</span>
+              </p>
               <p class="hero-cn">围绕品牌体验、产品设计、设计方法与 AI 工作流，探索设计与智能协同的新工作方式。</p>
               <div class="hero-rule" aria-hidden="true"></div>
               <div class="profile-mini">
@@ -1708,21 +1984,29 @@
                   <p class="profile-name">Linpo Wu</p>
                   <p class="profile-meta">
                     <span>UI/UX Designer</span>
-                    <span>10+ Years Experience</span>
+                    <span>10+ Years in Design</span>
                   </p>
                 </div>
               </div>
             </div>
 
-            <img
-              class="hero-visual"
-              src="assets/optimized/linpo-hero-right-1100.jpg"
-              alt="LINPO LAB 设计框架关系图，连接品牌、产品、体验、工作流与 AI。"
-              width="1100"
-              height="1100"
-              fetchpriority="high"
-              decoding="async"
-            />
+            <picture class="hero-visual">
+              <source
+                type="image/webp"
+                srcset="assets/home-media/hero-framework-640.webp?v=home-18df10809cd1 640w, assets/home-media/hero-framework-768.webp?v=home-18df10809cd1 768w, assets/home-media/hero-framework-1100.webp?v=home-18df10809cd1 1100w"
+                sizes="(max-width: 900px) 88vw, 500px"
+              />
+              <img
+                src="assets/home-media/hero-framework-640.jpg?v=home-18df10809cd1"
+                srcset="assets/home-media/hero-framework-640.jpg?v=home-18df10809cd1 640w, assets/home-media/hero-framework-768.jpg?v=home-18df10809cd1 768w, assets/home-media/hero-framework-1100.jpg?v=home-18df10809cd1 1100w"
+                sizes="(max-width: 900px) 88vw, 500px"
+                alt="LINPO LAB 设计框架关系图，连接品牌、产品、体验、工作流与 AI。"
+                width="1100"
+                height="1100"
+                fetchpriority="high"
+                decoding="async"
+              />
+            </picture>
           </div>
         </div>
       </header>
@@ -1742,47 +2026,55 @@
             </aside>
 
             <div class="feature-stack">
-              <a class="feature-card is-live" href="project-decks/quanyu/index.html?v=20260708-4" aria-label="打开全域营销后台体验升级项目演示">
+              <a class="feature-card is-live" href="projects/quanyu/index.html?v=20260708-4" aria-label="打开全域营销后台体验升级项目演示">
+                <picture class="card-media" data-media style="--media-position: center 52%; --media-fallback: #d9d5ee">
+                  <source type="image/webp" data-srcset="assets/home-media/project-quanyu-640.webp?v=home-18df10809cd1 640w, assets/home-media/project-quanyu-800.webp?v=home-18df10809cd1 800w, assets/home-media/project-quanyu-960.webp?v=home-18df10809cd1 960w, assets/home-media/project-quanyu-1200.webp?v=home-18df10809cd1 1200w" />
+                  <img data-src="assets/home-media/project-quanyu-640.jpg?v=home-18df10809cd1" data-srcset="assets/home-media/project-quanyu-640.jpg?v=home-18df10809cd1 640w, assets/home-media/project-quanyu-800.jpg?v=home-18df10809cd1 800w, assets/home-media/project-quanyu-960.jpg?v=home-18df10809cd1 960w, assets/home-media/project-quanyu-1200.jpg?v=home-18df10809cd1 1200w" data-sizes="(max-width: 620px) 100vw, (max-width: 900px) 58vw, 880px" width="1400" height="700" alt="" decoding="async" />
+                </picture>
                 <div class="feature-content">
                   <span class="feature-index">01</span>
                   <h3 class="feature-title">全域营销后台体验升级</h3>
                   <p class="feature-sub">Omni-channel Marketing<br />Platform Experience Upgrade</p>
                   <p class="feature-note">复杂业务场景 / 数据可视化 / 系统效率</p>
                 </div>
-                <span class="feature-status">View Case</span>
                 <div class="feature-art" aria-hidden="true"></div>
               </a>
 
-              <article class="feature-card is-soon">
+              <a class="feature-card is-live" href="projects/xiaohui/index.html" aria-label="打开小慧 AI 产品视觉与界面设计项目演示">
+                <picture class="card-media" data-media style="--media-position: center 52%; --media-fallback: #dbe4f7">
+                  <source type="image/webp" data-srcset="assets/home-media/project-xiaohui-640.webp?v=home-18df10809cd1 640w, assets/home-media/project-xiaohui-800.webp?v=home-18df10809cd1 800w, assets/home-media/project-xiaohui-960.webp?v=home-18df10809cd1 960w, assets/home-media/project-xiaohui-1200.webp?v=home-18df10809cd1 1200w" />
+                  <img data-src="assets/home-media/project-xiaohui-640.jpg?v=home-18df10809cd1" data-srcset="assets/home-media/project-xiaohui-640.jpg?v=home-18df10809cd1 640w, assets/home-media/project-xiaohui-800.jpg?v=home-18df10809cd1 800w, assets/home-media/project-xiaohui-960.jpg?v=home-18df10809cd1 960w, assets/home-media/project-xiaohui-1200.jpg?v=home-18df10809cd1 1200w" data-sizes="(max-width: 620px) 100vw, (max-width: 900px) 58vw, 880px" width="1400" height="622" alt="" decoding="async" />
+                </picture>
                 <div class="feature-content">
                   <span class="feature-index">02</span>
                   <h3 class="feature-title">小慧 AI 产品视觉与界面设计</h3>
                   <p class="feature-sub">Xiaohui AI Product<br />Visual & Interface Design</p>
                   <p class="feature-note">AI 产品体验 / 视觉系统 / 品牌表达</p>
                 </div>
-                <span class="feature-status">Preparing</span>
                 <div class="feature-art" aria-hidden="true"></div>
-              </article>
+              </a>
 
-              <article class="feature-card is-soon">
+              <a class="feature-card is-live" href="projects/jifen/index.html" aria-label="打开积分系统全链路体验优化项目演示">
+                <picture class="card-media" data-media style="--media-position: center 52%; --media-fallback: #eee5d1">
+                  <source type="image/webp" data-srcset="assets/home-media/project-jifen-640.webp?v=home-18df10809cd1 640w, assets/home-media/project-jifen-800.webp?v=home-18df10809cd1 800w, assets/home-media/project-jifen-960.webp?v=home-18df10809cd1 960w, assets/home-media/project-jifen-1200.webp?v=home-18df10809cd1 1200w" />
+                  <img data-src="assets/home-media/project-jifen-640.jpg?v=home-18df10809cd1" data-srcset="assets/home-media/project-jifen-640.jpg?v=home-18df10809cd1 640w, assets/home-media/project-jifen-800.jpg?v=home-18df10809cd1 800w, assets/home-media/project-jifen-960.jpg?v=home-18df10809cd1 960w, assets/home-media/project-jifen-1200.jpg?v=home-18df10809cd1 1200w" data-sizes="(max-width: 620px) 100vw, (max-width: 900px) 58vw, 880px" width="1400" height="664" alt="" decoding="async" />
+                </picture>
                 <div class="feature-content">
                   <span class="feature-index">03</span>
                   <h3 class="feature-title">积分系统全链路体验优化</h3>
                   <p class="feature-sub">Points System End-to-End<br />Experience Optimization</p>
                   <p class="feature-note">会员成长 / 积分机制 / 增长体验</p>
                 </div>
-                <span class="feature-status">Preparing</span>
                 <div class="feature-art" aria-hidden="true"></div>
-              </article>
+              </a>
 
-              <a class="feature-card is-live" href="projects/h5-archive/index.html" aria-label="打开品牌传播 H5 精选项目">
+              <a class="feature-card feature-card--archive is-live" href="https://woodslope.github.io/h5/" aria-label="打开品牌传播 H5 精选项目">
                 <div class="feature-content">
                   <span class="feature-index">04</span>
                   <h3 class="feature-title">品牌传播 H5</h3>
                   <p class="feature-sub">Brand Communication<br />H5 Archive</p>
                   <p class="feature-note">地产传播 / 招聘互动 / 品牌活动</p>
                 </div>
-                <span class="feature-status">View Case</span>
                 <div class="feature-art" aria-hidden="true"></div>
               </a>
             </div>
@@ -1793,15 +2085,19 @@
               <div>
                 <span class="section-number">02</span>
                 <div class="section-label">
-                  <h2 class="section-title-cn" id="methods-title">设计方法论</h2>
-                  <span class="section-title-en">Methods</span>
+                  <h2 class="section-title-cn" id="methods-title">AI 设计工作流</h2>
+                  <span class="section-title-en">AI Design Workflows</span>
                 </div>
               </div>
-              <p class="section-copy">Methods & Frameworks<br />沉淀提示框架、视觉逆向与 AI 协同方法，形成可复用工作流。</p>
+              <p class="section-copy">AI-Augmented Design<br />沉淀提示框架、视觉逆向、AI 协同与设计到代码的可复用工作流。</p>
             </aside>
 
             <div class="card-grid methods-grid">
               <article class="dark-card">
+                <picture class="card-media" data-media style="--media-position: center 58%; --media-fallback: #131323">
+                  <source type="image/webp" data-srcset="assets/home-media/method-prompt-480.webp?v=home-18df10809cd1 480w, assets/home-media/method-prompt-800.webp?v=home-18df10809cd1 800w" />
+                  <img data-src="assets/home-media/method-prompt-480.jpg?v=home-18df10809cd1" data-srcset="assets/home-media/method-prompt-480.jpg?v=home-18df10809cd1 480w, assets/home-media/method-prompt-800.jpg?v=home-18df10809cd1 800w" data-sizes="(max-width: 900px) 50vw, 220px" width="1000" height="666" alt="" decoding="async" />
+                </picture>
                 <h3>提示框架</h3>
                 <p>Prompt Framework</p>
                 <div class="method-visual" aria-hidden="true">
@@ -1813,6 +2109,10 @@
                 </div>
               </article>
               <article class="dark-card">
+                <picture class="card-media" data-media style="--media-position: center 54%; --media-fallback: #101820">
+                  <source type="image/webp" data-srcset="assets/home-media/method-visual-reverse-480.webp?v=home-18df10809cd1 480w, assets/home-media/method-visual-reverse-800.webp?v=home-18df10809cd1 800w" />
+                  <img data-src="assets/home-media/method-visual-reverse-480.jpg?v=home-18df10809cd1" data-srcset="assets/home-media/method-visual-reverse-480.jpg?v=home-18df10809cd1 480w, assets/home-media/method-visual-reverse-800.jpg?v=home-18df10809cd1 800w" data-sizes="(max-width: 900px) 50vw, 220px" width="1000" height="666" alt="" decoding="async" />
+                </picture>
                 <h3>视觉逆向系统</h3>
                 <p>Visual Reverse System</p>
                 <div class="method-visual" aria-hidden="true">
@@ -1825,6 +2125,10 @@
                 </div>
               </article>
               <article class="dark-card">
+                <picture class="card-media" data-media style="--media-position: center 52%; --media-fallback: #111a21">
+                  <source type="image/webp" data-srcset="assets/home-media/method-ai-framework-480.webp?v=home-18df10809cd1 480w, assets/home-media/method-ai-framework-800.webp?v=home-18df10809cd1 800w" />
+                  <img data-src="assets/home-media/method-ai-framework-480.jpg?v=home-18df10809cd1" data-srcset="assets/home-media/method-ai-framework-480.jpg?v=home-18df10809cd1 480w, assets/home-media/method-ai-framework-800.jpg?v=home-18df10809cd1 800w" data-sizes="(max-width: 900px) 50vw, 220px" width="1000" height="666" alt="" decoding="async" />
+                </picture>
                 <h3>AI 设计方法框架</h3>
                 <p>AI Design Method Framework</p>
                 <div class="method-visual" aria-hidden="true">
@@ -1833,6 +2137,10 @@
                 </div>
               </article>
               <article class="dark-card">
+                <picture class="card-media" data-media style="--media-position: center 50%; --media-fallback: #111515">
+                  <source type="image/webp" data-srcset="assets/home-media/method-design-code-480.webp?v=home-18df10809cd1 480w, assets/home-media/method-design-code-800.webp?v=home-18df10809cd1 800w" />
+                  <img data-src="assets/home-media/method-design-code-480.jpg?v=home-18df10809cd1" data-srcset="assets/home-media/method-design-code-480.jpg?v=home-18df10809cd1 480w, assets/home-media/method-design-code-800.jpg?v=home-18df10809cd1 800w" data-sizes="(max-width: 900px) 50vw, 220px" width="1000" height="666" alt="" decoding="async" />
+                </picture>
                 <h3>设计到代码工作流</h3>
                 <p>Design to Code Workflow</p>
                 <div class="method-visual" aria-hidden="true">
@@ -1852,37 +2160,61 @@
               <div>
                 <span class="section-number">03</span>
                 <div class="section-label">
-                  <h2 class="section-title-cn" id="experiments-title">探索实验</h2>
-                  <span class="section-title-en">Experiments</span>
+                  <h2 class="section-title-cn" id="experiments-title">Vibe Coding 实验</h2>
+                  <span class="section-title-en">Vibe Coding Explorations</span>
                 </div>
               </div>
-              <p class="section-copy">AI Explorations<br />记录内容可视化、动态变量与详情页策划等设计实验。</p>
+              <p class="section-copy">Vibe Coding Explorations<br />从想法、提示词到可运行原型的设计实验。</p>
             </aside>
 
             <div class="card-grid experiments-grid">
               <article class="experiment-card">
+                <picture class="card-media" data-media style="--media-position: center 52%; --media-fallback: #111b20">
+                  <source type="image/webp" data-srcset="assets/home-media/experiment-workbench-480.webp?v=home-18df10809cd1 480w, assets/home-media/experiment-workbench-800.webp?v=home-18df10809cd1 800w, assets/home-media/experiment-workbench-960.webp?v=home-18df10809cd1 960w" />
+                  <img data-src="assets/home-media/experiment-workbench-480.jpg?v=home-18df10809cd1" data-srcset="assets/home-media/experiment-workbench-480.jpg?v=home-18df10809cd1 480w, assets/home-media/experiment-workbench-800.jpg?v=home-18df10809cd1 800w, assets/home-media/experiment-workbench-960.jpg?v=home-18df10809cd1 960w" data-sizes="(max-width: 620px) 100vw, (max-width: 900px) 50vw, 460px" width="1100" height="619" alt="" decoding="async" />
+                </picture>
                 <h3>详情页策划工作台</h3>
                 <p>Detail Page Planning Workspace</p>
               </article>
-              <a class="experiment-card" href="experiments/leekquant/index.html" aria-label="打开韭菜策略 LeekQuant 收盘复盘工具原型实验案例">
-                <h3>LeekQuant 韭菜策略</h3>
-                <p>GitHub 展示版与本地执行版的收盘复盘工具案例</p>
-              </a>
-              <a class="experiment-card" href="experiments/dailyglance/index.html" aria-label="打开 DailyGlance 量化观察终端实验案例">
-                <h3>DailyGlance 一日一瞥</h3>
-                <p>把市场信息、观察依据与复盘动作组织成可解释的每日路径</p>
-              </a>
               <a class="experiment-card" href="experiments/moreimg/index.html" aria-label="打开 MoreImg 文章转知识卡片与视觉提示词实验案例">
+                <picture class="card-media" data-media style="--media-position: center 34%; --media-fallback: #161313">
+                  <source type="image/webp" data-srcset="assets/home-media/experiment-moreimg-480.webp?v=home-18df10809cd1 480w, assets/home-media/experiment-moreimg-800.webp?v=home-18df10809cd1 800w, assets/home-media/experiment-moreimg-960.webp?v=home-18df10809cd1 960w" />
+                  <img data-src="assets/home-media/experiment-moreimg-480.jpg?v=home-18df10809cd1" data-srcset="assets/home-media/experiment-moreimg-480.jpg?v=home-18df10809cd1 480w, assets/home-media/experiment-moreimg-800.jpg?v=home-18df10809cd1 800w, assets/home-media/experiment-moreimg-960.jpg?v=home-18df10809cd1 960w" data-sizes="(max-width: 620px) 100vw, (max-width: 900px) 50vw, 460px" width="1440" height="900" alt="" decoding="async" />
+                </picture>
                 <h3>MoreImg 一文多图</h3>
                 <p>把长文重构为知识卡片内容与一一对应的视觉提示词</p>
               </a>
               <a class="experiment-card" href="experiments/prompthub/index.html" aria-label="打开 PromptHub 本地提示词资产库实验案例">
+                <picture class="card-media" data-media style="--media-position: center 36%; --media-fallback: #141416">
+                  <source type="image/webp" data-srcset="assets/home-media/experiment-prompthub-480.webp?v=home-18df10809cd1 480w, assets/home-media/experiment-prompthub-800.webp?v=home-18df10809cd1 800w, assets/home-media/experiment-prompthub-960.webp?v=home-18df10809cd1 960w" />
+                  <img data-src="assets/home-media/experiment-prompthub-480.jpg?v=home-18df10809cd1" data-srcset="assets/home-media/experiment-prompthub-480.jpg?v=home-18df10809cd1 480w, assets/home-media/experiment-prompthub-800.jpg?v=home-18df10809cd1 800w, assets/home-media/experiment-prompthub-960.jpg?v=home-18df10809cd1 960w" data-sizes="(max-width: 620px) 100vw, (max-width: 900px) 50vw, 460px" width="1440" height="900" alt="" decoding="async" />
+                </picture>
                 <h3>PromptHub 提示中枢</h3>
                 <p>把建库、检索、动态填充、复用与备份连成本地优先的个人工作流</p>
               </a>
               <a class="experiment-card" href="experiments/vispath/index.html" aria-label="打开 VisPath 单变量视觉方向工作台实验案例">
+                <picture class="card-media" data-media style="--media-position: center 34%; --media-fallback: #11161b">
+                  <source type="image/webp" data-srcset="assets/home-media/experiment-vispath-480.webp?v=home-18df10809cd1 480w, assets/home-media/experiment-vispath-800.webp?v=home-18df10809cd1 800w, assets/home-media/experiment-vispath-960.webp?v=home-18df10809cd1 960w" />
+                  <img data-src="assets/home-media/experiment-vispath-480.jpg?v=home-18df10809cd1" data-srcset="assets/home-media/experiment-vispath-480.jpg?v=home-18df10809cd1 480w, assets/home-media/experiment-vispath-800.jpg?v=home-18df10809cd1 800w, assets/home-media/experiment-vispath-960.jpg?v=home-18df10809cd1 960w" data-sizes="(max-width: 620px) 100vw, (max-width: 900px) 50vw, 460px" width="1440" height="900" alt="" decoding="async" />
+                </picture>
                 <h3>VisPath 视觉路径</h3>
                 <p>固定创作约束，只改变一个视觉维度，生成并比较可继续细化的多套方向</p>
+              </a>
+              <a class="experiment-card" href="experiments/leekquant/index.html" aria-label="打开韭菜策略 LeekQuant 收盘复盘与策略验证实验案例">
+                <picture class="card-media" data-media style="--media-position: center 42%; --media-fallback: #101414">
+                  <source type="image/webp" data-srcset="assets/home-media/experiment-leekquant-480.webp?v=home-18df10809cd1 480w, assets/home-media/experiment-leekquant-800.webp?v=home-18df10809cd1 800w, assets/home-media/experiment-leekquant-960.webp?v=home-18df10809cd1 960w" />
+                  <img data-src="assets/home-media/experiment-leekquant-480.jpg?v=home-18df10809cd1" data-srcset="assets/home-media/experiment-leekquant-480.jpg?v=home-18df10809cd1 480w, assets/home-media/experiment-leekquant-800.jpg?v=home-18df10809cd1 800w, assets/home-media/experiment-leekquant-960.jpg?v=home-18df10809cd1 960w" data-sizes="(max-width: 620px) 100vw, (max-width: 900px) 50vw, 460px" width="1440" height="900" alt="" decoding="async" />
+                </picture>
+                <h3>LeekQuant 韭菜策略</h3>
+                <p>验证收盘扫描、候选信号与模拟回看的复盘路径</p>
+              </a>
+              <a class="experiment-card" href="experiments/dailyglance/index.html" aria-label="打开 DailyGlance 市场观察与可解释判断实验案例">
+                <picture class="card-media" data-media style="--media-position: center 42%; --media-fallback: #12151a">
+                  <source type="image/webp" data-srcset="assets/home-media/experiment-dailyglance-480.webp?v=home-18df10809cd1 480w, assets/home-media/experiment-dailyglance-800.webp?v=home-18df10809cd1 800w, assets/home-media/experiment-dailyglance-960.webp?v=home-18df10809cd1 960w" />
+                  <img data-src="assets/home-media/experiment-dailyglance-480.jpg?v=home-18df10809cd1" data-srcset="assets/home-media/experiment-dailyglance-480.jpg?v=home-18df10809cd1 480w, assets/home-media/experiment-dailyglance-800.jpg?v=home-18df10809cd1 800w, assets/home-media/experiment-dailyglance-960.jpg?v=home-18df10809cd1 960w" data-sizes="(max-width: 620px) 100vw, (max-width: 900px) 50vw, 460px" width="1440" height="900" alt="" decoding="async" />
+                </picture>
+                <h3>DailyGlance 一日一瞥</h3>
+                <p>从市场环境到个股依据的每日可解释观察路径</p>
               </a>
             </div>
           </section>
@@ -1900,10 +2232,15 @@
             </aside>
 
             <div class="about-row">
-              <div class="about-photo" role="img" aria-label="Linpo Wu 肖像照"></div>
+              <div class="about-photo is-media-target" role="img" aria-label="Linpo Wu 肖像照">
+                <picture class="about-media" data-media style="--media-position: center 30%; --media-fallback: #121212">
+                  <source type="image/webp" data-srcset="assets/home-media/about-portrait-480.webp?v=home-18df10809cd1 480w, assets/home-media/about-portrait-760.webp?v=home-18df10809cd1 760w" />
+                  <img data-src="assets/home-media/about-portrait-480.jpg?v=home-18df10809cd1" data-srcset="assets/home-media/about-portrait-480.jpg?v=home-18df10809cd1 480w, assets/home-media/about-portrait-760.jpg?v=home-18df10809cd1 760w" data-sizes="(max-width: 620px) 100vw, (max-width: 900px) 190px, 220px" width="760" height="760" alt="" decoding="async" />
+                </picture>
+              </div>
               <div class="about-copy">
                 <h3 class="about-name">Linpo Wu</h3>
-                <p class="about-meta">UI/UX Designer&nbsp;&nbsp;|&nbsp;&nbsp;10+ Years Experience</p>
+                <p class="about-meta">UI/UX Designer&nbsp;&nbsp;|&nbsp;&nbsp;10+ Years in Design</p>
                 <p class="about-desc">
                   专注于品牌体验、产品设计、设计方法与 AI 工作流，拥有 10+ 年互联网设计经验。
                   长期关注设计系统构建、SOP 经验体系与智能协同实践。
@@ -1928,7 +2265,7 @@
       <footer class="footer">
         <div class="container footer-inner">
           <span>© 2026 LINPO LAB · Design × Method × AI</span>
-          <a href="#top" aria-label="Back to top">Back to Top</a>
+          <a href="#top" aria-label="返回顶部">返回顶部 ↑</a>
         </div>
       </footer>
     </div>
@@ -1936,96 +2273,329 @@
       (() => {
         const root = document.documentElement;
         const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+        const compactViewport = window.matchMedia("(max-width: 620px)").matches;
         const sections = Array.from(document.querySelectorAll(".section"));
-        const firstContentSection = document.querySelector("#projects");
+        const motionCardSelector = ".feature-card, .dark-card, .experiment-card";
+        const initialTarget = location.hash ? document.getElementById(location.hash.slice(1)) : null;
+        const shouldRestorePage = ["restore", "target"].includes(root.dataset.entryMode);
+        const revealTitle = (section) => section?.classList.add("is-title-visible");
+        const revealSection = (section) => {
+          revealTitle(section);
+          section?.classList.add("is-visible");
+        };
+        const revealCard = (card) => {
+          if (!card) {
+            return;
+          }
+          if (card.closest("#projects") && !root.classList.contains("is-hero-settled")) {
+            card.dataset.revealPending = "true";
+            return;
+          }
+          delete card.dataset.revealPending;
+          card.classList.add("is-card-visible");
+        };
+        const revealCards = (section) => section?.querySelectorAll(motionCardSelector).forEach(revealCard);
+        const revealVisibleProjectLead = () => {
+          const projectSection = document.querySelector("#projects");
+          const firstProjectCard = projectSection?.querySelector(".feature-card");
+          const cardRect = firstProjectCard?.getBoundingClientRect();
+          if (
+            projectSection?.classList.contains("is-title-visible") &&
+            cardRect &&
+            cardRect.top < window.innerHeight &&
+            cardRect.bottom > 0
+          ) {
+            revealCard(firstProjectCard);
+          }
+        };
+        const canRevealEntry = (entry) => entry.isIntersecting || entry.boundingClientRect.top < 0;
 
-        const revealSection = (section, revealedDelay = 900) => {
-          if (!section) {
+        const activateMedia = (frame) => {
+          if (!frame || frame.dataset.loaded === "true") {
             return;
           }
 
-          section.classList.add("is-visible");
-          window.setTimeout(() => section.classList.add("is-revealed"), revealedDelay);
+          frame.dataset.loaded = "true";
+          const image = frame.querySelector("img");
+          frame.querySelectorAll("source[data-srcset]").forEach((source) => {
+            source.srcset = source.dataset.srcset;
+            if (image?.dataset.sizes) {
+              source.sizes = image.dataset.sizes;
+            }
+          });
+
+          if (!image) {
+            return;
+          }
+
+          if (image.dataset.sizes) {
+            image.sizes = image.dataset.sizes;
+          }
+          if (image.dataset.srcset) {
+            image.srcset = image.dataset.srcset;
+          }
+
+          const markReady = () => {
+            const done = () => frame.classList.add("is-media-ready");
+            if (typeof image.decode === "function") {
+              image.decode().catch(() => undefined).finally(done);
+            } else {
+              done();
+            }
+          };
+
+          image.addEventListener("load", markReady, { once: true });
+          image.addEventListener("error", () => frame.classList.add("is-media-ready"), { once: true });
+          image.src = image.dataset.src;
+
+          if (image.complete && image.naturalWidth) {
+            markReady();
+          }
         };
 
-        if (reduceMotion.matches) {
-          root.classList.remove("motion-ready");
-          sections.forEach((section) => section.classList.add("is-visible", "is-revealed"));
-          return;
-        }
-
-        requestAnimationFrame(() => {
-          root.classList.add("is-loaded");
-        });
-
-        window.setTimeout(() => revealSection(firstContentSection), 820);
-
+        const mediaFrames = Array.from(document.querySelectorAll("[data-media]"));
         if ("IntersectionObserver" in window) {
-          const observer = new IntersectionObserver(
+          const mediaObserver = new IntersectionObserver(
             (entries) => {
               entries.forEach((entry) => {
                 if (!entry.isIntersecting) {
                   return;
                 }
-
-                revealSection(entry.target);
-                observer.unobserve(entry.target);
+                activateMedia(entry.target);
+                mediaObserver.unobserve(entry.target);
               });
             },
-            {
-              rootMargin: "0px 0px -12% 0px",
-              threshold: 0.16,
-            }
+            { rootMargin: "560px 0px", threshold: 0.01 }
           );
-
-          sections.forEach((section) => {
-            if (section === firstContentSection) {
-              return;
-            }
-
-            observer.observe(section);
-          });
+          mediaFrames.forEach((frame) => mediaObserver.observe(frame));
         } else {
-          sections.forEach((section) => section.classList.add("is-visible", "is-revealed"));
+          mediaFrames.forEach(activateMedia);
         }
 
+        const navLinks = Array.from(document.querySelectorAll(".nav-links a"));
+        const setActiveNav = (sectionId) => {
+          navLinks.forEach((link) => link.classList.toggle("is-active", link.getAttribute("href") === `#${sectionId}`));
+        };
+
+        setActiveNav(sections[0]?.id);
+
+        const startPage = () => {
+          if (startPage.hasStarted) {
+            return;
+          }
+          startPage.hasStarted = true;
+
+          if (reduceMotion.matches) {
+            root.classList.remove("motion-ready");
+            sections.forEach(revealSection);
+            return;
+          }
+
+          if (shouldRestorePage) {
+            root.classList.add("is-booted", "is-hero-settled", "is-page-restored");
+            if (initialTarget?.classList.contains("section")) {
+              revealSection(initialTarget);
+              revealCards(initialTarget);
+            }
+          } else {
+            requestAnimationFrame(() => root.classList.add("is-booted"));
+            window.setTimeout(() => {
+              root.classList.add("is-hero-settled");
+              window.setTimeout(() => {
+                revealVisibleProjectLead();
+                document
+                  .querySelectorAll('#projects .feature-card[data-reveal-pending="true"]')
+                  .forEach(revealCard);
+              }, 220);
+            }, 1450);
+          }
+
+          if ("IntersectionObserver" in window) {
+            const revealOptions = compactViewport
+              ? { rootMargin: "0px 0px -18% 0px", threshold: 0.12 }
+              : { rootMargin: "0px 0px -38% 0px", threshold: 0.12 };
+            const titleObserver = new IntersectionObserver(
+              (entries) => {
+                entries.forEach((entry) => {
+                  if (!canRevealEntry(entry)) {
+                    return;
+                  }
+                  const section = entry.target.closest(".section") || entry.target;
+                  revealTitle(section);
+                  if (section.id === "projects" && root.classList.contains("is-hero-settled")) {
+                    window.setTimeout(revealVisibleProjectLead, 220);
+                  }
+                  titleObserver.unobserve(entry.target);
+                });
+              },
+              { rootMargin: "0px 0px -8% 0px", threshold: 0.05 }
+            );
+            const sectionObserver = new IntersectionObserver(
+              (entries) => {
+                entries.forEach((entry) => {
+                  if (!canRevealEntry(entry)) {
+                    return;
+                  }
+                  const section = entry.target.closest(".section") || entry.target;
+                  revealSection(section);
+                  revealCards(section);
+                  sectionObserver.unobserve(entry.target);
+                });
+              },
+              revealOptions
+            );
+            const cardObserver = new IntersectionObserver(
+              (entries) => {
+                entries.forEach((entry) => {
+                  if (!canRevealEntry(entry)) {
+                    return;
+                  }
+                  revealCard(entry.target);
+                  revealSection(entry.target.closest(".section"));
+                  cardObserver.unobserve(entry.target);
+                });
+              },
+              revealOptions
+            );
+            const finalSectionObserver = new IntersectionObserver(
+              (entries) => {
+                entries.forEach((entry) => {
+                  if (!canRevealEntry(entry)) {
+                    return;
+                  }
+                  revealSection(entry.target.closest(".section") || entry.target);
+                  finalSectionObserver.unobserve(entry.target);
+                });
+              },
+              { rootMargin: "0px 0px -8% 0px", threshold: 0.08 }
+            );
+            sections.forEach((section) => {
+              titleObserver.observe(section.querySelector(".side") || section);
+              const revealAnchor = section.querySelector(
+                ".feature-card, .dark-card, .experiment-card, .about-row"
+              );
+              if (section.id === "about") {
+                finalSectionObserver.observe(revealAnchor || section);
+              } else if (compactViewport) {
+                section.querySelectorAll(motionCardSelector).forEach((card) => cardObserver.observe(card));
+              } else {
+                sectionObserver.observe(revealAnchor || section);
+              }
+            });
+
+            const navObserver = new IntersectionObserver(
+              (entries) => {
+                const visibleSections = entries.filter((entry) => entry.isIntersecting);
+                if (!visibleSections.length) {
+                  return;
+                }
+                visibleSections.sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+                setActiveNav(visibleSections[0].target.id);
+              },
+              { rootMargin: "-25% 0px -58% 0px", threshold: [0.08, 0.24, 0.5] }
+            );
+            sections.forEach((section) => navObserver.observe(section));
+          } else {
+            sections.forEach((section) => {
+              revealSection(section);
+              revealCards(section);
+            });
+          }
+        };
+
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", startPage, { once: true });
+        } else {
+          startPage();
+        }
+
+        window.addEventListener("pageshow", (event) => {
+          if (!event.persisted || reduceMotion.matches) {
+            return;
+          }
+          root.classList.add("is-booted", "is-hero-settled", "is-page-restored");
+          const restoredTarget = location.hash ? document.getElementById(location.hash.slice(1)) : null;
+          if (restoredTarget?.classList.contains("section")) {
+            revealSection(restoredTarget);
+            revealCards(restoredTarget);
+          }
+        });
+
+        document.querySelectorAll("#projects a.feature-card.is-live").forEach((card) => {
+          card.addEventListener("click", (event) => {
+            if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+              return;
+            }
+            try {
+              sessionStorage.setItem("linpo-home-return-target", "projects");
+            } catch {}
+          });
+        });
+
         const hero = document.querySelector(".hero");
+        const heroVisual = document.querySelector(".hero-visual");
         const canUsePointerMotion =
-          window.innerWidth >= 760 && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+          !reduceMotion.matches && window.innerWidth >= 760 && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
-        if (hero && canUsePointerMotion) {
-          window.setTimeout(() => {
-            root.classList.add("is-hero-interactive");
-          }, 1200);
+        if (hero && heroVisual && canUsePointerMotion) {
+          let heroRect;
+          let pointerFrame = 0;
+          let shiftX = 0;
+          let shiftY = 0;
+          const measureHero = () => {
+            heroRect = hero.getBoundingClientRect();
+          };
+          const applyPointerShift = () => {
+            pointerFrame = 0;
+            heroVisual.style.setProperty("--hero-shift-x", `${shiftX.toFixed(2)}px`);
+            heroVisual.style.setProperty("--hero-shift-y", `${shiftY.toFixed(2)}px`);
+          };
+          const schedulePointerShift = () => {
+            if (!pointerFrame) {
+              pointerFrame = requestAnimationFrame(applyPointerShift);
+            }
+          };
 
+          hero.addEventListener("pointerenter", () => {
+            measureHero();
+            if (root.classList.contains("is-booted")) {
+              heroVisual.style.transition = "none";
+            }
+          }, { passive: true });
           hero.addEventListener("pointermove", (event) => {
-            const rect = hero.getBoundingClientRect();
-            const x = (event.clientX - rect.left) / rect.width - 0.5;
-            const y = (event.clientY - rect.top) / rect.height - 0.5;
-
-            hero.style.setProperty("--hero-shift-x", `${(x * 6).toFixed(2)}px`);
-            hero.style.setProperty("--hero-shift-y", `${(y * 4.5).toFixed(2)}px`);
-          });
-
+            if (!heroRect) {
+              measureHero();
+            }
+            if (root.classList.contains("is-booted")) {
+              heroVisual.style.transition = "none";
+            }
+            const x = (event.clientX - heroRect.left) / heroRect.width - 0.5;
+            const y = (event.clientY - heroRect.top) / heroRect.height - 0.5;
+            shiftX = x * 10;
+            shiftY = y * 7;
+            schedulePointerShift();
+          }, { passive: true });
           hero.addEventListener("pointerleave", () => {
-            hero.style.setProperty("--hero-shift-x", "0px");
-            hero.style.setProperty("--hero-shift-y", "0px");
-          });
+            shiftX = 0;
+            shiftY = 0;
+            heroVisual.style.transition = "transform 520ms var(--ease-system)";
+            schedulePointerShift();
+          }, { passive: true });
+          window.addEventListener("resize", measureHero, { passive: true });
         }
 
         document.querySelectorAll('a[href^="#"]').forEach((link) => {
           link.addEventListener("click", () => {
             const target = document.querySelector(link.getAttribute("href"));
-
             if (!target || !target.classList.contains("section")) {
               return;
             }
-
-            window.setTimeout(() => {
-              target.classList.add("is-visible", "is-jump-target");
-              revealSection(target);
-              window.setTimeout(() => target.classList.remove("is-jump-target"), 900);
-            }, 260);
+            revealSection(target);
+            if (!compactViewport) {
+              revealCards(target);
+            }
+            target.classList.add("is-jump-target");
+            window.setTimeout(() => target.classList.remove("is-jump-target"), 620);
           });
         });
       })();

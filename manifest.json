@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "home:linpo-lab",
+  "type": "home",
+  "slug": "linpo-lab",
+  "title": "LINPO LAB",
+  "route": "index.html",
+  "entry": "index.html",
+  "status": "published",
+  "producer": { "skill": "linpolab-home", "kind": "homepage" },
+  "homepage": { "section": "home", "order": 0, "visible": false },
+  "runtime": null
+}

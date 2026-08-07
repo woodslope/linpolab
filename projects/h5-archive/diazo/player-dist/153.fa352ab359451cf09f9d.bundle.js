@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[153],{3165:function(e,n,t){var o,p;o=[t(69)],void 0===(p=function(e){"use strict";epub360.PlayerPlugins.push({config:{type:"clist",Model:"WebContent",template:"WebContent"},render:function(){this.model.renderWebContent=!0}})}.apply(n,o))||(e.exports=p)}}]);

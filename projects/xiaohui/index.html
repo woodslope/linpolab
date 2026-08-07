@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="zh-CN" class="fonts-loading">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>小慧 AI 产品视觉与界面设计 - LINPO LAB</title>
+  <link rel="icon" type="image/png" href="../../assets/optimized/linpo-hero-avatar-192.png">
+  <link rel="preload" href="../../assets/fonts/BaiWuchangKeke-Thin.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="../../assets/fonts/BaiWuchangKeke-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="../../assets/fonts/BaiWuchangKeke-Bold.ttf" as="font" type="font/ttf" crossorigin>
+  <style>
+    @font-face{font-family:"BaiWuchangKeke";src:url("../../assets/fonts/BaiWuchangKeke-Thin.ttf") format("truetype");font-weight:200;font-style:normal;font-display:optional}
+    @font-face{font-family:"BaiWuchangKeke";src:url("../../assets/fonts/BaiWuchangKeke-Regular.ttf") format("truetype");font-weight:400;font-style:normal;font-display:optional}
+    @font-face{font-family:"BaiWuchangKeke";src:url("../../assets/fonts/BaiWuchangKeke-Bold.ttf") format("truetype");font-weight:800;font-style:normal;font-display:optional}
+    :root{--paper:#fff;--ink:#11120f;--muted:rgba(17,18,15,.62);--line:rgba(17,18,15,.15);--grid:rgba(17,18,15,.055);--panel:rgba(17,18,15,.035);--lime:#2f7d4a;--accent:#2f7d4a;--nav-muted:#73746f;--nav-active:#11120f;--nav-accent:#2f7d4a;--slide-w:1672;--slide-h:941;--font:"BaiWuchangKeke",sans-serif}
+    *{box-sizing:border-box;letter-spacing:0}
+    html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--paper);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
+    button{font:inherit}.deck{position:fixed;inset:0;display:grid;place-items:center;overflow:hidden}
+    .slide-shell{position:absolute;left:50%;top:50%;opacity:0;pointer-events:none;transform:translate(-50%,-50%);transition:opacity 160ms ease}
+    .slide-shell.is-active{z-index:2;opacity:1;pointer-events:auto}
+    .slide{position:absolute;left:0;top:0;width:calc(var(--slide-w)*1px);height:calc(var(--slide-h)*1px);overflow:hidden;transform-origin:top left;background:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px),var(--paper);background-size:28px 28px;border:1px solid var(--line)}
+    .slide-shell[data-code="COVER"] .slide{background:var(--paper)}
+    .slide-header{position:absolute;left:0;top:0;z-index:8;display:grid;grid-template-columns:250px minmax(0,1fr) auto auto;align-items:center;gap:32px;width:100%;height:82px;padding:0 52px;border-bottom:1px solid var(--line)}
+    .brand{display:grid;gap:5px;line-height:1}.brand strong{font-size:34px;font-weight:400}
+    .brand-link{color:var(--ink);text-decoration:none}.meta{display:flex;align-items:center;justify-content:flex-start;gap:10px;min-width:0;white-space:nowrap}
+    .project-tab{position:relative;display:inline-flex;align-items:center;gap:7px;padding:10px 8px 9px;color:var(--nav-muted);text-decoration:none;line-height:1}
+    .project-tab b{font-size:16px;font-weight:400}.project-tab span{font-size:14px;font-weight:400}.project-tab:hover,.project-tab:focus-visible{color:var(--ink)}
+    .project-tab.is-current{color:var(--nav-active)}.project-tab.is-current b{color:var(--nav-accent)}.project-tab.is-current:after{content:"";position:absolute;right:0;bottom:0;left:0;height:2px;background:var(--nav-accent)}.project-tab[aria-disabled="true"]{color:rgba(17,18,15,.38);cursor:default}
+    .year{font-size:50px;font-weight:800;line-height:.86}.page-chip{display:inline-grid;grid-template-columns:58px auto;align-items:center;gap:10px;min-width:126px;height:36px;padding:0 13px 0 5px;border-radius:999px;background:var(--lime);box-shadow:none}
+    .page-arrow{position:relative;display:block;width:54px;height:28px}.page-arrow:before,.page-arrow:after{content:"";position:absolute;display:block}.page-arrow:before{left:10px;top:13px;width:31px;height:2px;background:#fff}.page-arrow:after{right:9px;top:8px;width:10px;height:10px;border-top:2px solid #fff;border-right:2px solid #fff;transform:rotate(45deg)}
+    .page-number{color:#fff;font-size:14px;font-weight:800;line-height:1}.slide-footer{position:absolute;left:52px;right:52px;bottom:28px;z-index:8;display:grid;grid-template-columns:96px 1fr 260px;align-items:center;gap:20px;min-height:28px;color:var(--ink);font-size:12px;font-weight:400;text-transform:uppercase}
+    .slide-footer span:last-child{color:var(--muted);text-align:right}.progress-dots{display:flex;justify-content:center;gap:14px}.progress-dot{appearance:none;width:13px;height:13px;padding:0;border:2px solid var(--muted);border-radius:999px;background:transparent;cursor:pointer}.progress-dot.is-filled{border-color:var(--lime);background:var(--lime);box-shadow:none}
+    .content{position:absolute;inset:118px 76px 94px;z-index:3}h1,h2,h3,p{margin:0}.kicker{margin:0 0 22px;color:var(--muted);font-size:16px;font-weight:400;line-height:1;text-transform:uppercase}.kicker:after{content:"";display:block;width:72px;height:3px;margin-top:14px;background:var(--lime)}
+    .title{font-size:82px;font-weight:200;line-height:1.08;max-width:760px}.title.small{font-size:64px}.lead{color:var(--muted);font-size:25px;font-weight:800;line-height:1.45}.tag{display:inline-flex;align-items:center;min-height:38px;margin-top:34px;padding:0 20px;border-radius:999px;background:var(--lime);color:#fff;font-size:14px;font-weight:800;text-transform:uppercase}
+    .reveal{opacity:0;transform:translate3d(0,24px,0);transition:opacity 520ms ease var(--delay,0ms),transform 640ms cubic-bezier(.16,1,.3,1) var(--delay,0ms)}.slide-shell.is-active .reveal{opacity:1;transform:translate3d(0,0,0)}
+    .cover-grid{display:grid;grid-template-columns:minmax(0,.42fr) minmax(0,.58fr);gap:54px;align-items:center}.hero-title{font-size:78px;font-weight:200;line-height:1.1}.hero-sub{margin-top:30px;max-width:540px}
+    .visual-slot{position:relative;display:grid;place-items:center;overflow:hidden;border:1px solid rgba(47,125,74,.38);border-radius:22px;background:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px),rgba(17,18,15,.025);background-size:18px 18px;color:var(--muted);min-height:220px}
+    .visual-slot:before{content:"";position:absolute;inset:14px;border:1px dashed rgba(17,18,15,.2);border-radius:16px;pointer-events:none}.visual-slot.has-image{display:flex;align-items:center;justify-content:center;align-self:center;min-height:0;padding:0;border:0;border-radius:18px;background:transparent;box-shadow:none}.visual-slot.has-image:before{display:none}.slot-image{position:relative;z-index:2;display:block;width:100%;height:100%;object-fit:contain;object-position:center;border-radius:18px;cursor:zoom-in}.visual-slot.image-crop-top .slot-image{object-fit:cover;object-position:top center}.slot-inner{position:relative;z-index:2;text-align:center;padding:32px}.slot-id{color:var(--accent);font-size:28px;font-weight:800;line-height:1.1}.slot-desc{margin:18px auto 0;max-width:680px;font-size:20px;font-weight:800;line-height:1.36}.slot-ratio{margin-top:18px;color:var(--ink);font-size:14px;text-transform:uppercase}.slot-hero{height:620px}.slot-board,.slot-showcase{height:100%}
+    .image-lightbox{position:fixed;inset:0;z-index:1000;display:none;padding:32px;background:rgba(0,0,0,.88);backdrop-filter:blur(10px)}.image-lightbox.is-open{display:block}.image-lightbox-stage{display:flex;align-items:center;justify-content:center;width:100%;height:100%;overflow:auto;overscroll-behavior:contain}.image-lightbox-media{flex:none;display:block;width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain;border-radius:12px;box-shadow:0 24px 80px rgba(0,0,0,.55);cursor:zoom-in;user-select:none}.image-lightbox.is-zoomed .image-lightbox-stage{align-items:flex-start;justify-content:flex-start}.image-lightbox.is-zoomed .image-lightbox-media{max-width:none;max-height:none;cursor:zoom-out}.image-lightbox-close{appearance:none;position:absolute;z-index:2;top:20px;right:20px;display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid rgba(47,125,74,.46);border-radius:999px;background:rgba(0,0,0,.62);color:#f8f8f4;cursor:pointer}.image-lightbox-close-icon{position:relative;display:block;width:16px;height:16px}.image-lightbox-close-icon:before,.image-lightbox-close-icon:after{content:"";position:absolute;left:7px;top:0;width:2px;height:16px;border-radius:999px;background:currentColor}.image-lightbox-close-icon:before{transform:rotate(45deg)}.image-lightbox-close-icon:after{transform:rotate(-45deg)}.image-lightbox-hint{position:absolute;z-index:2;left:50%;bottom:18px;transform:translateX(-50%);padding:8px 14px;border:1px solid rgba(255,255,255,.2);border-radius:999px;background:rgba(0,0,0,.66);color:rgba(255,255,255,.88);font-size:13px;font-weight:800;white-space:nowrap;pointer-events:none}
+    .page-with-title{display:grid;grid-template-rows:auto 1fr;gap:38px}.page-head{display:flex;align-items:end;justify-content:space-between;gap:40px}.page-head .lead{max-width:640px}.info-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px}
+    .info-item,.card{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:22px}.info-item b,.card b{display:block;color:var(--accent);font-size:13px;font-weight:800;text-transform:uppercase}.info-item span{display:block;margin-top:9px;color:var(--ink);font-size:22px;font-weight:800}
+    .challenge-grid,.strategy-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}.card{min-height:182px}.line-icon{display:block;width:54px;height:54px;color:var(--accent)}.line-icon svg,.strategy-icon svg{display:block;width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round}.card h3{margin-top:22px;font-size:30px;font-weight:800;line-height:1.1}.card p{margin-top:14px;color:var(--muted);font-size:18px;font-weight:800;line-height:1.35}
+    .strategy-card{display:grid;grid-template-rows:auto 1fr auto;min-height:250px;padding:24px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,rgba(17,18,15,.055),rgba(17,18,15,.02))}.strategy-top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}.strategy-index{color:var(--accent);font-size:42px;font-weight:200;line-height:.9}.strategy-icon{width:58px;height:58px;color:var(--accent)}
+    .strategy-card h3{margin-top:34px;font-size:29px;font-weight:800;line-height:1.08}.strategy-card p{margin-top:14px;color:var(--muted);font-size:17px;font-weight:800;line-height:1.35}.strategy-points{list-style:none;margin:28px 0 0;padding:0;display:grid;gap:10px;color:var(--ink);font-size:14px;font-weight:800;line-height:1.15}.strategy-points li{display:flex;align-items:center;gap:9px}.strategy-points li:before{content:"";flex:0 0 6px;width:6px;height:6px;border-radius:999px;background:var(--lime)}.strategy-meta{padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:11px;font-weight:800;text-transform:uppercase}
+    .split{display:grid;grid-template-columns:minmax(0,35fr) minmax(0,65fr);gap:42px;align-items:stretch}.logic{display:flex;flex-direction:column;justify-content:center;gap:24px;min-width:0}.logic h1{font-size:56px;font-weight:200;line-height:1.1}.logic .lead{font-size:22px}.logic-groups{display:grid;gap:16px}.logic-box{border-left:3px solid var(--lime);padding:4px 0 4px 18px}.logic-box b{display:block;color:var(--accent);font-size:14px;font-weight:800;text-transform:uppercase}.logic-box p{margin-top:12px;color:var(--muted);font-size:19px;font-weight:800;line-height:1.24}.logic-box ul{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:8px;color:var(--muted);font-size:19px;font-weight:800;line-height:1.24}.logic-box li:before{content:"- ";color:var(--accent)}
+    .visual-only{display:grid;grid-template-rows:42px 1fr;gap:20px}.mobile-title{z-index:4}
+    .closing-layout{display:grid;grid-template-rows:minmax(0,38fr) minmax(0,62fr);gap:28px}.closing-head{display:flex;align-items:end;justify-content:space-between}.closing-head .lead{max-width:720px}.impact-grid,.cap-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.impact-grid .card{min-height:150px}.cap-grid{margin-top:18px}.cap-grid .card{min-height:190px}.cap-grid .card h3{font-size:24px}.cap-grid .card p{font-size:16px}
+    @media (prefers-reduced-motion:reduce){.slide-shell,.reveal{transition:none!important}}
+    .slot-image:focus-visible{outline:3px solid var(--lime);outline-offset:4px}.deck-controls{position:fixed;right:16px;bottom:max(16px,env(safe-area-inset-bottom));z-index:20;display:none;gap:10px}.deck-control{min-width:48px;min-height:48px;padding:0 14px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.92);color:var(--ink);font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 6px 18px rgba(17,18,15,.12)}.deck-control:focus-visible{outline:3px solid var(--lime);outline-offset:3px}.deck-control:disabled{opacity:.42;cursor:default}@media(max-width:700px){.deck-controls{display:flex}}
+    html.fonts-loading .deck{visibility:hidden}
+    html.fonts-fallback{--font:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  </style>
+  <script>
+    (()=>{const root=document.documentElement;const fontReady=Promise.all([200,400,800].map(weight=>document.fonts.load(`${weight} 1em "BaiWuchangKeke"`))).then(()=>"fonts-ready",()=>"fonts-fallback");const fallback=new Promise(resolve=>window.setTimeout(()=>resolve("fonts-fallback"),2500));Promise.race([fontReady,fallback]).then(state=>{root.classList.remove("fonts-loading");root.classList.add(state)})})();
+  </script>
+  <noscript><style>html.fonts-loading .deck{visibility:visible}</style></noscript>
+</head>
+<body>
+<main class="deck" data-theme="white" data-project-index="2" data-project-title="小慧 AI 产品视觉与界面设计" data-project-year="2026" aria-label="小慧 AI 产品视觉与界面设计">
+  <section class="slide-shell is-active" id="slide-01" data-layout="CASE_COVER" data-code="COVER" aria-label="小慧 AI 产品视觉与界面设计">
+    <article class="slide"><header class="slide-header"></header>
+      <div class="content cover-grid"><div><p class="kicker reveal">PORTFOLIO / AI PRODUCT</p><h1 class="hero-title reveal" style="--delay:120ms">小慧 AI 产品视觉<br>与界面设计</h1><p class="lead hero-sub reveal" style="--delay:220ms">以专属 IP 建立产品识别，并将 AI 能力延展到真实业务场景。</p><span class="tag reveal" style="--delay:320ms">AI 产品体验 × IP 视觉 × 多场景接入</span></div><div class="visual-slot slot-hero reveal" data-slot-id="xiaohui-cover-visual" data-asset="assets/images/xiaohui-01.png" data-alt="小慧 AI IP 场景组合主视觉" data-image-mode="fit_full" style="--delay:180ms"><div class="slot-inner"><div class="slot-id">xiaohui-cover-visual</div><div class="slot-desc">小慧 AI IP 场景组合主视觉</div><div class="slot-ratio">主视觉 90% + 标题信息 10% / 16:9</div></div></div></div>
+      <footer class="slide-footer"></footer></article>
+  </section>
+
+  <section class="slide-shell" id="slide-02" data-layout="CASE_CONTEXT" data-code="CONTEXT" aria-label="项目背景与设计目标">
+    <article class="slide"><header class="slide-header"></header>
+      <div class="content page-with-title"><div><div class="info-strip reveal"><div class="info-item"><b>角色 / Role</b><span>UX/UI 与产品视觉设计师</span></div><div class="info-item"><b>平台 / Platform</b><span>Web + Mobile</span></div><div class="info-item"><b>范围 / Scope</b><span>AI 产品界面 + IP 视觉</span></div><div class="info-item"><b>项目节奏 / Delivery Cadence</b><span>单人分阶段推进</span></div></div><div class="page-head"><div><p class="kicker">CONTEXT / DESIGN GOALS</p><h1 class="title small">项目背景与<br>设计目标</h1></div><p class="lead">在产品持续智能化的过程中，同时建立 AI 入口、业务能力表达与品牌识别。</p></div></div>
+        <div class="challenge-grid reveal" style="--delay:180ms">
+          <div class="card"><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg></span><h3>基础对话起步</h3><p>先建立随时可用的稳定入口</p></div>
+          <div class="card"><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M8 18v-1"/><path d="M12 18v-6"/><path d="M16 18v-3"/></svg></span><h3>业务结果生成</h3><p>从回答问题走向生成报告与内容</p></div>
+          <div class="card"><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg></span><h3>多场景接入</h3><p>根据宿主产品重新组织 AI 能力</p></div>
+          <div class="card"><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg></span><h3>产品识别建立</h3><p>用 IP 补齐亲和力与传播视觉</p></div>
+        </div>
+      </div><footer class="slide-footer"></footer></article>
+  </section>
+
+  <section class="slide-shell" id="slide-03" data-layout="CASE_STRATEGY" data-code="STRATEGY" aria-label="整体设计策略">
+    <article class="slide"><header class="slide-header"></header>
+      <div class="content page-with-title"><div class="page-head"><div><p class="kicker">STRATEGY / FRAMEWORK</p><h1 class="title small">整体设计策略</h1></div><p class="lead">以基础对话为起点，逐步扩展业务生成、营销接入与产品视觉识别。</p></div>
+        <div class="strategy-grid reveal" style="--delay:160ms">
+          <div class="strategy-card"><div class="strategy-top"><span class="strategy-index">01</span><span class="strategy-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M15 3v18"/></svg></span></div><div><h3>建立侧边栏 AI 助手</h3><p>在当前业务页面中提供稳定入口</p><ul class="strategy-points"><li>PC 侧边栏 / PC Sidebar</li><li>基础对话 / Basic Conversation</li><li>上下文保留 / Context Retention</li></ul></div><div class="strategy-meta">入口与对话 / ENTRY &amp; CONVERSATION</div></div>
+          <div class="strategy-card"><div class="strategy-top"><span class="strategy-index">02</span><span class="strategy-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg></span></div><div><h3>生成业务结果</h3><p>让对话进一步产出可用内容</p><ul class="strategy-points"><li>经营报告 / Business Report</li><li>外呼话术 / Call Script</li><li>预览与修改 / Preview &amp; Edit</li></ul></div><div class="strategy-meta">报告与内容 / REPORT &amp; CONTENT</div></div>
+          <div class="strategy-card"><div class="strategy-top"><span class="strategy-index">03</span><span class="strategy-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect width="8" height="8" x="3" y="3" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect width="8" height="8" x="13" y="13" rx="2"/></svg></span></div><div><h3>进入营销与产品入口</h3><p>将 AI 能力嵌入不同业务上下文</p><ul class="strategy-points"><li>营销画布 / Marketing Canvas</li><li>全域罗盘 / Omni-channel Compass</li><li>电商聊天工具 / E-commerce Chat</li></ul></div><div class="strategy-meta">工作流与生态 / WORKFLOW &amp; ECOSYSTEM</div></div>
+          <div class="strategy-card"><div class="strategy-top"><span class="strategy-index">04</span><span class="strategy-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/></svg></span></div><div><h3>建立 IP 与宣传视觉</h3><p>形成可持续延展的产品识别</p><ul class="strategy-points"><li>角色母版 / Character Master</li><li>表情与动作 / Expressions &amp; Poses</li><li>宣传应用 / Campaign Applications</li></ul></div><div class="strategy-meta">IP 与品牌 / IP &amp; BRAND</div></div>
+        </div>
+      </div><footer class="slide-footer"></footer></article>
+  </section>
+
+  <section class="slide-shell" id="slide-04" data-layout="CASE_SPLIT" data-code="IP DESIGN" aria-label="小慧 IP 形象设计">
+    <article class="slide"><header class="slide-header"></header>
+      <div class="content split"><div class="logic"><p class="kicker">IP CHARACTER DESIGN</p><h1>小慧 IP<br>形象设计</h1><p class="lead">基础对话完成后，逐步建立兼具科技感、智慧感与亲和力的小慧形象。</p><div class="logic-groups"><div class="logic-box"><b>设计时机</b><p>基础产品形态稳定后补齐品牌识别</p></div><div class="logic-box"><b>角色目标</b><p>亲和、智慧、具有清晰记忆点</p></div><div class="logic-box"><b>形象系统</b><p>统一轮廓、面部、色彩与基础姿态</p></div></div></div><div class="visual-slot slot-board reveal" data-slot-id="xiaohui-ip-three-view" data-asset="assets/images/xiaohui-04.png" data-alt="小慧 IP 正面、侧面和背面三视图" data-image-mode="fit_full"><div class="slot-inner"><div class="slot-id">xiaohui-ip-three-view</div><div class="slot-desc">小慧 IP 正面、侧面和背面三视图</div><div class="slot-ratio">左侧说明 35% + 右侧视觉 65% / 3:2</div></div></div></div>
+      <footer class="slide-footer"></footer></article>
+  </section>
+
+  <section class="slide-shell" id="slide-05" data-layout="CASE_SHOWCASE" data-code="IP SYSTEM" aria-label="IP 延展与角色系统">
+    <article class="slide"><header class="slide-header"></header>
+      <div class="content visual-only"><div class="mobile-title"><p class="kicker">IP EXTENSION / IP 延展与角色系统</p></div><div class="visual-slot slot-showcase reveal" data-slot-id="xiaohui-ip-extension" data-asset="assets/images/xiaohui-05.png" data-alt="小慧 IP 表情、动作与业务场景延展汇总拼版" data-image-mode="fit_full"><div class="slot-inner"><div class="slot-id">xiaohui-ip-extension</div><div class="slot-desc">小慧 IP 表情、动作与业务场景延展汇总拼版</div><div class="slot-ratio">主视觉 95% + 标题信息 5% / 16:9</div></div></div></div>
+      <footer class="slide-footer"></footer></article>
+  </section>
+
+  <section class="slide-shell" id="slide-06" data-layout="CASE_SPLIT" data-code="PROMOTION" aria-label="IP 宣传应用">
+    <article class="slide"><header class="slide-header"></header>
+      <div class="content split"><div class="logic"><p class="kicker">IP PROMOTION APPLICATION</p><h1>IP 宣传应用</h1><p class="lead">以小慧为统一视觉主体，服务产品展示、市场推广与品牌传播。</p><div class="logic-groups"><div class="logic-box"><b>产品展示</b><p>用角色承接功能说明与能力演示</p></div><div class="logic-box"><b>市场推广</b><p>通过动作、道具和场景组织宣传素材</p></div><div class="logic-box"><b>品牌传播</b><p>延展至品牌宣传与线下物料</p></div></div></div><div class="visual-slot slot-board reveal" data-slot-id="xiaohui-promotion-scenes" data-asset="assets/images/xiaohui-06.png" data-alt="产品展示、市场推广与品牌宣传应用拼版" data-image-mode="fit_full"><div class="slot-inner"><div class="slot-id">xiaohui-promotion-scenes</div><div class="slot-desc">产品展示、市场推广与品牌宣传应用拼版</div><div class="slot-ratio">左侧策略 35% + 右侧视觉 65% / 16:10</div></div></div></div>
+      <footer class="slide-footer"></footer></article>
+  </section>
+
+  <section class="slide-shell" id="slide-07" data-layout="CASE_SPLIT" data-code="PC ASSISTANT" aria-label="PC 侧边栏聊天助手">
+    <article class="slide"><header class="slide-header"></header>
+      <div class="content split"><div class="logic"><p class="kicker">PHASE 01 / CHAT ASSISTANT</p><h1>PC 侧边栏<br>聊天助手</h1><p class="lead">一期先建立嵌入业务后台的对话入口，让 AI 在当前页面中随时可用。</p><div class="logic-groups"><div class="logic-box"><b>一期起点</b><p>从稳定、清晰的基础对话能力开始</p></div><div class="logic-box"><b>嵌入方式</b><p>侧边栏展开，不打断主业务页面</p></div><div class="logic-box"><b>基础交互</b><p>消息流、固定输入区与页面上下文</p></div></div></div><div class="visual-slot slot-board reveal" data-slot-id="xiaohui-pc-chat-assistant" data-asset="assets/images/xiaohui-07.png" data-alt="PC 业务页面右侧展开小慧 AI 基础对话侧边栏" data-image-mode="fit_full"><div class="slot-inner"><div class="slot-id">xiaohui-pc-chat-assistant</div><div class="slot-desc">PC 业务页面右侧展开小慧 AI 基础对话侧边栏</div><div class="slot-ratio">左侧文字 35% + 右侧界面 65% / 16:9</div></div></div></div>
+      <footer class="slide-footer"></footer></article>
+  </section>
+
+  <section class="slide-shell" id="slide-08" data-layout="CASE_SPLIT" data-code="REPORT" aria-label="对话生成经营报告">
+    <article class="slide"><header class="slide-header"></header>
+      <div class="content split"><div class="logic"><p class="kicker">CONVERSATION TO REPORT</p><h1>对话生成<br>经营报告</h1><p class="lead">在基础对话上扩展经营分析，让用户通过自然表达生成并查看业务报告。</p><div class="logic-groups"><div class="logic-box"><b>01 对话提问</b><p>在聊天中表达经营分析需求</p></div><div class="logic-box"><b>02 分析生成</b><p>完成数据查询与结构化分析</p></div><div class="logic-box"><b>03 报告查看</b><p>返回结果卡并进入报告详情</p></div></div></div><div class="visual-slot slot-board reveal" data-slot-id="xiaohui-business-report" data-asset="assets/images/xiaohui-08.png" data-alt="对话过程、经营报告结果卡与报告详情整体成果图" data-image-mode="fit_full"><div class="slot-inner"><div class="slot-id">xiaohui-business-report</div><div class="slot-desc">对话过程、经营报告结果卡与报告详情整体成果图</div><div class="slot-ratio">左侧说明 35% + Dashboard 视觉 65% / 16:9</div></div></div></div>
+      <footer class="slide-footer"></footer></article>
+  </section>
+
+  <section class="slide-shell" id="slide-09" data-layout="CASE_SPLIT" data-code="OUTBOUND" aria-label="AI 外呼话术生成">
+    <article class="slide"><header class="slide-header"></header>
+      <div class="content split"><div class="logic"><p class="kicker">AI OUTBOUND SCRIPT</p><h1>AI 外呼<br>话术生成</h1><p class="lead">根据外呼场景与业务信息，利用 AI 生成可编辑、可预览的场景话术。</p><div class="logic-groups"><div class="logic-box"><b>场景输入</b><p>组织人群、品牌、活动、时间与角色设定</p></div><div class="logic-box"><b>话术生成</b><p>将分散条件转换为结构化对话内容</p></div><div class="logic-box"><b>预览修改</b><p>同页查看完整话术并保留人工调整入口</p></div></div></div><div class="visual-slot slot-board reveal" data-slot-id="xiaohui-outbound-script" data-asset="assets/images/xiaohui-09.png" data-alt="场景信息输入、AI 话术预览与体验外呼入口" data-image-mode="fit_full"><div class="slot-inner"><div class="slot-id">xiaohui-outbound-script</div><div class="slot-desc">场景信息输入、AI 话术预览与体验外呼入口</div><div class="slot-ratio">左侧文字 35% + 右侧界面 65% / 16:9</div></div></div></div>
+      <footer class="slide-footer"></footer></article>
+  </section>
+
+  <section class="slide-shell" id="slide-10" data-layout="CASE_SPLIT" data-code="MARKETING BRAIN" aria-label="AI 营销大脑">
+    <article class="slide"><header class="slide-header"></header>
+      <div class="content split"><div class="logic"><p class="kicker">AI MARKETING BRAIN</p><h1>AI 营销大脑</h1><p class="lead">将 AI 引入营销画布，让营销场景能够被组织、预览并进入流程编排。</p><div class="logic-groups"><div class="logic-box"><b>营销场景</b><p>以场景化入口承载业务模板</p></div><div class="logic-box"><b>流程预览</b><p>在导入前理解节点关系与执行路径</p></div><div class="logic-box"><b>画布导入</b><p>将 AI 能力衔接至后续流程编排</p></div></div></div><div class="visual-slot slot-board reveal" data-slot-id="xiaohui-marketing-brain" data-asset="assets/images/xiaohui-10.png" data-alt="场景选择、流程预览与智能化营销画布导入界面" data-image-mode="fit_full"><div class="slot-inner"><div class="slot-id">xiaohui-marketing-brain</div><div class="slot-desc">场景选择、流程预览与智能化营销画布导入界面</div><div class="slot-ratio">左侧文字 35% + 右侧界面 65% / 16:9</div></div></div></div>
+      <footer class="slide-footer"></footer></article>
+  </section>
+
+  <section class="slide-shell" id="slide-11" data-layout="CASE_SPLIT" data-code="ECOSYSTEM" aria-label="AI 接入产品生态">
+    <article class="slide"><header class="slide-header"></header>
+      <div class="content split"><div class="logic"><p class="kicker">AI PRODUCT ECOSYSTEM</p><h1>AI 接入<br>产品生态</h1><p class="lead">从单一侧边栏助手扩展为可嵌入不同产品与业务上下文的通用能力入口。</p><div class="logic-groups"><div class="logic-box"><b>全域罗盘</b><p>承载数据查询与经营报告</p></div><div class="logic-box"><b>营销画布节点</b><p>作为流程中的 AI 能力节点</p></div><div class="logic-box"><b>电商聊天工具</b><p>以侧边栏融入沟通工作流</p></div></div></div><div class="visual-slot slot-board reveal" data-slot-id="xiaohui-ecosystem-integration" data-asset="assets/images/xiaohui-11.png" data-alt="全域罗盘、营销画布节点与电商聊天工具侧边栏三场景拼版" data-image-mode="fit_full"><div class="slot-inner"><div class="slot-id">xiaohui-ecosystem-integration</div><div class="slot-desc">全域罗盘、营销画布节点与电商聊天工具侧边栏三场景拼版</div><div class="slot-ratio">左侧说明 35% + 右侧视觉 65% / 16:9</div></div></div></div>
+      <footer class="slide-footer"></footer></article>
+  </section>
+
+  <section class="slide-shell" id="slide-12" data-layout="CASE_SHOWCASE" data-code="PRODUCT SHOWCASE" aria-label="AI 产品核心体验展示">
+    <article class="slide"><header class="slide-header"></header>
+      <div class="content visual-only"><div class="mobile-title"><p class="kicker">PRODUCT SHOWCASE / AI 产品核心体验展示</p></div><div class="visual-slot slot-showcase reveal" data-slot-id="xiaohui-product-interface-showcase" data-asset="assets/images/xiaohui-12.png" data-alt="PC 侧边栏聊天助手、经营报告、外呼话术、AI 营销大脑与产品生态接入界面精选拼版" data-image-mode="fit_full"><div class="slot-inner"><div class="slot-id">xiaohui-product-interface-showcase</div><div class="slot-desc">PC、经营报告、外呼、营销大脑与产品生态界面精选拼版</div><div class="slot-ratio">产品界面照片墙 / 16:9</div></div></div></div>
+      <footer class="slide-footer"></footer></article>
+  </section>
+
+  <section class="slide-shell" id="slide-13" data-layout="CASE_IMPACT" data-code="IMPACT" aria-label="项目成果与能力沉淀">
+    <article class="slide"><header class="slide-header"></header>
+      <div class="content closing-layout"><div><p class="kicker">PROJECT IMPACT</p><h1 class="title small">项目成果与<br>能力沉淀</h1></div><div><div class="impact-grid">
+        <div class="card"><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg></span><h3>建立基础对话入口</h3></div>
+        <div class="card"><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M8 18v-1"/><path d="M12 18v-6"/><path d="M16 18v-3"/></svg></span><h3>生成报告与外呼话术</h3></div>
+        <div class="card"><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg></span><h3>进入营销与多产品场景</h3></div>
+        <div class="card"><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/></svg></span><h3>建立 IP 与宣传视觉</h3></div>
+      </div><div class="cap-grid">
+        <div class="card"><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg></span><h3>AI 产品体验</h3><p>设计对话、生成与结果承载</p></div>
+        <div class="card"><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 22V7a1 1 0 0 0-1-1H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5a1 1 0 0 0-1-1H2"/><rect x="14" y="2" width="8" height="8" rx="1"/></svg></span><h3>业务场景抽象</h3><p>把复杂条件转化为清晰结构</p></div>
+        <div class="card"><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8.3 10a.7.7 0 0 1-.626-1.079L11.4 3a.7.7 0 0 1 1.198-.043L16.3 8.9a.7.7 0 0 1-.572 1.1Z"/><rect x="3" y="14" width="7" height="7" rx="1"/><circle cx="17.5" cy="17.5" r="3.5"/></svg></span><h3>IP 视觉系统</h3><p>建立角色母版与延展资产</p></div>
+        <div class="card"><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18 8V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h8"/><path d="M10 19v-3.96 3.15"/><path d="M7 19h5"/><rect width="6" height="10" x="16" y="12" rx="2"/></svg></span><h3>跨产品接入</h3><p>适配不同容器与任务上下文</p></div>
+      </div></div></div>
+      <footer class="slide-footer"></footer></article>
+  </section>
+  <nav class="deck-controls" aria-label="幻灯片翻页"><button class="deck-control" type="button" data-deck-prev>上一页</button><button class="deck-control" type="button" data-deck-next>下一页</button></nav>
+</main>
+<script>
+  (()=>{
+    const SLIDE_W=1672,SLIDE_H=941;
+    const slides=Array.from(document.querySelectorAll('.slide-shell'));
+    const state={slide:0};
+    const pad=n=>String(n).padStart(2,'0');
+    let lightbox,lastFocused;
+    function setupImageLightbox(){
+      lightbox=document.createElement('div');
+      lightbox.className='image-lightbox';
+      lightbox.setAttribute('role','dialog');
+      lightbox.setAttribute('aria-modal','true');
+      lightbox.setAttribute('aria-label','图片大图查看');
+      lightbox.setAttribute('aria-hidden','true');
+      lightbox.inert=true;
+      lightbox.innerHTML='<button class="image-lightbox-close" type="button" aria-label="关闭大图"><span class="image-lightbox-close-icon" aria-hidden="true"></span></button><div class="image-lightbox-stage"><img class="image-lightbox-media" alt="" draggable="false"></div><div class="image-lightbox-hint">点击图片放大 · Esc 关闭</div>';
+      document.body.appendChild(lightbox);
+      const stage=lightbox.querySelector('.image-lightbox-stage');
+      const media=lightbox.querySelector('.image-lightbox-media');
+      const closeButton=lightbox.querySelector('.image-lightbox-close');
+      const hint=lightbox.querySelector('.image-lightbox-hint');
+      const resetZoom=()=>{lightbox.classList.remove('is-zoomed');media.style.width='';media.style.height='';stage.scrollLeft=0;stage.scrollTop=0;hint.textContent='点击图片放大 · Esc 关闭'};
+      const close=()=>{lightbox.classList.remove('is-open');lightbox.setAttribute('aria-hidden','true');lightbox.inert=true;resetZoom();media.src='';if(lastFocused instanceof HTMLElement)lastFocused.focus()};
+      media.addEventListener('click',event=>{event.stopPropagation();if(lightbox.classList.contains('is-zoomed')){resetZoom();return}const rect=media.getBoundingClientRect();media.style.width=`${Math.round(Math.min(media.naturalWidth||rect.width*2,rect.width*2))}px`;media.style.height='auto';lightbox.classList.add('is-zoomed');hint.textContent='点击图片还原 · 滚动查看'});
+      closeButton.addEventListener('click',event=>{event.stopPropagation();close()});
+      lightbox.addEventListener('click',event=>{event.stopPropagation();if(event.target===lightbox||event.target===stage)close()});
+      const openLightbox=image=>{lastFocused=document.activeElement;resetZoom();media.src=image.currentSrc||image.src;media.alt=image.alt||'项目图片大图';lightbox.classList.add('is-open');lightbox.setAttribute('aria-hidden','false');lightbox.inert=false;closeButton.focus()};
+      document.addEventListener('click',event=>{const image=event.target.closest?.('img.slot-image');if(!image)return;event.preventDefault();event.stopImmediatePropagation();openLightbox(image)},true);
+      document.addEventListener('keydown',event=>{const image=event.target instanceof Element?event.target.closest('img.slot-image'):null;if(!image||!['Enter',' '].includes(event.key))return;event.preventDefault();event.stopImmediatePropagation();openLightbox(image)},true);
+      document.addEventListener('keydown',event=>{if(!lightbox.classList.contains('is-open')||event.key!=='Escape')return;event.preventDefault();event.stopImmediatePropagation();close()},true);
+    }
+    function buildChrome(){
+      const total=slides.length;
+      slides.forEach((shell,index)=>{
+        const page=`${pad(index+1)}/${pad(total)}`;
+        shell.querySelector('.slide-header').innerHTML=`<a class="brand brand-link" href="../../index.html#projects" aria-label="返回精选项目"><strong>LINPO LAB</strong></a><div class="meta" aria-label="精选项目切换"><a class="project-tab" href="../quanyu/index.html" aria-label="全域营销后台体验升级"><b>01</b><span>全域营销</span></a><span class="project-tab is-current" aria-current="page" aria-label="小慧 AI 产品视觉与界面设计"><b>02</b><span>小慧 AI</span></span><a class="project-tab" href="../jifen/index.html" aria-label="打开积分系统全链路体验优化"><b>03</b><span>积分系统</span></a></div><div class="year">2026</div><div class="page-chip" aria-label="第 ${page} 页"><span class="page-arrow" aria-hidden="true"></span><span class="page-number">${page}</span></div>`;
+        const footer=shell.querySelector('.slide-footer');
+        footer.innerHTML=`<span>${page}</span><div class="progress-dots" aria-label="页面进度"></div><span>DESIGN / ${shell.dataset.code||'DESIGN'}</span>`;
+        const dots=footer.querySelector('.progress-dots');
+        for(let dotIndex=0;dotIndex<total;dotIndex++){
+          const dot=document.createElement('button');dot.type='button';dot.className='progress-dot';dot.setAttribute('aria-label',`跳到第 ${pad(dotIndex+1)} 页`);
+          if(dotIndex<=index)dot.classList.add('is-filled');
+          dot.addEventListener('click',event=>{event.stopPropagation();setSlide(dotIndex)});dots.appendChild(dot);
+        }
+      });
+    }
+    function resize(){const scale=Math.min(window.innerWidth/SLIDE_W,window.innerHeight/SLIDE_H);slides.forEach(shell=>{const slide=shell.querySelector('.slide');slide.style.transform=`scale(${scale})`;shell.style.width=`${SLIDE_W*scale}px`;shell.style.height=`${SLIDE_H*scale}px`})}
+    function loadVisualSlot(slot){
+      if(['loading','loaded'].includes(slot.dataset.loadState)||!slot.dataset.asset)return;
+      slot.dataset.loadState='loading';
+      const img=new Image();img.className='slot-image';img.alt=slot.dataset.alt||slot.dataset.slotId||'';img.decoding='async';img.tabIndex=0;img.setAttribute('role','button');img.setAttribute('aria-label',`查看大图：${img.alt||'项目图片'}`);
+      img.onload=()=>{slot.classList.add('has-image');slot.classList.toggle('image-crop-top',slot.dataset.imageMode==='crop_top');slot.dataset.loadState='loaded';slot.replaceChildren(img)};
+      img.onerror=()=>{slot.dataset.loadState='error';slot.classList.remove('has-image','image-crop-top')};img.src=slot.dataset.asset;
+    }
+    function hydrateVisualSlots(centerIndex){[centerIndex-1,centerIndex,centerIndex+1].forEach(index=>{if(index<0||index>=slides.length)return;slides[index].querySelectorAll('.visual-slot[data-asset]').forEach(loadVisualSlot)})}
+    function setSlide(index){const requested=Number(index);state.slide=Math.max(0,Math.min(slides.length-1,Number.isInteger(requested)?requested:0));const focused=document.activeElement;let moveFocus=false;slides.forEach((shell,i)=>{const isActive=i===state.slide;if(!isActive&&shell.contains(focused))moveFocus=true;shell.classList.toggle('is-active',isActive);shell.inert=!isActive;shell.setAttribute('aria-hidden',String(!isActive))});document.querySelector('[data-deck-prev]').disabled=state.slide===0;document.querySelector('[data-deck-next]').disabled=state.slide===slides.length-1;hydrateVisualSlots(state.slide);const url=new URL(window.location.href);url.searchParams.set('slide',String(state.slide+1));history.replaceState(null,'',url);if(moveFocus)slides[state.slide].querySelector('.brand-link,.progress-dot')?.focus({preventScroll:true})}
+    function next(){setSlide(state.slide+1)}function prev(){setSlide(state.slide-1)}
+    let suppressClickUntil=0,touchStart;
+    buildChrome();setupImageLightbox();resize();window.addEventListener('resize',resize);
+    document.querySelector('[data-deck-prev]').addEventListener('click',event=>{event.stopPropagation();prev()});document.querySelector('[data-deck-next]').addEventListener('click',event=>{event.stopPropagation();next()});
+    document.addEventListener('click',event=>{if(Date.now()<suppressClickUntil||event.target.closest('a,button'))return;next()});
+    document.addEventListener('keydown',event=>{if(event.target instanceof Element&&event.target.closest('a,button,input,textarea,select,[contenteditable="true"]'))return;const key=event.key.toLowerCase();if(['arrowright','pagedown',' ','enter'].includes(key)){event.preventDefault();next()}if(['arrowleft','pageup','backspace'].includes(key)){event.preventDefault();prev()}if(key==='home')setSlide(0);if(key==='end')setSlide(slides.length-1)});
+    document.addEventListener('touchstart',event=>{if(lightbox?.classList.contains('is-open'))return;const touch=event.changedTouches[0];touchStart={x:touch.clientX,y:touch.clientY}},{passive:true});document.addEventListener('touchend',event=>{if(!touchStart||lightbox?.classList.contains('is-open'))return;const touch=event.changedTouches[0],dx=touch.clientX-touchStart.x,dy=touch.clientY-touchStart.y;touchStart=null;if(Math.abs(dx)<48||Math.abs(dx)<=Math.abs(dy))return;suppressClickUntil=Date.now()+500;dx<0?next():prev()},{passive:true});
+    const initial=Number(new URL(window.location.href).searchParams.get('slide'));setSlide(Number.isInteger(initial)&&initial>0?initial-1:0);
+    window.__BWC_XIXI_DECK__={getState(){return{slide:state.slide,total:slides.length,mode:'xiaohui-bwc-white'}}};
+  })();
+</script>
+</body>
+</html>

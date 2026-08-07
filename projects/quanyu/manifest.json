@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "project:quanyu",
+  "type": "project",
+  "slug": "quanyu",
+  "title": "全域营销后台体验升级",
+  "route": "projects/quanyu/index.html",
+  "entry": "index.html",
+  "status": "published",
+  "producer": { "skill": "linpolab-project-workflow", "kind": "project-deck" },
+  "homepage": { "section": "projects", "order": 1, "visible": true },
+  "runtime": null
+}

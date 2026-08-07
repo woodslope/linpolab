@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "experiment:moreimg",
+  "type": "experiment",
+  "slug": "moreimg",
+  "title": "MoreImg 一文多图",
+  "route": "experiments/moreimg/index.html",
+  "entry": "index.html",
+  "status": "published",
+  "producer": { "skill": "linpolab-content-page", "kind": "exploration" },
+  "homepage": { "section": "experiments", "order": 2, "visible": true },
+  "runtime": { "id": "exploration-default", "version": "20260714", "ownerSkill": "linpolab-content-page" }
+}

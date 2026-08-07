@@ -4,7 +4,7 @@ Linpo Wu 的设计作品集，围绕品牌体验、产品设计、AI 设计工�
 
 ## 在线访问
 
-- LINPO LAB：[https://linpolab.com/](https://linpolab.com/)
+- LINPO LAB：[https://linpo.cc.cd/](https://linpo.cc.cd/)
 - H5 归档：[https://woodslope.github.io/h5/](https://woodslope.github.io/h5/)
 
 ## 展示内容

@@ -48,6 +48,8 @@
         const root = document.documentElement;
         const sectionHashes = ["#projects", "#methods", "#experiments", "#about"];
         const navigationType = performance.getEntriesByType("navigation")[0]?.type || "navigate";
+        const shouldSkipInitialSmoothScroll =
+          navigationType === "navigate" && sectionHashes.includes(location.hash);
         let returnTarget = "";
         let returnedFromProject = false;
 
@@ -63,6 +65,10 @@
             /\/(?:projects\/|h5\/)/.test(referrer.pathname);
         } catch {}
 
+        if (navigationType === "reload" || shouldSkipInitialSmoothScroll) {
+          root.style.scrollBehavior = "auto";
+        }
+
         if (navigationType === "reload") {
           history.scrollRestoration = "manual";
           if (sectionHashes.includes(location.hash)) {
@@ -72,9 +78,6 @@
             "DOMContentLoaded",
             () => {
               window.scrollTo(0, 0);
-              requestAnimationFrame(() => {
-                history.scrollRestoration = "auto";
-              });
             },
             { once: true }
           );
@@ -91,16 +94,25 @@
                   ? "target"
                   : "intro";
         root.dataset.entryMode = entryMode;
+        root.dataset.navigationType = navigationType;
+
+        if (entryMode === "target") {
+          root.classList.add("is-target-entry-pending");
+        }
 
         if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
           root.classList.add("motion-ready");
-          if (entryMode !== "intro") {
+          if (entryMode === "restore") {
             root.classList.add("is-page-restored");
           }
         }
       })();
     </script>
     <style>
+      .is-target-entry-pending body {
+        visibility: hidden;
+      }
+
       :root {
         --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
           "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
@@ -1284,6 +1296,11 @@
           opacity: 0.2;
         }
 
+        .motion-ready #methods .dark-card {
+          opacity: 0;
+          transform: translate3d(0, 10px, 0);
+        }
+
         .motion-ready #methods .dark-card .card-media {
           opacity: 0;
           transform: scale(1.035);
@@ -1301,8 +1318,8 @@
         }
 
         .motion-ready #experiments .experiment-card {
-          opacity: 0.18;
-          transform: scale(0.994);
+          opacity: 0;
+          transform: translate3d(0, 10px, 0);
         }
 
         .motion-ready #experiments .experiment-card::after {
@@ -1435,6 +1452,10 @@
           --item-delay: 300ms;
         }
 
+        .motion-ready #projects .feature-card[data-reveal-mode="viewport"] {
+          --item-delay: 0ms;
+        }
+
         .motion-ready #projects .feature-card.is-card-visible .feature-content {
           opacity: 1;
           transform: translate3d(0, 0, 0);
@@ -1466,35 +1487,48 @@
           transition: none;
         }
 
+        .motion-ready #methods,
+        .motion-ready #experiments {
+          --section-content-delay: 140ms;
+        }
+
         .motion-ready #methods .dark-card:nth-child(1) {
           --item-delay: 0ms;
         }
 
         .motion-ready #methods .dark-card:nth-child(2) {
-          --item-delay: 90ms;
+          --item-delay: 100ms;
         }
 
         .motion-ready #methods .dark-card:nth-child(3) {
-          --item-delay: 180ms;
+          --item-delay: 200ms;
         }
 
         .motion-ready #methods .dark-card:nth-child(4) {
-          --item-delay: 270ms;
+          --item-delay: 300ms;
+        }
+
+        .motion-ready #methods .dark-card.is-card-visible {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+          transition:
+            opacity 300ms var(--ease-soft) calc(var(--section-content-delay) + var(--item-delay)),
+            transform 440ms var(--ease-system) calc(var(--section-content-delay) + var(--item-delay));
         }
 
         .motion-ready #methods .dark-card.is-card-visible::after {
           opacity: 1;
           transition:
             border-color var(--motion-fast) ease,
-            opacity 240ms var(--ease-soft) var(--item-delay);
+            opacity 240ms var(--ease-soft) calc(var(--section-content-delay) + var(--item-delay));
         }
 
         .motion-ready #methods .dark-card.is-card-visible .card-media {
           opacity: 1;
           transform: scale(1);
           transition:
-            opacity 400ms var(--ease-soft) var(--item-delay),
-            transform 540ms var(--ease-system) var(--item-delay);
+            opacity 400ms var(--ease-soft) calc(var(--section-content-delay) + var(--item-delay) + 120ms),
+            transform 540ms var(--ease-system) calc(var(--section-content-delay) + var(--item-delay) + 120ms);
         }
 
         .motion-ready #methods .dark-card.is-card-visible h3::after {
@@ -1502,8 +1536,8 @@
           transform: scaleX(1);
           transition:
             background-color var(--motion-fast) ease,
-            opacity 260ms var(--ease-soft) calc(var(--item-delay) + 140ms),
-            transform 380ms var(--ease-system) calc(var(--item-delay) + 140ms);
+            opacity 260ms var(--ease-soft) calc(var(--section-content-delay) + var(--item-delay) + 60ms),
+            transform 380ms var(--ease-system) calc(var(--section-content-delay) + var(--item-delay) + 60ms);
         }
 
         .motion-ready #methods .dark-card.is-card-visible h3 {
@@ -1511,8 +1545,8 @@
           transform: translate3d(0, 0, 0);
           transition:
             color var(--motion-fast) ease,
-            opacity 300ms var(--ease-soft) calc(var(--item-delay) + 220ms),
-            transform 380ms var(--ease-system) calc(var(--item-delay) + 220ms);
+            opacity 300ms var(--ease-soft) calc(var(--section-content-delay) + var(--item-delay)),
+            transform 380ms var(--ease-system) calc(var(--section-content-delay) + var(--item-delay));
         }
 
         .motion-ready #methods .dark-card.is-card-visible p {
@@ -1520,8 +1554,8 @@
           transform: translate3d(0, 0, 0);
           transition:
             color var(--motion-fast) ease,
-            opacity 300ms var(--ease-soft) calc(var(--item-delay) + 280ms),
-            transform 380ms var(--ease-system) calc(var(--item-delay) + 280ms);
+            opacity 300ms var(--ease-soft) calc(var(--section-content-delay) + var(--item-delay) + 70ms),
+            transform 380ms var(--ease-system) calc(var(--section-content-delay) + var(--item-delay) + 70ms);
         }
 
         .motion-ready #experiments .experiment-card:nth-child(1) {
@@ -1529,55 +1563,63 @@
         }
 
         .motion-ready #experiments .experiment-card:nth-child(2) {
-          --item-delay: 60ms;
+          --item-delay: 100ms;
         }
 
         .motion-ready #experiments .experiment-card:nth-child(3) {
-          --item-delay: 120ms;
+          --item-delay: 200ms;
         }
 
         .motion-ready #experiments .experiment-card:nth-child(4) {
-          --item-delay: 180ms;
+          --item-delay: 300ms;
         }
 
         .motion-ready #experiments .experiment-card:nth-child(5) {
-          --item-delay: 240ms;
+          --item-delay: 400ms;
         }
 
         .motion-ready #experiments .experiment-card:nth-child(6) {
-          --item-delay: 300ms;
+          --item-delay: 500ms;
+        }
+
+        .motion-ready #experiments .experiment-card[data-reveal-mode="row"]:nth-child(odd) {
+          --item-delay: 0ms;
+        }
+
+        .motion-ready #experiments .experiment-card[data-reveal-mode="row"]:nth-child(even) {
+          --item-delay: 100ms;
         }
 
         .motion-ready #experiments .experiment-card.is-card-visible {
           opacity: 1;
-          transform: scale(1);
+          transform: translate3d(0, 0, 0);
           transition:
             background-color var(--motion-fast) ease,
-            opacity 280ms var(--ease-soft) var(--item-delay),
-            transform 340ms var(--ease-system) var(--item-delay);
+            opacity 300ms var(--ease-soft) calc(var(--section-content-delay) + var(--item-delay)),
+            transform 440ms var(--ease-system) calc(var(--section-content-delay) + var(--item-delay));
         }
 
         .motion-ready #experiments .experiment-card.is-card-visible::after {
           opacity: 1;
           transition:
             border-color var(--motion-fast) ease,
-            opacity 220ms var(--ease-soft) var(--item-delay);
+            opacity 220ms var(--ease-soft) calc(var(--section-content-delay) + var(--item-delay));
         }
 
         .motion-ready #experiments .experiment-card.is-card-visible .card-media {
           opacity: 1;
           transform: scale(1);
           transition:
-            opacity 340ms var(--ease-soft) calc(var(--item-delay) + 70ms),
-            transform 440ms var(--ease-system) calc(var(--item-delay) + 70ms);
+            opacity 340ms var(--ease-soft) calc(var(--section-content-delay) + var(--item-delay) + 120ms),
+            transform 440ms var(--ease-system) calc(var(--section-content-delay) + var(--item-delay) + 120ms);
         }
 
         .motion-ready #experiments .experiment-card.is-card-visible h3 {
           opacity: 1;
           transform: translate3d(0, 0, 0);
           transition:
-            opacity 250ms var(--ease-soft) calc(var(--item-delay) + 140ms),
-            transform 320ms var(--ease-system) calc(var(--item-delay) + 140ms);
+            opacity 250ms var(--ease-soft) calc(var(--section-content-delay) + var(--item-delay)),
+            transform 320ms var(--ease-system) calc(var(--section-content-delay) + var(--item-delay));
         }
 
         .motion-ready #experiments .experiment-card.is-card-visible h3::after {
@@ -1585,8 +1627,8 @@
           transform: scaleX(1);
           transition:
             background-color var(--motion-fast) ease,
-            opacity 220ms var(--ease-soft) calc(var(--item-delay) + 180ms),
-            transform 320ms var(--ease-system) calc(var(--item-delay) + 180ms);
+            opacity 220ms var(--ease-soft) calc(var(--section-content-delay) + var(--item-delay) + 60ms),
+            transform 320ms var(--ease-system) calc(var(--section-content-delay) + var(--item-delay) + 60ms);
         }
 
         .motion-ready #experiments .experiment-card.is-card-visible p {
@@ -1594,8 +1636,8 @@
           transform: translate3d(0, 0, 0);
           transition:
             color var(--motion-fast) ease,
-            opacity 250ms var(--ease-soft) calc(var(--item-delay) + 210ms),
-            transform 320ms var(--ease-system) calc(var(--item-delay) + 210ms);
+            opacity 250ms var(--ease-soft) calc(var(--section-content-delay) + var(--item-delay) + 70ms),
+            transform 320ms var(--ease-system) calc(var(--section-content-delay) + var(--item-delay) + 70ms);
         }
 
         .motion-ready #about.is-visible .about-photo {
@@ -1884,9 +1926,9 @@
           grid-template-columns: 1fr;
         }
 
-        .motion-ready #projects .feature-card,
-        .motion-ready #methods .dark-card,
-        .motion-ready #experiments .experiment-card {
+        .motion-ready #projects .feature-card[data-reveal-mode="viewport"],
+        .motion-ready #methods .dark-card[data-reveal-mode="viewport"],
+        .motion-ready #experiments .experiment-card[data-reveal-mode="viewport"] {
           --item-delay: 0ms;
         }
 
@@ -2277,7 +2319,11 @@
         const sections = Array.from(document.querySelectorAll(".section"));
         const motionCardSelector = ".feature-card, .dark-card, .experiment-card";
         const initialTarget = location.hash ? document.getElementById(location.hash.slice(1)) : null;
-        const shouldRestorePage = ["restore", "target"].includes(root.dataset.entryMode);
+        const shouldRestorePage = root.dataset.entryMode === "restore";
+        const shouldEnterAtTarget = root.dataset.entryMode === "target";
+        const shouldWaitForReloadReset = root.dataset.navigationType === "reload";
+        const shouldReleaseTargetScroll =
+          root.dataset.navigationType === "navigate" && initialTarget?.classList.contains("section");
         const revealTitle = (section) => section?.classList.add("is-title-visible");
         const revealSection = (section) => {
           revealTitle(section);
@@ -2308,7 +2354,13 @@
             revealCard(firstProjectCard);
           }
         };
-        const canRevealEntry = (entry) => entry.isIntersecting || entry.boundingClientRect.top < 0;
+        const canRevealEntry = (entry) => {
+          if (shouldWaitForReloadReset) {
+            const currentRect = entry.target.getBoundingClientRect();
+            return currentRect.top < window.innerHeight && currentRect.bottom > 0;
+          }
+          return entry.isIntersecting || entry.boundingClientRect.top < 0;
+        };
 
         const activateMedia = (frame) => {
           if (!frame || frame.dataset.loaded === "true") {
@@ -2397,6 +2449,9 @@
               revealSection(initialTarget);
               revealCards(initialTarget);
             }
+          } else if (shouldEnterAtTarget) {
+            root.classList.add("is-booted", "is-hero-settled");
+            revealTitle(initialTarget);
           } else {
             requestAnimationFrame(() => root.classList.add("is-booted"));
             window.setTimeout(() => {
@@ -2414,6 +2469,9 @@
             const revealOptions = compactViewport
               ? { rootMargin: "0px 0px -18% 0px", threshold: 0.12 }
               : { rootMargin: "0px 0px -38% 0px", threshold: 0.12 };
+            const experimentRevealOptions = compactViewport
+              ? { rootMargin: "0px 0px -9% 0px", threshold: 0.08 }
+              : { rootMargin: "0px 0px -14% 0px", threshold: 0.1 };
             const titleObserver = new IntersectionObserver(
               (entries) => {
                 entries.forEach((entry) => {
@@ -2457,6 +2515,19 @@
               },
               revealOptions
             );
+            const experimentCardObserver = new IntersectionObserver(
+              (entries) => {
+                entries.forEach((entry) => {
+                  if (!canRevealEntry(entry)) {
+                    return;
+                  }
+                  revealCard(entry.target);
+                  revealSection(entry.target.closest(".section"));
+                  experimentCardObserver.unobserve(entry.target);
+                });
+              },
+              experimentRevealOptions
+            );
             const finalSectionObserver = new IntersectionObserver(
               (entries) => {
                 entries.forEach((entry) => {
@@ -2477,7 +2548,24 @@
               if (section.id === "about") {
                 finalSectionObserver.observe(revealAnchor || section);
               } else if (compactViewport) {
-                section.querySelectorAll(motionCardSelector).forEach((card) => cardObserver.observe(card));
+                section.querySelectorAll(motionCardSelector).forEach((card) => {
+                  card.dataset.revealMode = "viewport";
+                  if (card.matches("#experiments .experiment-card")) {
+                    experimentCardObserver.observe(card);
+                  } else {
+                    cardObserver.observe(card);
+                  }
+                });
+              } else if (section.id === "projects") {
+                section.querySelectorAll(".feature-card").forEach((card) => {
+                  card.dataset.revealMode = "viewport";
+                  cardObserver.observe(card);
+                });
+              } else if (section.id === "experiments") {
+                section.querySelectorAll(".experiment-card").forEach((card) => {
+                  card.dataset.revealMode = "row";
+                  experimentCardObserver.observe(card);
+                });
               } else {
                 sectionObserver.observe(revealAnchor || section);
               }
@@ -2503,10 +2591,43 @@
           }
         };
 
-        if (document.readyState === "loading") {
-          document.addEventListener("DOMContentLoaded", startPage, { once: true });
+        const scheduleStartPage = () => {
+          if (!shouldWaitForReloadReset) {
+            startPage();
+            if (shouldEnterAtTarget && initialTarget) {
+              requestAnimationFrame(() => {
+                const targetTop = initialTarget.getBoundingClientRect().top + window.scrollY;
+                const targetOffset = compactViewport ? 72 : 88;
+                window.scrollTo({ top: Math.max(0, targetTop - targetOffset), behavior: "auto" });
+                requestAnimationFrame(() => {
+                  root.classList.remove("is-target-entry-pending");
+                  window.setTimeout(() => root.style.removeProperty("scroll-behavior"), 600);
+                });
+              });
+            } else if (shouldReleaseTargetScroll) {
+              requestAnimationFrame(() => root.style.removeProperty("scroll-behavior"));
+            }
+            return;
+          }
+          window.scrollTo(0, 0);
+          requestAnimationFrame(() => {
+            window.scrollTo(0, 0);
+            requestAnimationFrame(() => {
+              startPage();
+              requestAnimationFrame(() => {
+                history.scrollRestoration = "auto";
+                root.style.removeProperty("scroll-behavior");
+              });
+            });
+          });
+        };
+
+        if (shouldWaitForReloadReset && document.readyState !== "complete") {
+          window.addEventListener("load", scheduleStartPage, { once: true });
+        } else if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", scheduleStartPage, { once: true });
         } else {
-          startPage();
+          scheduleStartPage();
         }
 
         window.addEventListener("pageshow", (event) => {
@@ -2591,7 +2712,7 @@
               return;
             }
             revealSection(target);
-            if (!compactViewport) {
+            if (!compactViewport && target.id === "methods") {
               revealCards(target);
             }
             target.classList.add("is-jump-target");

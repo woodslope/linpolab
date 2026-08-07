@@ -24,9 +24,16 @@
   .slide-header{grid-template-columns:250px minmax(0,1fr) auto auto}
   .meta{display:flex;align-items:center;justify-content:flex-start;gap:10px;min-width:0;white-space:nowrap}
   .brand-link{color:var(--ink);text-decoration:none;cursor:pointer}
-  .slide-shell[data-code="COVER"] .slide{background:var(--paper)}
-  .visual-slot.has-image{box-shadow:none}
-  html.fonts-loading .deck{visibility:hidden}
+	  .slide-shell[data-code="COVER"] .slide{background:var(--paper)}
+	  .visual-slot.has-image{box-shadow:none}
+	  .visual-slot[data-asset]:not([data-asset=""]):not(.has-image){border-color:transparent;background:transparent}
+	  .visual-slot[data-asset]:not([data-asset=""]):not(.has-image):before,
+	  .visual-slot[data-asset]:not([data-asset=""]):not(.has-image) .slot-inner{display:none}
+	  .visual-slot[data-asset]:not([data-asset=""]):not(.has-image):after{content:"";width:52px;height:2px;border-radius:999px;background:var(--lime);opacity:.62;animation:slot-loading 900ms ease-in-out infinite alternate}
+	  .visual-slot[data-asset][data-load-state="error"]:not(.has-image):after{content:"项目图片暂时无法加载";width:auto;height:auto;background:none;color:var(--muted);font-size:16px;font-weight:800;letter-spacing:.08em;animation:none}
+	  @keyframes slot-loading{from{opacity:.18;transform:scaleX(.45)}to{opacity:.72;transform:scaleX(1)}}
+	  @media(prefers-reduced-motion:reduce){.visual-slot[data-asset]:not([data-asset=""]):not(.has-image):after{animation:none;opacity:.48}}
+	  html.fonts-loading .deck{visibility:hidden}
   html.fonts-fallback{--font:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
   .project-tab{position:relative;display:inline-flex;align-items:center;gap:7px;padding:10px 8px 9px;color:rgba(248,248,244,.78);text-decoration:none;line-height:1}
   .project-tab b{font-size:16px;font-weight:400;line-height:1}
@@ -285,6 +292,9 @@
     const existing=slot.querySelector('img.slot-image');
     if(existing){existing.decoding='async';applyMode();slot.dataset.loadState='loaded';return}
     slot.dataset.loadState='loading';
+    slot.setAttribute('aria-busy','true');
+    slot.removeAttribute('role');
+    slot.removeAttribute('aria-label');
     const img=new Image();
     img.className='slot-image';
     img.alt=slot.dataset.alt||slot.dataset.slotId||'';
@@ -292,8 +302,8 @@
     img.tabIndex=0;
     img.setAttribute('role','button');
     img.setAttribute('aria-label',`查看大图：${img.alt||'项目图片'}`);
-    img.onload=()=>{applyMode();slot.dataset.loadState='loaded';slot.replaceChildren(img)};
-    img.onerror=()=>{slot.dataset.loadState='error';slot.classList.remove('has-image','image-crop-top')};
+    img.onload=()=>{applyMode();slot.dataset.loadState='loaded';slot.setAttribute('aria-busy','false');slot.replaceChildren(img)};
+    img.onerror=()=>{slot.dataset.loadState='error';slot.setAttribute('aria-busy','false');slot.setAttribute('role','status');slot.setAttribute('aria-label','项目图片暂时无法加载');slot.classList.remove('has-image','image-crop-top')};
     img.src=`${asset}?v=${IMAGE_ASSET_VERSION}`;
   }
   function hydrateVisualSlots(centerIndex=state.slide){

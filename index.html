@@ -232,6 +232,23 @@
         --motion-fast: 180ms;
         --motion-base: 420ms;
         --motion-assembly: 720ms;
+        --motion-card-stagger: 80ms;
+        --motion-shell-opacity: 260ms;
+        --motion-shell-transform: 360ms;
+        --motion-media-opacity: 300ms;
+        --motion-media-transform: 400ms;
+        --motion-copy-opacity: 240ms;
+        --motion-copy-transform: 320ms;
+        --motion-line-opacity: 200ms;
+        --motion-line-transform: 260ms;
+        --motion-delay-shell: 80ms;
+        --motion-delay-media: 80ms;
+        --motion-delay-title: 180ms;
+        --motion-delay-line: 180ms;
+        --motion-delay-copy: 260ms;
+        --motion-delay-note: 260ms;
+        --motion-delay-section-label: 50ms;
+        --motion-delay-section-copy: 110ms;
         color-scheme: light;
       }
 
@@ -1244,6 +1261,12 @@
       }
 
       @media (prefers-reduced-motion: no-preference) {
+        .motion-ready #projects .feature-card,
+        .motion-ready #methods .dark-card,
+        .motion-ready #experiments .experiment-card {
+          --item-delay: 0ms;
+        }
+
         .motion-ready .nav,
         .motion-ready .hero-cn,
         .motion-ready .hero-rule,
@@ -1278,7 +1301,15 @@
 
         .motion-ready #projects .feature-content {
           opacity: 1;
-          transform: translate3d(-8px, 0, 0);
+          transform: none;
+        }
+
+        .motion-ready #projects .feature-index,
+        .motion-ready #projects .feature-title,
+        .motion-ready #projects .feature-sub,
+        .motion-ready #projects .feature-note {
+          opacity: 0;
+          transform: translate3d(0, 8px, 0);
         }
 
         .motion-ready #projects .feature-card {
@@ -1287,7 +1318,7 @@
         }
 
         .motion-ready #projects .feature-card .card-media {
-          opacity: 1;
+          opacity: 0;
           transform: translate3d(38px, 0, 0) scaleX(0.94);
           transform-origin: 100% 50%;
         }
@@ -1309,7 +1340,7 @@
         .motion-ready #methods .dark-card h3,
         .motion-ready #methods .dark-card p {
           opacity: 0;
-          transform: translate3d(0, 5px, 0);
+          transform: translate3d(0, 8px, 0);
         }
 
         .motion-ready #methods .dark-card h3::after {
@@ -1334,7 +1365,7 @@
         .motion-ready #experiments .experiment-card h3,
         .motion-ready #experiments .experiment-card p {
           opacity: 0;
-          transform: translate3d(0, 5px, 0);
+          transform: translate3d(0, 8px, 0);
         }
 
         .motion-ready #experiments .experiment-card h3::after {
@@ -1425,71 +1456,147 @@
           transition: opacity 360ms var(--ease-soft), transform 420ms var(--ease-system);
         }
 
-        .motion-ready #projects .side {
-          opacity: 0;
-          transform: translate3d(-10px, 0, 0);
+        .motion-ready #projects .side,
+        .motion-ready #methods .side,
+        .motion-ready #experiments .side,
+        .motion-ready #about .side {
+          opacity: 1;
+          transform: none;
         }
 
-        .motion-ready.is-hero-settled #projects.is-title-visible .side {
+        .motion-ready #projects .section-number,
+        .motion-ready #projects .section-label,
+        .motion-ready #projects .section-copy,
+        .motion-ready #methods .section-number,
+        .motion-ready #methods .section-label,
+        .motion-ready #methods .section-copy,
+        .motion-ready #experiments .section-number,
+        .motion-ready #experiments .section-label,
+        .motion-ready #experiments .section-copy,
+        .motion-ready #about .section-number,
+        .motion-ready #about .section-label,
+        .motion-ready #about .section-copy {
+          opacity: 0;
+          transform: translate3d(0, 9px, 0);
+        }
+
+        .motion-ready #projects.is-title-visible .section-number,
+        .motion-ready #methods.is-title-visible .section-number,
+        .motion-ready #experiments.is-title-visible .section-number,
+        .motion-ready #about.is-title-visible .section-number {
           opacity: 1;
           transform: translate3d(0, 0, 0);
-          transition: opacity 360ms var(--ease-soft), transform 420ms var(--ease-system);
+          transition:
+            opacity var(--motion-copy-opacity) var(--ease-soft),
+            transform var(--motion-copy-transform) var(--ease-system);
         }
 
-        .motion-ready #projects .feature-card:nth-child(1) {
-          --item-delay: 0ms;
+        .motion-ready #projects.is-title-visible .section-label,
+        .motion-ready #methods.is-title-visible .section-label,
+        .motion-ready #experiments.is-title-visible .section-label,
+        .motion-ready #about.is-title-visible .section-label {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+          transition:
+            opacity var(--motion-copy-opacity) var(--ease-soft) var(--motion-delay-section-label),
+            transform var(--motion-copy-transform) var(--ease-system) var(--motion-delay-section-label);
         }
 
-        .motion-ready #projects .feature-card:nth-child(2) {
-          --item-delay: 100ms;
-        }
-
-        .motion-ready #projects .feature-card:nth-child(3) {
-          --item-delay: 200ms;
-        }
-
-        .motion-ready #projects .feature-card:nth-child(4) {
-          --item-delay: 300ms;
+        .motion-ready #projects.is-title-visible .section-copy,
+        .motion-ready #methods.is-title-visible .section-copy,
+        .motion-ready #experiments.is-title-visible .section-copy,
+        .motion-ready #about.is-title-visible .section-copy {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+          transition:
+            opacity var(--motion-copy-opacity) var(--ease-soft) var(--motion-delay-section-copy),
+            transform var(--motion-copy-transform) var(--ease-system) var(--motion-delay-section-copy);
         }
 
         .motion-ready #projects .feature-card[data-reveal-mode="viewport"] {
           --item-delay: 0ms;
         }
 
-        .motion-ready #projects .feature-card.is-card-visible .feature-content {
+        .motion-ready #projects .feature-card.is-card-visible .feature-index,
+        .motion-ready #projects .feature-card.is-card-visible .feature-title {
           opacity: 1;
           transform: translate3d(0, 0, 0);
           transition:
-            opacity 320ms var(--ease-soft) var(--item-delay),
-            transform 440ms var(--ease-system) var(--item-delay);
+            opacity var(--motion-copy-opacity) var(--ease-soft) calc(var(--item-delay) + var(--motion-delay-title)),
+            transform var(--motion-copy-transform) var(--ease-system) calc(var(--item-delay) + var(--motion-delay-title));
+        }
+
+        .motion-ready #projects .feature-card.is-card-visible .feature-sub {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+          transition:
+            opacity var(--motion-copy-opacity) var(--ease-soft) calc(var(--item-delay) + var(--motion-delay-copy)),
+            transform var(--motion-copy-transform) var(--ease-system) calc(var(--item-delay) + var(--motion-delay-copy));
+        }
+
+        .motion-ready #projects .feature-card.is-card-visible .feature-note {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+          transition:
+            opacity var(--motion-copy-opacity) var(--ease-soft) calc(var(--item-delay) + var(--motion-delay-note)),
+            transform var(--motion-copy-transform) var(--ease-system) calc(var(--item-delay) + var(--motion-delay-note));
         }
 
         .motion-ready #projects .feature-card.is-card-visible .card-media {
           opacity: 1;
           transform: translate3d(0, 0, 0) scaleX(1);
           transition:
-            opacity 480ms var(--ease-soft) calc(var(--item-delay) + 120ms),
-            transform 640ms var(--ease-system) calc(var(--item-delay) + 120ms);
+            opacity var(--motion-media-opacity) var(--ease-soft) calc(var(--item-delay) + var(--motion-delay-media)),
+            transform var(--motion-media-transform) var(--ease-system) calc(var(--item-delay) + var(--motion-delay-media));
         }
 
-        .motion-ready.is-hero-settled #projects .feature-card.is-card-visible {
+        .motion-ready #projects .feature-card.is-card-visible {
           opacity: 1;
           transform: translate3d(0, 0, 0);
           transition:
-            opacity 300ms var(--ease-soft) var(--item-delay),
-            transform 440ms var(--ease-system) var(--item-delay);
+            opacity var(--motion-shell-opacity) var(--ease-soft) calc(var(--item-delay) + var(--motion-delay-shell)),
+            transform var(--motion-shell-transform) var(--ease-system) calc(var(--item-delay) + var(--motion-delay-shell));
         }
 
         .motion-ready.is-page-restored #projects.is-title-visible .side,
         .motion-ready.is-page-restored #projects .feature-card.is-card-visible,
         .motion-ready.is-page-restored #projects .feature-card.is-card-visible .feature-content,
-        .motion-ready.is-page-restored #projects .feature-card.is-card-visible .card-media {
+        .motion-ready.is-page-restored #projects .feature-card.is-card-visible .card-media,
+        .motion-ready.is-page-restored #projects .feature-card.is-card-visible .feature-index,
+        .motion-ready.is-page-restored #projects .feature-card.is-card-visible .feature-title,
+        .motion-ready.is-page-restored #projects .feature-card.is-card-visible .feature-sub,
+        .motion-ready.is-page-restored #projects .feature-card.is-card-visible .feature-note {
           transition: none;
         }
 
-        .motion-ready #methods,
-        .motion-ready #experiments {
-          --section-content-delay: 140ms;
+        .motion-ready.is-page-restored #methods .dark-card.is-card-visible,
+        .motion-ready.is-page-restored #methods .dark-card.is-card-visible::after,
+        .motion-ready.is-page-restored #methods .dark-card.is-card-visible .card-media,
+        .motion-ready.is-page-restored #methods .dark-card.is-card-visible h3,
+        .motion-ready.is-page-restored #methods .dark-card.is-card-visible h3::after,
+        .motion-ready.is-page-restored #methods .dark-card.is-card-visible p,
+        .motion-ready.is-page-restored #experiments .experiment-card.is-card-visible,
+        .motion-ready.is-page-restored #experiments .experiment-card.is-card-visible::after,
+        .motion-ready.is-page-restored #experiments .experiment-card.is-card-visible .card-media,
+        .motion-ready.is-page-restored #experiments .experiment-card.is-card-visible h3,
+        .motion-ready.is-page-restored #experiments .experiment-card.is-card-visible h3::after,
+        .motion-ready.is-page-restored #experiments .experiment-card.is-card-visible p {
+          transition: none;
+        }
+
+        .motion-ready.is-page-restored #projects.is-title-visible .section-number,
+        .motion-ready.is-page-restored #projects.is-title-visible .section-label,
+        .motion-ready.is-page-restored #projects.is-title-visible .section-copy,
+        .motion-ready.is-page-restored #methods.is-title-visible .section-number,
+        .motion-ready.is-page-restored #methods.is-title-visible .section-label,
+        .motion-ready.is-page-restored #methods.is-title-visible .section-copy,
+        .motion-ready.is-page-restored #experiments.is-title-visible .section-number,
+        .motion-ready.is-page-restored #experiments.is-title-visible .section-label,
+        .motion-ready.is-page-restored #experiments.is-title-visible .section-copy,
+        .motion-ready.is-page-restored #about.is-title-visible .section-number,
+        .motion-ready.is-page-restored #about.is-title-visible .section-label,
+        .motion-ready.is-page-restored #about.is-title-visible .section-copy {
+          transition: none;
         }
 
         .motion-ready #methods .dark-card:nth-child(1) {
@@ -1497,38 +1604,38 @@
         }
 
         .motion-ready #methods .dark-card:nth-child(2) {
-          --item-delay: 100ms;
+          --item-delay: var(--motion-card-stagger);
         }
 
         .motion-ready #methods .dark-card:nth-child(3) {
-          --item-delay: 200ms;
+          --item-delay: calc(var(--motion-card-stagger) + var(--motion-card-stagger));
         }
 
         .motion-ready #methods .dark-card:nth-child(4) {
-          --item-delay: 300ms;
+          --item-delay: calc(var(--motion-card-stagger) + var(--motion-card-stagger) + var(--motion-card-stagger));
         }
 
         .motion-ready #methods .dark-card.is-card-visible {
           opacity: 1;
           transform: translate3d(0, 0, 0);
           transition:
-            opacity 300ms var(--ease-soft) calc(var(--section-content-delay) + var(--item-delay)),
-            transform 440ms var(--ease-system) calc(var(--section-content-delay) + var(--item-delay));
+            opacity var(--motion-shell-opacity) var(--ease-soft) calc(var(--item-delay) + var(--motion-delay-shell)),
+            transform var(--motion-shell-transform) var(--ease-system) calc(var(--item-delay) + var(--motion-delay-shell));
         }
 
         .motion-ready #methods .dark-card.is-card-visible::after {
           opacity: 1;
           transition:
             border-color var(--motion-fast) ease,
-            opacity 240ms var(--ease-soft) calc(var(--section-content-delay) + var(--item-delay));
+            opacity var(--motion-line-opacity) var(--ease-soft) calc(var(--item-delay) + var(--motion-delay-shell));
         }
 
         .motion-ready #methods .dark-card.is-card-visible .card-media {
           opacity: 1;
           transform: scale(1);
           transition:
-            opacity 400ms var(--ease-soft) calc(var(--section-content-delay) + var(--item-delay) + 120ms),
-            transform 540ms var(--ease-system) calc(var(--section-content-delay) + var(--item-delay) + 120ms);
+            opacity var(--motion-media-opacity) var(--ease-soft) calc(var(--item-delay) + var(--motion-delay-media)),
+            transform var(--motion-media-transform) var(--ease-system) calc(var(--item-delay) + var(--motion-delay-media));
         }
 
         .motion-ready #methods .dark-card.is-card-visible h3::after {
@@ -1536,8 +1643,8 @@
           transform: scaleX(1);
           transition:
             background-color var(--motion-fast) ease,
-            opacity 260ms var(--ease-soft) calc(var(--section-content-delay) + var(--item-delay) + 60ms),
-            transform 380ms var(--ease-system) calc(var(--section-content-delay) + var(--item-delay) + 60ms);
+            opacity var(--motion-line-opacity) var(--ease-soft) calc(var(--item-delay) + var(--motion-delay-line)),
+            transform var(--motion-line-transform) var(--ease-system) calc(var(--item-delay) + var(--motion-delay-line));
         }
 
         .motion-ready #methods .dark-card.is-card-visible h3 {
@@ -1545,8 +1652,8 @@
           transform: translate3d(0, 0, 0);
           transition:
             color var(--motion-fast) ease,
-            opacity 300ms var(--ease-soft) calc(var(--section-content-delay) + var(--item-delay)),
-            transform 380ms var(--ease-system) calc(var(--section-content-delay) + var(--item-delay));
+            opacity var(--motion-copy-opacity) var(--ease-soft) calc(var(--item-delay) + var(--motion-delay-title)),
+            transform var(--motion-copy-transform) var(--ease-system) calc(var(--item-delay) + var(--motion-delay-title));
         }
 
         .motion-ready #methods .dark-card.is-card-visible p {
@@ -1554,32 +1661,8 @@
           transform: translate3d(0, 0, 0);
           transition:
             color var(--motion-fast) ease,
-            opacity 300ms var(--ease-soft) calc(var(--section-content-delay) + var(--item-delay) + 70ms),
-            transform 380ms var(--ease-system) calc(var(--section-content-delay) + var(--item-delay) + 70ms);
-        }
-
-        .motion-ready #experiments .experiment-card:nth-child(1) {
-          --item-delay: 0ms;
-        }
-
-        .motion-ready #experiments .experiment-card:nth-child(2) {
-          --item-delay: 100ms;
-        }
-
-        .motion-ready #experiments .experiment-card:nth-child(3) {
-          --item-delay: 200ms;
-        }
-
-        .motion-ready #experiments .experiment-card:nth-child(4) {
-          --item-delay: 300ms;
-        }
-
-        .motion-ready #experiments .experiment-card:nth-child(5) {
-          --item-delay: 400ms;
-        }
-
-        .motion-ready #experiments .experiment-card:nth-child(6) {
-          --item-delay: 500ms;
+            opacity var(--motion-copy-opacity) var(--ease-soft) calc(var(--item-delay) + var(--motion-delay-copy)),
+            transform var(--motion-copy-transform) var(--ease-system) calc(var(--item-delay) + var(--motion-delay-copy));
         }
 
         .motion-ready #experiments .experiment-card[data-reveal-mode="row"]:nth-child(odd) {
@@ -1587,7 +1670,7 @@
         }
 
         .motion-ready #experiments .experiment-card[data-reveal-mode="row"]:nth-child(even) {
-          --item-delay: 100ms;
+          --item-delay: var(--motion-card-stagger);
         }
 
         .motion-ready #experiments .experiment-card.is-card-visible {
@@ -1595,31 +1678,31 @@
           transform: translate3d(0, 0, 0);
           transition:
             background-color var(--motion-fast) ease,
-            opacity 300ms var(--ease-soft) calc(var(--section-content-delay) + var(--item-delay)),
-            transform 440ms var(--ease-system) calc(var(--section-content-delay) + var(--item-delay));
+            opacity var(--motion-shell-opacity) var(--ease-soft) calc(var(--item-delay) + var(--motion-delay-shell)),
+            transform var(--motion-shell-transform) var(--ease-system) calc(var(--item-delay) + var(--motion-delay-shell));
         }
 
         .motion-ready #experiments .experiment-card.is-card-visible::after {
           opacity: 1;
           transition:
             border-color var(--motion-fast) ease,
-            opacity 220ms var(--ease-soft) calc(var(--section-content-delay) + var(--item-delay));
+            opacity var(--motion-line-opacity) var(--ease-soft) calc(var(--item-delay) + var(--motion-delay-shell));
         }
 
         .motion-ready #experiments .experiment-card.is-card-visible .card-media {
           opacity: 1;
           transform: scale(1);
           transition:
-            opacity 340ms var(--ease-soft) calc(var(--section-content-delay) + var(--item-delay) + 120ms),
-            transform 440ms var(--ease-system) calc(var(--section-content-delay) + var(--item-delay) + 120ms);
+            opacity var(--motion-media-opacity) var(--ease-soft) calc(var(--item-delay) + var(--motion-delay-media)),
+            transform var(--motion-media-transform) var(--ease-system) calc(var(--item-delay) + var(--motion-delay-media));
         }
 
         .motion-ready #experiments .experiment-card.is-card-visible h3 {
           opacity: 1;
           transform: translate3d(0, 0, 0);
           transition:
-            opacity 250ms var(--ease-soft) calc(var(--section-content-delay) + var(--item-delay)),
-            transform 320ms var(--ease-system) calc(var(--section-content-delay) + var(--item-delay));
+            opacity var(--motion-copy-opacity) var(--ease-soft) calc(var(--item-delay) + var(--motion-delay-title)),
+            transform var(--motion-copy-transform) var(--ease-system) calc(var(--item-delay) + var(--motion-delay-title));
         }
 
         .motion-ready #experiments .experiment-card.is-card-visible h3::after {
@@ -1627,8 +1710,8 @@
           transform: scaleX(1);
           transition:
             background-color var(--motion-fast) ease,
-            opacity 220ms var(--ease-soft) calc(var(--section-content-delay) + var(--item-delay) + 60ms),
-            transform 320ms var(--ease-system) calc(var(--section-content-delay) + var(--item-delay) + 60ms);
+            opacity var(--motion-line-opacity) var(--ease-soft) calc(var(--item-delay) + var(--motion-delay-line)),
+            transform var(--motion-line-transform) var(--ease-system) calc(var(--item-delay) + var(--motion-delay-line));
         }
 
         .motion-ready #experiments .experiment-card.is-card-visible p {
@@ -1636,26 +1719,38 @@
           transform: translate3d(0, 0, 0);
           transition:
             color var(--motion-fast) ease,
-            opacity 250ms var(--ease-soft) calc(var(--section-content-delay) + var(--item-delay) + 70ms),
-            transform 320ms var(--ease-system) calc(var(--section-content-delay) + var(--item-delay) + 70ms);
+            opacity var(--motion-copy-opacity) var(--ease-soft) calc(var(--item-delay) + var(--motion-delay-copy)),
+            transform var(--motion-copy-transform) var(--ease-system) calc(var(--item-delay) + var(--motion-delay-copy));
         }
 
         .motion-ready #about.is-visible .about-photo {
           opacity: 1;
           transform: translate3d(0, 0, 0);
-          transition: opacity 420ms var(--ease-soft), transform 520ms var(--ease-system);
+          transition:
+            opacity var(--motion-media-opacity) var(--ease-soft) 180ms,
+            transform var(--motion-media-transform) var(--ease-system) 180ms;
         }
 
-        .motion-ready #about.is-visible .about-copy {
+        .motion-ready #about.is-about-copy-visible .about-copy {
           opacity: 1;
           transform: translate3d(0, 0, 0);
-          transition: opacity 340ms var(--ease-soft) 140ms, transform 420ms var(--ease-system) 140ms;
+          transition:
+            opacity var(--motion-copy-opacity) var(--ease-soft) 180ms,
+            transform var(--motion-copy-transform) var(--ease-system) 180ms;
         }
 
-        .motion-ready #about.is-visible .about-details {
+        .motion-ready #about.is-about-copy-visible .about-details {
           opacity: 1;
           transform: translate3d(0, 0, 0);
-          transition: opacity 340ms var(--ease-soft) 240ms, transform 420ms var(--ease-system) 240ms;
+          transition:
+            opacity var(--motion-copy-opacity) var(--ease-soft) 280ms,
+            transform var(--motion-copy-transform) var(--ease-system) 280ms;
+        }
+
+        .motion-ready.is-page-restored #about.is-visible .about-photo,
+        .motion-ready.is-page-restored #about.is-about-copy-visible .about-copy,
+        .motion-ready.is-page-restored #about.is-about-copy-visible .about-details {
+          transition: none;
         }
 
         .motion-ready .section.is-jump-target {
@@ -2011,14 +2106,14 @@
               <div class="hero-title-wrap">
                 <h1 class="hero-title">LINPO LAB</h1>
               </div>
-              <p class="hero-axis" aria-label="Design × Method × AI">
-                <span class="hero-axis-word">Design</span>
+              <p class="hero-axis" aria-label="Projects × AI Workflows × Vibe Coding">
+                <span class="hero-axis-word">Projects</span>
                 <span class="hero-axis-node" aria-hidden="true">×</span>
-                <span class="hero-axis-word">Method</span>
+                <span class="hero-axis-word">AI Workflows</span>
                 <span class="hero-axis-node" aria-hidden="true">×</span>
-                <span class="hero-axis-word">AI</span>
+                <span class="hero-axis-word">Vibe Coding</span>
               </p>
-              <p class="hero-cn">围绕品牌体验、产品设计、设计方法与 AI 工作流，探索设计与智能协同的新工作方式。</p>
+              <p class="hero-cn">以真实项目为基础，沉淀 AI 设计工作流，并通过 Vibe Coding 将想法持续转化为可运行的产品实验。</p>
               <div class="hero-rule" aria-hidden="true"></div>
               <div class="profile-mini">
                 <div class="avatar" aria-hidden="true"></div>
@@ -2096,16 +2191,16 @@
                 <div class="feature-art" aria-hidden="true"></div>
               </a>
 
-              <a class="feature-card is-live" href="projects/jifen/index.html" aria-label="打开积分系统全链路体验优化项目演示">
+              <a class="feature-card is-live" href="projects/jifen/index.html" aria-label="打开品牌会员积分系统体验优化项目演示">
                 <picture class="card-media" data-media style="--media-position: center 52%; --media-fallback: #eee5d1">
                   <source type="image/webp" data-srcset="assets/home-media/project-jifen-640.webp?v=home-18df10809cd1 640w, assets/home-media/project-jifen-800.webp?v=home-18df10809cd1 800w, assets/home-media/project-jifen-960.webp?v=home-18df10809cd1 960w, assets/home-media/project-jifen-1200.webp?v=home-18df10809cd1 1200w" />
                   <img data-src="assets/home-media/project-jifen-640.jpg?v=home-18df10809cd1" data-srcset="assets/home-media/project-jifen-640.jpg?v=home-18df10809cd1 640w, assets/home-media/project-jifen-800.jpg?v=home-18df10809cd1 800w, assets/home-media/project-jifen-960.jpg?v=home-18df10809cd1 960w, assets/home-media/project-jifen-1200.jpg?v=home-18df10809cd1 1200w" data-sizes="(max-width: 620px) 100vw, (max-width: 900px) 58vw, 880px" width="1400" height="664" alt="" decoding="async" />
                 </picture>
                 <div class="feature-content">
                   <span class="feature-index">03</span>
-                  <h3 class="feature-title">积分系统全链路体验优化</h3>
-                  <p class="feature-sub">Points System End-to-End<br />Experience Optimization</p>
-                  <p class="feature-note">会员成长 / 积分机制 / 增长体验</p>
+                  <h3 class="feature-title">品牌会员积分系统体验优化</h3>
+                  <p class="feature-sub">Member Points System<br />Experience Optimization</p>
+                  <p class="feature-note">系统框架 / 会员服务 / 互动体验</p>
                 </div>
                 <div class="feature-art" aria-hidden="true"></div>
               </a>
@@ -2292,7 +2387,6 @@
                 <p class="about-detail">
                   <strong>工作地点</strong>
                   <span class="about-detail-value">深圳，中国</span>
-                  <span class="about-detail-sub">Shenzhen, China</span>
                 </p>
                 <p class="about-detail">
                   <strong>联系合作</strong>
@@ -2318,6 +2412,14 @@
         const compactViewport = window.matchMedia("(max-width: 620px)").matches;
         const sections = Array.from(document.querySelectorAll(".section"));
         const motionCardSelector = ".feature-card, .dark-card, .experiment-card";
+        const motionPolicy = Object.freeze({
+          titleReveal: compactViewport
+            ? { rootMargin: "0px 0px -8% 0px", threshold: 0.04 }
+            : { rootMargin: "0px 0px -14% 0px", threshold: 0.06 },
+          cardReveal: compactViewport
+            ? { rootMargin: "0px 0px -10% 0px", threshold: 0.06 }
+            : { rootMargin: "0px 0px -18% 0px", threshold: 0.08 }
+        });
         const initialTarget = location.hash ? document.getElementById(location.hash.slice(1)) : null;
         const shouldRestorePage = root.dataset.entryMode === "restore";
         const shouldEnterAtTarget = root.dataset.entryMode === "target";
@@ -2325,41 +2427,27 @@
         const shouldReleaseTargetScroll =
           root.dataset.navigationType === "navigate" && initialTarget?.classList.contains("section");
         const revealTitle = (section) => section?.classList.add("is-title-visible");
+        const revealSectionBody = (section) => section?.classList.add("is-visible");
+        const revealAboutCopy = (section) => {
+          if (section?.id === "about") {
+            section.classList.add("is-about-copy-visible");
+          }
+        };
         const revealSection = (section) => {
           revealTitle(section);
-          section?.classList.add("is-visible");
+          revealSectionBody(section);
+          revealAboutCopy(section);
         };
-        const revealCard = (card) => {
-          if (!card) {
-            return;
-          }
-          if (card.closest("#projects") && !root.classList.contains("is-hero-settled")) {
-            card.dataset.revealPending = "true";
-            return;
-          }
-          delete card.dataset.revealPending;
-          card.classList.add("is-card-visible");
-        };
+        const revealCard = (card) => card?.classList.add("is-card-visible");
         const revealCards = (section) => section?.querySelectorAll(motionCardSelector).forEach(revealCard);
-        const revealVisibleProjectLead = () => {
-          const projectSection = document.querySelector("#projects");
-          const firstProjectCard = projectSection?.querySelector(".feature-card");
-          const cardRect = firstProjectCard?.getBoundingClientRect();
-          if (
-            projectSection?.classList.contains("is-title-visible") &&
-            cardRect &&
-            cardRect.top < window.innerHeight &&
-            cardRect.bottom > 0
-          ) {
-            revealCard(firstProjectCard);
-          }
-        };
+        // Continuous-scroll motion: section headings and content cards reveal independently.
+        // Card content uses three stages: shell + media, title, supporting copy.
         const canRevealEntry = (entry) => {
           if (shouldWaitForReloadReset) {
             const currentRect = entry.target.getBoundingClientRect();
             return currentRect.top < window.innerHeight && currentRect.bottom > 0;
           }
-          return entry.isIntersecting || entry.boundingClientRect.top < 0;
+          return entry.isIntersecting;
         };
 
         const activateMedia = (frame) => {
@@ -2428,8 +2516,29 @@
         const setActiveNav = (sectionId) => {
           navLinks.forEach((link) => link.classList.toggle("is-active", link.getAttribute("href") === `#${sectionId}`));
         };
+        let activeNavFrame = 0;
+        const updateActiveNav = () => {
+          activeNavFrame = 0;
+          if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2) {
+            setActiveNav(sections.at(-1)?.id);
+            return;
+          }
+          const focusLine = window.innerHeight * (compactViewport ? 0.3 : 0.32);
+          const activeSection = sections.find((section) => {
+            const rect = section.getBoundingClientRect();
+            return rect.top <= focusLine && rect.bottom > focusLine;
+          });
+          setActiveNav(activeSection?.id || sections[0]?.id);
+        };
+        const scheduleActiveNav = () => {
+          if (!activeNavFrame) {
+            activeNavFrame = requestAnimationFrame(updateActiveNav);
+          }
+        };
 
         setActiveNav(sections[0]?.id);
+        window.addEventListener("scroll", scheduleActiveNav, { passive: true });
+        window.addEventListener("resize", scheduleActiveNav, { passive: true });
 
         const startPage = () => {
           if (startPage.hasStarted) {
@@ -2444,34 +2553,19 @@
           }
 
           if (shouldRestorePage) {
-            root.classList.add("is-booted", "is-hero-settled", "is-page-restored");
+            root.classList.add("is-booted", "is-page-restored");
             if (initialTarget?.classList.contains("section")) {
               revealSection(initialTarget);
               revealCards(initialTarget);
             }
           } else if (shouldEnterAtTarget) {
-            root.classList.add("is-booted", "is-hero-settled");
+            root.classList.add("is-booted");
             revealTitle(initialTarget);
           } else {
             requestAnimationFrame(() => root.classList.add("is-booted"));
-            window.setTimeout(() => {
-              root.classList.add("is-hero-settled");
-              window.setTimeout(() => {
-                revealVisibleProjectLead();
-                document
-                  .querySelectorAll('#projects .feature-card[data-reveal-pending="true"]')
-                  .forEach(revealCard);
-              }, 220);
-            }, 1450);
           }
 
           if ("IntersectionObserver" in window) {
-            const revealOptions = compactViewport
-              ? { rootMargin: "0px 0px -18% 0px", threshold: 0.12 }
-              : { rootMargin: "0px 0px -38% 0px", threshold: 0.12 };
-            const experimentRevealOptions = compactViewport
-              ? { rootMargin: "0px 0px -9% 0px", threshold: 0.08 }
-              : { rootMargin: "0px 0px -14% 0px", threshold: 0.1 };
             const titleObserver = new IntersectionObserver(
               (entries) => {
                 entries.forEach((entry) => {
@@ -2480,27 +2574,10 @@
                   }
                   const section = entry.target.closest(".section") || entry.target;
                   revealTitle(section);
-                  if (section.id === "projects" && root.classList.contains("is-hero-settled")) {
-                    window.setTimeout(revealVisibleProjectLead, 220);
-                  }
                   titleObserver.unobserve(entry.target);
                 });
               },
-              { rootMargin: "0px 0px -8% 0px", threshold: 0.05 }
-            );
-            const sectionObserver = new IntersectionObserver(
-              (entries) => {
-                entries.forEach((entry) => {
-                  if (!canRevealEntry(entry)) {
-                    return;
-                  }
-                  const section = entry.target.closest(".section") || entry.target;
-                  revealSection(section);
-                  revealCards(section);
-                  sectionObserver.unobserve(entry.target);
-                });
-              },
-              revealOptions
+              motionPolicy.titleReveal
             );
             const cardObserver = new IntersectionObserver(
               (entries) => {
@@ -2508,81 +2585,38 @@
                   if (!canRevealEntry(entry)) {
                     return;
                   }
-                  revealCard(entry.target);
-                  revealSection(entry.target.closest(".section"));
-                  cardObserver.unobserve(entry.target);
-                });
-              },
-              revealOptions
-            );
-            const experimentCardObserver = new IntersectionObserver(
-              (entries) => {
-                entries.forEach((entry) => {
-                  if (!canRevealEntry(entry)) {
-                    return;
+                  const target = entry.target;
+                  const section = target.closest(".section");
+                  revealTitle(section);
+                  revealSectionBody(section);
+                  if (target.matches(".about-row")) {
+                    revealAboutCopy(section);
+                  } else {
+                    revealCard(target);
                   }
-                  revealCard(entry.target);
-                  revealSection(entry.target.closest(".section"));
-                  experimentCardObserver.unobserve(entry.target);
+                  cardObserver.unobserve(target);
                 });
               },
-              experimentRevealOptions
-            );
-            const finalSectionObserver = new IntersectionObserver(
-              (entries) => {
-                entries.forEach((entry) => {
-                  if (!canRevealEntry(entry)) {
-                    return;
-                  }
-                  revealSection(entry.target.closest(".section") || entry.target);
-                  finalSectionObserver.unobserve(entry.target);
-                });
-              },
-              { rootMargin: "0px 0px -8% 0px", threshold: 0.08 }
+              motionPolicy.cardReveal
             );
             sections.forEach((section) => {
               titleObserver.observe(section.querySelector(".side") || section);
-              const revealAnchor = section.querySelector(
-                ".feature-card, .dark-card, .experiment-card, .about-row"
-              );
               if (section.id === "about") {
-                finalSectionObserver.observe(revealAnchor || section);
-              } else if (compactViewport) {
-                section.querySelectorAll(motionCardSelector).forEach((card) => {
-                  card.dataset.revealMode = "viewport";
-                  if (card.matches("#experiments .experiment-card")) {
-                    experimentCardObserver.observe(card);
-                  } else {
-                    cardObserver.observe(card);
-                  }
-                });
-              } else if (section.id === "projects") {
-                section.querySelectorAll(".feature-card").forEach((card) => {
-                  card.dataset.revealMode = "viewport";
-                  cardObserver.observe(card);
-                });
-              } else if (section.id === "experiments") {
-                section.querySelectorAll(".experiment-card").forEach((card) => {
-                  card.dataset.revealMode = "row";
-                  experimentCardObserver.observe(card);
-                });
-              } else {
-                sectionObserver.observe(revealAnchor || section);
+                cardObserver.observe(section.querySelector(".about-row") || section);
+                return;
               }
+              section.querySelectorAll(motionCardSelector).forEach((card) => {
+                card.dataset.revealMode = compactViewport
+                  ? "viewport"
+                  : section.id === "methods"
+                    ? "group"
+                    : section.id === "experiments"
+                      ? "row"
+                      : "viewport";
+                cardObserver.observe(card);
+              });
             });
 
-            const navObserver = new IntersectionObserver(
-              (entries) => {
-                const visibleSections = entries.filter((entry) => entry.isIntersecting);
-                if (!visibleSections.length) {
-                  return;
-                }
-                visibleSections.sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-                setActiveNav(visibleSections[0].target.id);
-              },
-              { rootMargin: "-25% 0px -58% 0px", threshold: [0.08, 0.24, 0.5] }
-            );
-            sections.forEach((section) => navObserver.observe(section));
           } else {
             sections.forEach((section) => {
               revealSection(section);
@@ -2634,7 +2668,7 @@
           if (!event.persisted || reduceMotion.matches) {
             return;
           }
-          root.classList.add("is-booted", "is-hero-settled", "is-page-restored");
+          root.classList.add("is-booted", "is-page-restored");
           const restoredTarget = location.hash ? document.getElementById(location.hash.slice(1)) : null;
           if (restoredTarget?.classList.contains("section")) {
             revealSection(restoredTarget);
@@ -2711,12 +2745,9 @@
             if (!target || !target.classList.contains("section")) {
               return;
             }
-            revealSection(target);
-            if (!compactViewport && target.id === "methods") {
-              revealCards(target);
-            }
             target.classList.add("is-jump-target");
             window.setTimeout(() => target.classList.remove("is-jump-target"), 620);
+            scheduleActiveNav();
           });
         });
       })();

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "project": "moreimg",
+  "captureContext": "Existing clean screenshots produced from a local/offline application state; the original runtime is not required for this evidence registration.",
+  "screenshots": [
+    {
+      "file": "00-real-ai-processing-1440x900@2x.png",
+      "route": "unknown",
+      "purpose": "证明文章提交后会进入可见的 AI 分阶段处理流程。",
+      "viewport": "1440x900",
+      "pixelSize": "2880x1800",
+      "capturedAt": "unknown",
+      "source": "local",
+      "sourceRevision": "unknown",
+      "verificationStatus": "unconfirmed"
+    },
+    {
+      "file": "01-real-classify-and-audit-1440x900@2x.png",
+      "route": "unknown",
+      "purpose": "证明判型与核查阶段会暴露文章事实、风险和阶段结果。",
+      "viewport": "1440x900",
+      "pixelSize": "2880x1800",
+      "capturedAt": "unknown",
+      "source": "local",
+      "sourceRevision": "unknown",
+      "verificationStatus": "unconfirmed"
+    },
+    {
+      "file": "04-real-card-content-pack-1440x900@2x.png",
+      "route": "unknown",
+      "purpose": "证明文章重构结果与卡片内容包可以分别检查。",
+      "viewport": "1440x900",
+      "pixelSize": "2880x1800",
+      "capturedAt": "unknown",
+      "source": "local",
+      "sourceRevision": "unknown",
+      "verificationStatus": "unconfirmed"
+    },
+    {
+      "file": "05-real-visual-prompts-1440x900@2x.png",
+      "route": "unknown",
+      "purpose": "证明视觉提示词与每张知识卡片一一对应。",
+      "viewport": "1440x900",
+      "pixelSize": "2880x1800",
+      "capturedAt": "unknown",
+      "source": "local",
+      "sourceRevision": "unknown",
+      "verificationStatus": "unconfirmed"
+    }
+  ]
+}

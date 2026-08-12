@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "project": "leekquant",
+  "captureContext": "Existing clean screenshots produced from a local/offline application state; the original runtime is not required for this evidence registration.",
+  "screenshots": [
+    {
+      "file": "20260714-01-monitor@2x.png",
+      "route": "unknown",
+      "purpose": "证明监控台将策略漏斗、买入信号和模拟持仓风控组织在同一检查面。",
+      "viewport": "1440x900",
+      "pixelSize": "2880x1800",
+      "capturedAt": "unknown",
+      "source": "local",
+      "sourceRevision": "unknown",
+      "verificationStatus": "unconfirmed"
+    },
+    {
+      "file": "20260714-02-history@2x.png",
+      "route": "unknown",
+      "purpose": "证明历史页能在同一条记录中回看收益、离场原因和纪律状态。",
+      "viewport": "1440x900",
+      "pixelSize": "2880x1800",
+      "capturedAt": "unknown",
+      "source": "local",
+      "sourceRevision": "unknown",
+      "verificationStatus": "unconfirmed"
+    },
+    {
+      "file": "20260714-03-strategy@2x.png",
+      "route": "unknown",
+      "purpose": "证明策略库将发现、确认与离场条件拆成可检查的规则。",
+      "viewport": "1440x900",
+      "pixelSize": "2880x1800",
+      "capturedAt": "unknown",
+      "source": "local",
+      "sourceRevision": "unknown",
+      "verificationStatus": "unconfirmed"
+    },
+    {
+      "file": "20260714-04-backtest@2x.png",
+      "route": "unknown",
+      "purpose": "证明回测大厅已集中呈现任务、收益、胜率和导入状态。",
+      "viewport": "1440x900",
+      "pixelSize": "2880x1800",
+      "capturedAt": "unknown",
+      "source": "local",
+      "sourceRevision": "unknown",
+      "verificationStatus": "unconfirmed"
+    }
+  ]
+}

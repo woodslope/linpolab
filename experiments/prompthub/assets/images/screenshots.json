@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "project": "prompthub",
+  "captureContext": "Existing clean screenshots produced from a local/offline application state; the original runtime is not required for this evidence registration.",
+  "screenshots": [
+    {
+      "file": "20260715-01-library-overview@2x.png",
+      "route": "unknown",
+      "purpose": "证明提示词库集中提供分类、搜索、收藏和复制入口。",
+      "viewport": "1440x900",
+      "pixelSize": "2880x1800",
+      "capturedAt": "unknown",
+      "source": "local",
+      "sourceRevision": "unknown",
+      "verificationStatus": "unconfirmed"
+    },
+    {
+      "file": "20260715-02-edit-prompt@2x.png",
+      "route": "unknown",
+      "purpose": "证明编辑时可将分类、动态变量和视觉参考一起保存。",
+      "viewport": "1440x900",
+      "pixelSize": "2880x1800",
+      "capturedAt": "unknown",
+      "source": "local",
+      "sourceRevision": "unknown",
+      "verificationStatus": "unconfirmed"
+    },
+    {
+      "file": "20260714-03-dynamic-variables@2x.png",
+      "route": "unknown",
+      "purpose": "证明复制前可检测动态变量并填入本次任务内容。",
+      "viewport": "1440x900",
+      "pixelSize": "2880x1800",
+      "capturedAt": "unknown",
+      "source": "local",
+      "sourceRevision": "unknown",
+      "verificationStatus": "unconfirmed"
+    },
+    {
+      "file": "20260714-04-gist-settings@2x.png",
+      "route": "unknown",
+      "purpose": "证明本地导入导出与可选的 Gist 纯文本同步被明确分开。",
+      "viewport": "1440x900",
+      "pixelSize": "2880x1800",
+      "capturedAt": "unknown",
+      "source": "local",
+      "sourceRevision": "unknown",
+      "verificationStatus": "unconfirmed"
+    }
+  ]
+}

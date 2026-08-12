@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "project": "vispath",
+  "captureContext": "Existing clean screenshots produced from a local/offline application state; the original runtime is not required for this evidence registration.",
+  "screenshots": [
+    {
+      "file": "20260714-01-complex-prompt-input.png",
+      "route": "unknown",
+      "purpose": "证明输入阶段能将固定创作条件与本轮探索变量分开。",
+      "viewport": "1440x900",
+      "pixelSize": "2880x1800",
+      "capturedAt": "unknown",
+      "source": "local",
+      "sourceRevision": "unknown",
+      "verificationStatus": "unconfirmed"
+    },
+    {
+      "file": "20260714-02-four-prompt-plans.png",
+      "route": "unknown",
+      "purpose": "证明方案阶段能生成四套可检查、可比较的视觉方向。",
+      "viewport": "1440x900",
+      "pixelSize": "2880x1800",
+      "capturedAt": "unknown",
+      "source": "local",
+      "sourceRevision": "unknown",
+      "verificationStatus": "unconfirmed"
+    },
+    {
+      "file": "20260714-03-result-board.png",
+      "route": "unknown",
+      "purpose": "证明结果画板保留同批次结果、请求参数和继续细化入口。",
+      "viewport": "1440x900",
+      "pixelSize": "2880x1800",
+      "capturedAt": "unknown",
+      "source": "local",
+      "sourceRevision": "unknown",
+      "verificationStatus": "unconfirmed"
+    },
+    {
+      "file": "20260714-04-batch-comparison.png",
+      "route": "unknown",
+      "purpose": "证明批次对比可将四个生成方向放在同一视觉尺度下检查。",
+      "viewport": "1440x900",
+      "pixelSize": "2880x1800",
+      "capturedAt": "unknown",
+      "source": "local",
+      "sourceRevision": "unknown",
+      "verificationStatus": "unconfirmed"
+    }
+  ]
+}

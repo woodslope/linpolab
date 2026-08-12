@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "project": "dailyglance",
+  "captureContext": "Existing clean screenshots produced from a local/offline application state; the original runtime is not required for this evidence registration.",
+  "screenshots": [
+    {
+      "file": "20260714-01-market-dashboard@2x.png",
+      "route": "unknown",
+      "purpose": "证明核心大盘页能在同一观察面呈现市场温度、图表和每日结论。",
+      "viewport": "1440x900",
+      "pixelSize": "2880x1800",
+      "capturedAt": "unknown",
+      "source": "local",
+      "sourceRevision": "unknown",
+      "verificationStatus": "unconfirmed"
+    },
+    {
+      "file": "20260714-02-watchlist-pool@2x.png",
+      "route": "unknown",
+      "purpose": "证明自选股池支持在多只股票之间连续切换并同步更新观察信息。",
+      "viewport": "1440x900",
+      "pixelSize": "2880x1800",
+      "capturedAt": "unknown",
+      "source": "local",
+      "sourceRevision": "unknown",
+      "verificationStatus": "unconfirmed"
+    },
+    {
+      "file": "20260714-03-system-settings@2x.png",
+      "route": "unknown",
+      "purpose": "证明系统设置显式暴露策略类型和信号积分规则。",
+      "viewport": "1440x900",
+      "pixelSize": "2880x1800",
+      "capturedAt": "unknown",
+      "source": "local",
+      "sourceRevision": "unknown",
+      "verificationStatus": "unconfirmed"
+    },
+    {
+      "file": "20260714-04-help-guide@2x.png",
+      "route": "unknown",
+      "purpose": "证明帮助页说明了界面阅读顺序与三类判断依据。",
+      "viewport": "1440x900",
+      "pixelSize": "2880x1800",
+      "capturedAt": "unknown",
+      "source": "local",
+      "sourceRevision": "unknown",
+      "verificationStatus": "unconfirmed"
+    }
+  ]
+}

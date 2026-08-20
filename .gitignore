@@ -1,5 +1,6 @@
 .DS_Store
 .gitattributes
+.workbuddy/
 projects/*/assets/fonts/
 output/
 *.bak*

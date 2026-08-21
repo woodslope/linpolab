@@ -2,15 +2,13 @@
 
 :root { --exploration-nav-height: 64px; }
 
-body.exploration-page { margin: 0; overflow-x: hidden; background: var(--paper); color: var(--ink); }
+body.exploration-page { margin: 0; overflow-x: hidden; overscroll-behavior-y: none; background: var(--paper); color: var(--ink); }
 body.exploration-page *,
 body.exploration-page *::before,
 body.exploration-page *::after { box-sizing: border-box; }
-html { --scrollbar-thumb: rgba(255, 255, 255, .24); background: var(--hero-background, var(--dark)); scroll-behavior: smooth; scrollbar-color: var(--scrollbar-thumb) transparent; }
-html.page-on-paper { --scrollbar-thumb: rgba(24, 32, 27, .24); background: var(--paper); }
-html::-webkit-scrollbar { width: 10px; }
-html::-webkit-scrollbar-track { background: transparent; }
-html::-webkit-scrollbar-thumb { border: 3px solid transparent; border-radius: 999px; background: var(--scrollbar-thumb); background-clip: padding-box; }
+html { background: var(--hero-background, var(--dark)); overscroll-behavior-y: none; scroll-behavior: smooth; scrollbar-width: none; }
+html.page-on-paper { background: var(--paper); }
+html::-webkit-scrollbar { display: none; }
 body.exploration-page a { color: inherit; }
 body.exploration-page img { display: block; max-width: 100%; }
 body.exploration-page h1,
@@ -46,6 +44,7 @@ body.exploration-page [id] { scroll-margin-top: calc(var(--exploration-nav-heigh
 .exploration-page .project-links,
 .exploration-page .chips { display: flex; flex-wrap: wrap; justify-content: center; }
 .exploration-page .hero-actions { margin-top: 28px; }
+.exploration-page .hero-actions .button { padding-inline: 32px; }
 .exploration-page .button { border: 1px solid var(--accent); background: var(--accent); color: #fff; text-decoration: none; }
 .exploration-page .button.ghost { background: transparent; color: var(--accent); }
 .exploration-page .hero .button { border-color: var(--hero-accent, var(--accent)); background: var(--hero-accent, var(--accent)); color: var(--hero-background, #fff); }

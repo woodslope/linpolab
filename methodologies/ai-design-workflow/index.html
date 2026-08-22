@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>从模糊需求到可验证方案｜LINPO LAB</title>
+    <meta name="description" content="以小慧 AI 对话功能为例，说明如何把模糊需求逐步整理成能够讨论、执行和验证的设计方案。" />
+    <meta name="author" content="Linpo Wu" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="从模糊需求到可验证方案" />
+    <meta property="og:description" content="我的 AI 辅助设计工作流。" />
+    <meta property="og:image" content="assets/images/xiaohui-report-flow.png" />
+    <style>
+      :root {
+        --page: #f4f4f1;
+        --paper: #ffffff;
+        --ink: #050505;
+        --text: #414346;
+        --muted: #6d6f73;
+        --line: rgba(0, 0, 0, 0.13);
+        --accent: #b7ff00;
+        --callout-bg: #f1f2ef;
+        --article-width: 720px;
+        --topbar-height: 56px;
+      }
+
+      * { box-sizing: border-box; }
+
+      html { scroll-behavior: smooth; }
+
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+      }
+
+      h2, h3 { scroll-margin-top: calc(var(--topbar-height) + 16px); }
+
+      body {
+        margin: 0;
+        padding-top: var(--topbar-height);
+        color: var(--ink);
+        background: var(--page);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+        font-size: 17px;
+        line-height: 1.85;
+        text-rendering: optimizeLegibility;
+      }
+
+      ::selection { color: var(--ink); background: var(--accent); }
+      img { display: block; max-width: 100%; }
+      a { color: inherit; }
+
+      .topbar {
+        position: fixed;
+        inset: 0 0 auto;
+        z-index: 30;
+        min-height: var(--topbar-height);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+        background: #000;
+      }
+
+      .topbar__inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        width: min(calc(100% - 40px), 1120px);
+        min-width: 0;
+        min-height: var(--topbar-height);
+        margin: 0 auto;
+      }
+
+      .brand,
+      .back {
+        flex: 0 0 auto;
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 13px;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+
+      .brand { color: #fff; font-weight: 800; letter-spacing: 0; }
+      .back:hover, .back:focus-visible { color: var(--accent); }
+      .brand:focus-visible, .back:focus-visible, .case-link:focus-visible {
+        border-radius: 4px;
+        outline: 2px solid var(--accent);
+        outline-offset: 4px;
+      }
+
+      .sheet {
+        width: min(calc(100% - 32px), 816px);
+        max-width: 100%;
+        min-width: 0;
+        min-height: 100vh;
+        margin: clamp(18px, 3.5vw, 32px) auto 0;
+        padding: clamp(48px, 8vw, 84px) clamp(22px, 7vw, 76px) 72px;
+        background: var(--paper);
+      }
+
+      .sheet > header {
+        margin-bottom: 40px;
+        padding-bottom: 28px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      h1, h2, h3, p { margin-top: 0; }
+
+      h1, h2, h3, p, li, a {
+        max-width: 100%;
+        overflow-wrap: break-word;
+      }
+
+      h1, h2, h3 {
+        color: var(--ink);
+        font-family: inherit;
+      }
+
+      h1 {
+        margin-bottom: 20px;
+        font-size: clamp(36px, 5vw, 48px);
+        line-height: 1.18;
+        letter-spacing: 0;
+        text-wrap: balance;
+      }
+
+      .subtitle {
+        max-width: 620px;
+        margin-bottom: 20px;
+        color: var(--text);
+        font-size: 19px;
+        line-height: 1.65;
+      }
+
+      .byline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 8px;
+        margin-bottom: 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .byline span + span::before {
+        margin-right: 8px;
+        color: var(--line);
+        content: "·";
+      }
+
+      .article > p,
+      .article > ul,
+      .article > ol,
+      .article > .image-block,
+      .article > blockquote {
+        width: min(100%, var(--article-width));
+        margin-right: auto;
+        margin-left: auto;
+      }
+
+      .article,
+      .article > *,
+      .sheet > header {
+        min-width: 0;
+        max-width: 100%;
+      }
+
+      .article p {
+        margin-bottom: 24px;
+        color: var(--text);
+        text-wrap: pretty;
+      }
+
+      .article a:not(.case-link) {
+        color: var(--ink);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 3px;
+      }
+
+      .article a:not(.case-link):hover {
+        color: var(--ink);
+        text-decoration-color: var(--accent);
+        text-decoration-thickness: 2px;
+      }
+
+      .article strong { color: var(--ink); }
+
+      .article blockquote.callout {
+        position: relative;
+        width: min(100%, var(--article-width));
+        margin: 36px auto;
+        padding: 8px 20px 8px 58px;
+        color: var(--ink);
+        font-size: 19px;
+        font-weight: 550;
+        line-height: 1.75;
+      }
+
+      .article blockquote.callout::before {
+        position: absolute;
+        top: -3px;
+        left: 0;
+        color: var(--accent);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 68px;
+        font-weight: 700;
+        line-height: 1;
+        content: "“";
+      }
+
+      .article blockquote.callout--boundary {
+        margin: 30px auto;
+        padding: 18px 22px;
+        border-left: 4px solid var(--accent);
+        background: var(--callout-bg);
+        color: var(--text);
+        font-size: inherit;
+        font-weight: 400;
+        line-height: inherit;
+      }
+
+      .article blockquote.callout--boundary::before { content: none; }
+
+      .article .callout-label {
+        white-space: nowrap;
+        color: var(--ink);
+      }
+
+      .article blockquote.callout p:last-child { margin-bottom: 0; }
+
+      .article h2 {
+        width: min(100%, var(--article-width));
+        max-width: 100%;
+        margin: 70px auto 24px;
+        padding-top: 11px;
+        border-top: 1px solid var(--line);
+        font-size: clamp(26px, 3.2vw, 32px);
+        line-height: 1.45;
+        line-break: strict;
+        overflow-wrap: normal;
+        word-break: normal;
+        text-wrap: pretty;
+      }
+
+      .article ul,
+      .article ol {
+        display: grid;
+        gap: 5px;
+        margin-top: -2px;
+        margin-bottom: 28px;
+        padding: 0;
+      }
+
+      .article ul {
+        list-style: none;
+      }
+
+      .article ol {
+        padding-left: 1.4em;
+        list-style-position: outside;
+      }
+
+      .article li {
+        position: relative;
+        padding-left: 18px;
+        color: var(--text);
+      }
+
+      .article li::before {
+        position: absolute;
+        top: 0.75em;
+        left: 0;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+        content: "";
+      }
+
+      .article ol li { padding-left: 5px; }
+      .article ol li::before { content: none; }
+      .article ol li p { margin-bottom: 10px; }
+      .article ol li p:last-child { margin-bottom: 0; }
+
+      .method-summary {
+        margin-top: 6px !important;
+      }
+
+      .method-summary li { margin-bottom: 8px; }
+
+      .image-block {
+        margin-top: 38px;
+        margin-bottom: 38px;
+      }
+
+      .image-block img {
+        display: block;
+        inline-size: 100%;
+        max-inline-size: 100%;
+        block-size: auto;
+        max-height: none;
+        object-fit: contain;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+      }
+
+      .image-link {
+        display: block;
+        border-radius: 6px;
+      }
+
+      .image-link:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 4px;
+      }
+
+      .image-link:hover img { border-color: rgba(0, 0, 0, 0.32); }
+
+      .image-caption {
+        display: block;
+        margin-top: 11px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.7;
+        text-align: center;
+      }
+
+      .case-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 6px;
+        color: var(--ink);
+        font-size: 15px;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .case-link:hover { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 3px; text-underline-offset: 4px; }
+
+      .footer {
+        width: min(calc(100% - 32px), 816px);
+        margin: 0 auto;
+        padding: 24px 0 34px;
+        color: var(--muted);
+        font-size: 11px;
+        text-align: center;
+      }
+
+      @media (max-width: 768px) {
+        .article blockquote.callout {
+          padding-right: 8px;
+          padding-left: 48px;
+          font-size: 18px;
+        }
+
+        .article blockquote.callout::before {
+          top: 0;
+          font-size: 58px;
+        }
+
+        .article blockquote.callout--boundary {
+          padding: 16px 18px;
+          font-size: inherit;
+        }
+      }
+
+      @media (max-width: 600px) {
+        body { font-size: 16px; }
+        .topbar__inner { width: calc(100% - 28px); }
+        .sheet { width: 100%; padding: 44px 24px 58px; }
+        .sheet > header { margin-bottom: 34px; padding-bottom: 24px; }
+        .article h2 { margin-top: 58px; }
+        .subtitle { font-size: 18px; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar__inner">
+        <a class="brand" href="../../index.html">LINPO LAB</a>
+        <a class="back" href="../../index.html#methods">返回首页</a>
+      </div>
+    </header>
+
+    <article class="sheet">
+      <header id="overview">
+        <h1>从模糊需求到可验证方案</h1>
+        <p class="subtitle">以小慧 AI 为例，展示如何把一句模糊功能需求，整理成可讨论、可执行、可验证的设计方案。</p>
+        <p class="byline"><span>Linpo Wu</span><span>2026</span></p>
+      </header>
+
+      <div class="article">
+        <p>设计工作里，真正耗费时间的部分，往往发生在画界面之前。</p>
+
+        <p>需求信息不完整，不同角色对目标的理解也可能不一致。设计师需要先确认：哪些内容已经明确，哪些属于设计判断，哪些问题必须由产品、技术或业务继续决策。</p>
+
+        <p>AI 加入设计流程后，我开始更早地用它整理资料、扩展问题和比较方向。它能够加快前期探索，但不能替项目成员做决定。业务规则、技术边界和最终方案，仍然需要对应角色共同确认。</p>
+
+        <p>下面以“小慧 AI 对话功能”为例，说明我如何把一句模糊的功能需求，逐步整理成能够讨论、执行和继续验证的设计方案。</p>
+
+        <p><strong>这套方法分为五步，每一步都对应一个可以继续检查的产出：</strong></p>
+
+        <ol class="method-summary">
+          <li><strong>定义设计问题：</strong>把功能描述转化为业务目标、用户任务、产品限制和设计交付。</li>
+          <li><strong>区分信息状态：</strong>整理已经确认的事实、需要验证的假设和等待其他角色决策的问题。</li>
+          <li><strong>比较方案方向：</strong>在投入界面细节之前，先说明各方向的收益、成本和限制。</li>
+          <li><strong>形成可检查规格：</strong>明确入口、核心流程、结果承载、关键状态和实现依赖。</li>
+          <li><strong>用证据继续验证：</strong>记录现有结果能够证明什么、不能证明什么，以及下一步如何验证。</li>
+        </ol>
+
+        <h2>第一步：先把功能描述翻译成设计问题</h2>
+
+        <p>小慧项目最初的需求是：“在业务后台增加一个 AI 助手。”</p>
+
+        <p>如果直接开始设计，很快就能画出一个聊天窗口：顶部是助手名称，中间是消息记录，底部是输入框。这样的界面回答了“长什么样”，却没有说明这个功能要解决什么问题。</p>
+
+        <p><strong>基于已有的项目目标和需求材料，我先从业务、用户、产品限制和设计交付四个方面梳理信息。</strong></p>
+
+        <ol>
+          <li>
+            <p><strong>业务希望解决什么问题？</strong></p>
+            <p>项目希望在现有产品中建立一个稳定的 AI 入口，让 AI 能力逐步进入真实业务场景。小慧一期从基础对话开始，后续继续连接经营报告、外呼话术和营销流程等业务结果。</p>
+            <p>因此，它不能只承担普通问答，还需要成为用户调用业务能力的入口。</p>
+          </li>
+          <li>
+            <p><strong>用户需要完成什么任务？</strong></p>
+            <p>用户需要在当前业务页面中打开小慧，通过自然语言提出经营分析或内容生成需求，并继续查看、预览或修改生成结果。</p>
+            <p>用户打开小慧的目的不是单纯聊天，而是继续完成已有的业务任务。</p>
+          </li>
+          <li>
+            <p><strong>当前产品存在哪些限制？</strong></p>
+            <p>小慧需要进入已经存在的业务后台，不能要求用户频繁离开当前页面。侧边栏可以承载连续对话，但空间有限，不适合完整展示经营报告、外呼话术和营销流程等复杂内容。</p>
+            <p>这意味着基础对话可以保留在侧边栏中，复杂结果需要通过结果卡片和独立详情页继续承载。</p>
+          </li>
+          <li>
+            <p><strong>我需要交付什么结果？</strong></p>
+            <p>在这个项目中，我负责的是 UX/UI 和产品视觉设计。<strong>一期需要完成 PC 侧边栏助手的核心界面，包括入口、消息流、固定输入区域和基础对话状态。</strong>同时，还需要设计对话与经营报告等业务结果之间的衔接方式。</p>
+            <p>数据接口、权限规则、模型能力和技术实现不属于 UI 设计师单独决定的范围，需要由相关角色确认后再反映到界面中。</p>
+          </li>
+        </ol>
+
+        <blockquote class="callout">
+          <p>在保留当前业务页面的前提下，设计一个能够承载基础对话，并连接后续业务结果的 AI 入口。</p>
+        </blockquote>
+
+        <figure class="image-block">
+          <a class="image-link" href="assets/images/xiaohui-chat-sidebar.png" target="_blank" rel="noopener" aria-label="查看小慧 AI 侧边栏对话界面原图">
+            <img src="assets/images/xiaohui-chat-sidebar.png" width="1384" height="848" alt="小慧 AI 侧边栏对话界面" />
+          </a>
+          <figcaption class="image-caption">小慧 AI 在业务后台右侧展开，保留当前页面并提供对话入口。点击图片查看原图。</figcaption>
+        </figure>
+
+        <h2>第二步：区分已知、假设与待确认事项</h2>
+
+        <p>设计师能够判断的内容有边界。</p>
+
+        <p>在小慧项目中，我先根据需求文档、会议结论和现有方案，整理已经确认的信息：</p>
+
+        <ul role="list">
+          <li>小慧需要进入现有业务产品</li>
+          <li>一期先建立基础对话入口</li>
+          <li>对话后续需要承接经营报告等业务结果</li>
+          <li>复杂结果不能全部停留在侧边栏中</li>
+        </ul>
+
+        <p>在这些信息基础上，我可以提出设计假设：<strong>侧边栏能够保留当前业务页面，可能比独立对话页更少打断用户。</strong></p>
+
+        <p>这个判断属于体验设计范畴，可以通过原型和实际使用继续验证。</p>
+
+        <p><strong>项目中还有一些会直接影响界面的待确认事项，但它们不能由设计师单独决定。</strong></p>
+
+        <ol>
+          <li>
+            <p><strong>AI 可以读取哪些业务数据</strong></p>
+            <p>这需要产品、数据和技术团队确认。设计师根据确认结果，决定界面是否需要展示数据范围、授权提示和不可用状态。</p>
+          </li>
+          <li>
+            <p><strong>不同角色拥有什么数据权限</strong></p>
+            <p>这需要产品负责人、权限系统负责人和安全相关角色确认。设计师负责呈现权限差异，以及用户无权访问时的反馈方式。</p>
+          </li>
+          <li>
+            <p><strong>回答是否需要显示数据来源</strong></p>
+            <p>产品需要先明确可信度要求，技术需要确认结果是否可以追溯。在此基础上，设计师再判断来源信息放在哪里、如何展开，以及需要展示到什么程度。</p>
+          </li>
+          <li>
+            <p><strong>回答错误后如何处理</strong></p>
+            <p>产品需要明确错误带来的业务影响，技术需要说明系统支持重新生成、修改条件还是转人工。设计师负责把已经支持的恢复方式组织成清晰流程。</p>
+          </li>
+          <li>
+            <p><strong>对话内容可以保留多久</strong></p>
+            <p>这取决于业务规则、数据安全和合规要求。设计师只能根据最终规则设计历史记录、删除入口和保存提示。</p>
+          </li>
+        </ol>
+
+        <blockquote class="callout">
+          <p>在这个过程中，我可以使用 AI 辅助整理会议记录，发现不同资料之间的矛盾，并为待确认事项标注来源、负责人和当前状态。</p>
+        </blockquote>
+
+        <blockquote class="callout callout--boundary">
+          <p><strong class="callout-label">边界：</strong>AI 不能替相关角色制定规则，设计师也不能把尚未确认的内容写成产品结论。</p>
+        </blockquote>
+
+        <h2>第三步：先比较方向，再投入细节</h2>
+
+        <p>当需求里出现“AI 助手”时，聊天窗口通常会成为最先想到的答案。如果立即沿着这个方向细化，很容易在界面、组件和视觉上投入大量时间，却没有确认入口形态是否适合当前产品。</p>
+
+        <p><strong>围绕小慧的接入方式，我把可能的方向整理为三种。</strong></p>
+
+        <ol>
+          <li>
+            <p><strong>独立对话页面</strong></p>
+            <p>独立页面能够提供完整的对话空间，也方便承载复杂内容。问题是用户需要离开当前业务页面，原有任务和页面上下文容易中断。</p>
+          </li>
+          <li>
+            <p><strong>悬浮窗口</strong></p>
+            <p>悬浮窗口足够轻量，对原有页面影响较小。但它的可用空间有限，更适合简单问答。面对经营报告、内容预览和多轮业务操作时，界面很快会变得拥挤。</p>
+          </li>
+          <li>
+            <p><strong>业务侧边栏</strong></p>
+            <p>侧边栏可以保留当前页面，同时提供相对稳定的对话空间，适合作为已有业务产品中的 AI 入口。它的限制也很明确：需要处理主页面空间变化、不同分辨率适配，以及复杂结果如何离开侧边栏继续展示。</p>
+          </li>
+        </ol>
+
+        <p>结合一期目标，小慧最终采用侧边栏方向：先在当前业务页面中建立稳定入口，再通过结果卡片和详情页承载复杂内容。</p>
+
+        <p>这项选择属于设计方案判断，但仍然需要经过产品目标确认和技术可行性评估。方向比较的价值不在于选出“最好看”的方案，而是尽早发现不同方案的成本和限制。</p>
+
+        <h2>第四步：把方向整理成可以检查的规格</h2>
+
+        <p>确定侧边栏方向后，设计工作还没有结束。</p>
+
+        <p><strong>侧边栏只是一种容器。要让方案进入实际生产，还需要明确哪些规则已经确定，哪些状态依赖产品和技术确认。</strong></p>
+
+        <p><strong>已经形成的核心规格：</strong></p>
+
+        <ol>
+          <li>
+            <p><strong>入口与页面关系</strong></p>
+            <p>小慧作为业务页面中的 AI 入口。用户展开侧边栏后，仍然保留在当前页面，不需要切换到独立产品。</p>
+            <p>侧边栏是否压缩主页面、覆盖部分区域，或者在不同分辨率下切换形态，还需要结合具体业务页面验证。</p>
+          </li>
+          <li>
+            <p><strong>基础对话结构</strong></p>
+            <p>侧边栏内部采用连续消息流，输入区域固定在底部。用户可以查看已有回答，并继续提出新的问题。一期优先保证基础对话结构清楚、入口稳定。</p>
+          </li>
+          <li>
+            <p><strong>业务结果承载</strong></p>
+            <p>普通回答可以直接出现在消息流中。经营报告等复杂结果先通过结果卡片返回，用户点击后进入独立详情页，查看完整报告。</p>
+            <p>这样既能保留对话上下文，也避免把复杂内容压缩在侧边栏中。外呼话术类结果需要提供预览和人工修改入口，生成内容经过用户确认后，才能继续进入实际业务。</p>
+          </li>
+        </ol>
+
+        <figure class="image-block">
+          <a class="image-link" href="assets/images/xiaohui-report-flow.png" target="_blank" rel="noopener" aria-label="查看小慧 AI 对话生成经营报告界面原图">
+            <img src="assets/images/xiaohui-report-flow.png" width="1360" height="800" alt="小慧 AI 对话生成经营报告的界面" />
+          </a>
+          <figcaption class="image-caption">用户提出经营分析需求后，AI 返回结果卡片，并提供报告详情入口。点击图片查看原图。</figcaption>
+        </figure>
+
+        <p><strong>仍需跨角色确认的状态：</strong></p>
+
+        <ul role="list">
+          <li>实际生成时间会影响加载反馈的形式</li>
+          <li>接口能力会影响是否支持中断和重新生成</li>
+          <li>权限规则会影响数据不可用状态</li>
+          <li>业务处理方式会影响错误恢复路径</li>
+          <li>安全与合规要求会影响历史记录和删除功能</li>
+        </ul>
+
+        <p>设计师可以提前准备相应的界面框架，但不能在规则没有确认时，把某一种处理方式当成最终方案。</p>
+
+        <p>规格整理的目的，是让产品能够检查业务范围，技术能够确认实现条件，设计也能根据真实能力补齐正常、加载、失败和权限受限等状态。</p>
+
+        <h2>第五步：用真实结果检查设计判断</h2>
+
+        <p>设计提案能够说明想法，但不能自动证明方案有效。</p>
+
+        <p>我会尽量保留页面截图、关键状态、可运行原型和评审结论，作为后续检查设计判断的依据。</p>
+
+        <p>在小慧案例中，现有界面能够说明两件事。第一，侧边栏可以作为业务页面中的 AI 对话入口，并形成相对完整的消息流和输入结构。第二，自然语言提问可以继续连接经营报告等业务结果，对话不再停留在普通文本问答中。</p>
+
+        <blockquote class="callout callout--boundary">
+          <p><strong class="callout-label">但这些界面截图不能证明：</strong>用户是否愿意主动使用这个入口；侧边栏是否影响原有页面操作；AI 生成结果是否准确；数据权限和信息来源是否清楚；用户能否在回答失败后顺利恢复任务。</p>
+        </blockquote>
+
+        <p>这些问题需要通过可运行原型、产品评审、技术验证和真实使用数据继续确认。设计师需要说明现有方案解决了什么，也要说明它还不能证明什么。</p>
+
+        <h2>AI 在这套流程中的位置</h2>
+
+        <p>在这套工作流里，我主要让 AI 协助完成以下工作：</p>
+
+        <ul role="list">
+          <li>整理已经提供的项目资料</li>
+          <li>识别不同资料之间的矛盾</li>
+          <li>扩展可能遗漏的设计问题</li>
+          <li>协助比较不同界面方向</li>
+          <li>检查页面状态和前后逻辑</li>
+          <li>把已经确认的讨论结果整理成说明</li>
+        </ul>
+
+        <p>AI 不负责制定业务规则，也不能替产品、技术、安全或设计师完成专业判断。</p>
+
+        <p>设计师的职责，是理解已经确认的目标，发现规则对用户体验的影响，并把跨角色确认后的内容转化成清晰的界面与流程。</p>
+
+        <h2>可以复用的检查清单</h2>
+
+        <p>面对下一项模糊需求时，我会用下面五组问题快速检查方案是否具备继续推进的条件：</p>
+
+        <ul role="list">
+          <li><strong>问题定义：</strong>业务目标、用户任务、当前限制和设计交付是否已经写清楚？</li>
+          <li><strong>信息状态：</strong>每条关键信息是已确认事实、设计假设，还是待确认事项？是否记录了来源、负责人和状态？</li>
+          <li><strong>方向比较：</strong>候选方向是否比较了任务连续性、内容承载能力、适配成本和主要风险？</li>
+          <li><strong>方案规格：</strong>入口、核心流程、结果承载，以及正常、加载、失败和权限受限状态是否可以被检查？</li>
+          <li><strong>验证证据：</strong>截图、原型、评审结论或真实数据分别证明了什么？还有哪些判断没有得到验证？</li>
+        </ul>
+
+        <h2>这套方法的适用边界</h2>
+
+        <p><strong>适合使用：</strong>需求仍然模糊、需要多个角色共同决策、存在多个可行方向，或者 AI 能力、数据与业务流程之间仍有较多未知条件的项目。</p>
+
+        <p><strong>不必完整使用：</strong>目标、规则和交付范围已经明确，只需要完成低风险的视觉执行或局部组件调整时，可以缩短为必要的规格确认与结果检查。</p>
+
+        <p><strong>不能替代：</strong>真实用户研究、业务决策、技术验证、安全与合规判断。缺少对应证据时，设计输出仍然只是等待验证的方案。</p>
+
+        <p>小慧 AI 对话功能从一句“增加 AI 助手”，逐步形成了一个可以继续检查的设计方案。它有明确的入口形态，知道需要服务哪些用户任务，也建立了从自然语言提问到经营报告等业务结果的基本路径。</p>
+
+        <p>与此同时，数据权限、错误恢复、信息来源和真实使用效果仍然被保留为待确认或待验证事项。</p>
+
+        <blockquote class="callout">
+          <p>对我来说，AI 辅助设计的价值，是帮助我更早发现需求中的空白，更快整理复杂信息，并在进入界面细节之前，先确认自己的判断建立在什么依据上。</p>
+        </blockquote>
+
+        <p>方案可以被检查，问题可以被追溯，下一步需要谁参与也更加清楚。</p>
+
+        <p><a class="case-link" href="../../projects/xiaohui/index.html">查看小慧 AI 完整案例 →</a></p>
+      </div>
+    </article>
+
+    <footer class="footer">© 2026 LINPO LAB</footer>
+  </body>
+</html>

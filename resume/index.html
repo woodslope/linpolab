@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>吴林坡｜UI/UX 设计师简历</title>
+    <meta name="description" content="吴林坡，UI/UX 设计师，拥有 13+ 年设计经验，专注复杂产品体验、设计系统与 AI 产品实践。" />
+    <meta name="author" content="吴林坡" />
+    <link rel="canonical" href="https://linpo.cc.cd/resume/" />
+    <style>
+      :root {
+        --paper: #fff;
+        --canvas: #f0f0f0;
+        --ink: #171717;
+        --text: #4b4b4b;
+        --muted: #6f6f6f;
+        --line: #d8d8d8;
+        --page-w: 210mm;
+        --page-h: 297mm;
+        --pad-x: 15mm;
+        --pad-y: 14mm;
+        --side-w: 54mm;
+      }
+
+      *, *::before, *::after { box-sizing: border-box; }
+      html { min-width: 320px; background: var(--canvas); overscroll-behavior-y: none; }
+      body {
+        margin: 0;
+        color: var(--text);
+        background: var(--canvas);
+        overscroll-behavior-y: none;
+        font-family: Arial, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+        font-size: 9pt;
+        line-height: 1.42;
+        -webkit-font-smoothing: antialiased;
+      }
+      a { color: inherit; text-decoration: none; }
+      img { display: block; max-width: 100%; }
+      button { font: inherit; }
+
+      .toolbar {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        display: flex;
+        min-height: 54px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 9px max(18px, calc((100vw - 210mm) / 2));
+        border-bottom: 1px solid #d7d7d7;
+        background: rgb(247, 247, 247);
+        backdrop-filter: blur(12px);
+      }
+      .toolbar-brand { color: var(--ink); font-size: 11px; font-weight: 700; letter-spacing: .08em; }
+      .toolbar-actions { display: flex; gap: 7px; }
+      .tool-button {
+        display: inline-flex;
+        min-height: 32px;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 0 11px;
+        border: 1px solid #c8c8c8;
+        border-radius: 2px;
+        color: #252525;
+        background: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+      .tool-button:hover, .tool-button:focus-visible { color: #fff; background: #111; border-color: #111; }
+      .tool-button.primary { color: #fff; background: #111; border-color: #111; }
+      .tool-icon { width: 14px; height: 14px; }
+
+      .resume { padding: 28px 18px 48px; }
+      .sheet {
+        position: relative;
+        display: grid;
+        width: var(--page-w);
+        height: var(--page-h);
+        margin: 0 auto;
+        grid-template-columns: var(--side-w) minmax(0, 1fr);
+        gap: 13mm;
+        padding: var(--pad-y) var(--pad-x);
+        overflow: hidden;
+        background: var(--paper);
+        box-shadow: 0 12px 34px rgba(0, 0, 0, .12);
+      }
+      .sheet::before, .sheet::after {
+        position: absolute;
+        right: var(--pad-x);
+        left: var(--pad-x);
+        height: 2.6mm;
+        content: "";
+      }
+      .sheet::before { top: 0; background: var(--ink); }
+      .sheet::after { bottom: 0; background: linear-gradient(90deg, #bdbdbd 0 34%, #333 34% 70%, #aaa 70% 100%); }
+
+      .sidebar {
+        display: flex;
+        min-width: 0;
+        min-height: 0;
+        flex-direction: column;
+        padding-right: 11mm;
+        border-right: 1px solid var(--line);
+      }
+      .portrait { width: 100%; aspect-ratio: 1 / 1.22; margin: 0; overflow: hidden; background: #eee; }
+      .portrait img { width: 100%; height: 100%; object-fit: cover; object-position: center 24%; filter: grayscale(1) contrast(.92); }
+      .identity { margin-top: 8mm; }
+      .identity h1 { max-width: 48mm; margin: 0; color: var(--ink); font-size: 27pt; font-weight: 700; line-height: 1.02; letter-spacing: -.04em; }
+      .career-title { margin: 3.5mm 0 0; color: var(--ink); font-size: 10.2pt; font-weight: 700; line-height: 1.3; }
+      .career-focus { margin: 1.2mm 0 0; color: var(--muted); font-size: 7.8pt; line-height: 1.45; }
+      .role-site { margin: 3.5mm 0 0; color: var(--ink); font-size: 9.5pt; }
+      .role-site a { color: var(--ink); }
+      .role-site a:hover { text-decoration: underline; }
+      .profile { margin: 7mm 0 0; color: var(--text); font-size: 8.6pt; line-height: 1.62; text-align: left; }
+      .side-spacer { flex: none; height: 12mm; min-height: 0; }
+      .side-block { padding-top: 3.5mm; border-top: 1px solid var(--line); }
+      .side-block + .side-block { margin-top: 4mm; }
+      .side-heading { margin: 0 0 2mm; color: var(--ink); font-size: 9.1pt; font-weight: 700; }
+      .side-copy, .side-list { margin: 0; color: #686868; font-size: 8.1pt; line-height: 1.58; }
+      .side-copy + .side-copy { margin-top: .8mm; }
+      .side-copy.side-muted { color: var(--muted); font-style: italic; }
+      .side-list { padding: 0; list-style: none; }
+      .side-list li { display: flex; }
+      .side-list li + li { margin-top: 1mm; }
+      .side-label { flex: 0 0 11mm; }
+      .side-list li > *:not(.side-label) { min-width: 0; }
+      .side-list a:hover, .side-copy a:hover { color: var(--ink); text-decoration: underline; }
+
+      .main { min-width: 0; padding-top: 1mm; }
+      .main-heading, .section-title {
+        margin: 0;
+        color: var(--ink);
+        font-size: 20pt;
+        font-weight: 700;
+        line-height: 1.08;
+      }
+      .main-heading small, .section-title small {
+        display: block;
+        margin-top: 1mm;
+        color: var(--muted);
+        font-size: 7.5pt;
+        font-style: italic;
+        font-weight: 400;
+        letter-spacing: .07em;
+      }
+      .section { margin-top: 5.6mm; }
+      .section:first-child { margin-top: 0; }
+      .skills-section { margin-top: 8.5mm; }
+      .entry { margin: 0 0 3.9mm; position: relative; }
+      .entry:last-child { margin-bottom: 0; }
+      .entry-head { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 2.5mm; }
+      .entry h3 { margin: 0; color: var(--ink); font-size: 9.7pt; font-weight: 700; line-height: 1.25; }
+      .entry-company { color: var(--ink); font-size: 8.8pt; }
+      .entry-date { margin-left: auto; color: var(--muted); font-size: 7.8pt; font-style: italic; }
+      .entry p { margin: 1mm 0 0; color: var(--text); font-size: 8.2pt; line-height: 1.58; }
+      .entry p + p { margin-top: .9mm; }
+      .entry p strong { color: var(--ink); font-weight: 700; }
+
+      /* 最近经历强调（信息层级，无时间轴） */
+      .section .entry:first-of-type { margin-top: 3mm; }
+      .entry:first-of-type h3 { font-size: 10.2pt; }
+      .section[aria-labelledby="experience-heading"] .entry:nth-of-type(-n+3) .entry-company { font-weight: 600; }
+      .skills-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 4.4mm 8mm; margin-top: 3.8mm; }
+      .skills-columns h3 { margin: 0 0 1.8mm; color: var(--ink); font-size: 8.5pt; }
+      .skills-columns p { margin: 0; color: var(--text); font-size: 7.9pt; line-height: 1.62; }
+
+      @media screen and (min-width: 861px) {
+        .resume { padding-top: 40px; padding-bottom: 64px; }
+        .sheet { zoom: 1.08; }
+      }
+
+      @media (max-width: 860px) {
+        body { font-size: 15px; }
+        .toolbar { padding: 9px 12px; }
+        .toolbar-brand { display: none; }
+        .toolbar-actions { width: 100%; justify-content: flex-end; }
+        .resume { padding: 14px 0 30px; }
+        .sheet { width: calc(100% - 24px); max-width: 680px; height: auto; min-height: 0; grid-template-columns: minmax(0, 1fr); gap: 28px; padding: 28px 28px 44px; }
+        .sheet::before, .sheet::after { right: 28px; left: 28px; }
+        .sidebar { min-height: 0; padding: 0 0 26px; border-right: 0; border-bottom: 1px solid var(--line); }
+        .portrait { width: min(220px, 56vw); }
+        .identity h1 { font-size: 40px; }
+        .side-spacer { display: none; }
+        .side-block { margin-top: 22px; }
+        .main, .entry, .entry p { min-width: 0; max-width: 100%; overflow-wrap: anywhere; word-break: break-word; }
+        .main-heading, .section-title { font-size: 28px; }
+        .entry-head > * { min-width: 0; }
+        .entry p { overflow-wrap: anywhere; }
+        .lower-grid { grid-template-columns: 1fr; gap: 0; }
+      }
+      @media (max-width: 560px) {
+        .tool-button { padding: 0 9px; }
+        .label-back { display: none; }
+        .sheet { width: calc(100% - 16px); padding: 24px 20px 40px; }
+        .sheet::before, .sheet::after { right: 20px; left: 20px; }
+        .portrait { width: 100%; max-width: 280px; }
+        .skills-columns { grid-template-columns: 1fr; }
+        .entry-head { display: block; }
+        .entry-company, .education-entry .entry-date { display: block; margin: 1mm 0 0; }
+      }
+
+      @page { size: A4; margin: 0; }
+      @media print {
+        html, body { width: 210mm; background: #fff; }
+        body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+        .no-print { display: none !important; }
+        .resume { padding: 0; }
+        .sheet { width: 210mm; height: 297mm; min-height: 297mm; margin: 0; box-shadow: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="toolbar no-print" aria-label="简历操作">
+      <a class="toolbar-brand" href="../index.html#about">LINPO LAB / RESUME</a>
+      <nav class="toolbar-actions">
+        <a class="tool-button" href="../index.html#about"><svg class="tool-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6M9 12h11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="label-back">返回作品集</span></a>
+        <button class="tool-button" type="button" data-print><svg class="tool-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8V3h10v5M7 17H5a2 2 0 01-2-2v-5a2 2 0 012-2h14a2 2 0 012 2v5a2 2 0 01-2 2h-2M7 13h10v8H7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>打印</button>
+        <a class="tool-button primary" href="吴林坡-UIUX简历.pdf" download><svg class="tool-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 20h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>下载 PDF</a>
+      </nav>
+    </header>
+
+    <main class="resume" id="resume">
+      <article class="sheet" aria-label="吴林坡简历">
+        <aside class="sidebar">
+          <div>
+            <figure class="portrait"><img src="assets/linpo-portrait-760.jpg" alt="吴林坡个人照片" /></figure>
+            <div class="identity">
+              <h1>吴林坡</h1>
+              <p class="career-title">UI/UX 设计师</p>
+              <p class="career-focus">产品体验 · 设计系统 · AI 实践</p>
+              <p class="role-site"><a href="https://linpo.cc.cd/">作品集 · linpo.cc.cd</a></p>
+            </div>
+            <p class="profile">13+ 年设计经验，覆盖品牌运营视觉、C 端电商与复杂 B 端产品。能够从需求拆解、业务流程和信息架构推进到交互与界面落地，并通过设计规范与组件库统一多产品体验；近年持续参与 AI 产品界面与原型实践。</p>
+          </div>
+          <div class="side-spacer"></div>
+          <div class="side-block">
+            <h2 class="side-heading">联系方式</h2>
+            <ul class="side-list">
+              <li><span class="side-label">电话</span><span>131-1911-6922</span></li>
+              <li><span class="side-label">邮箱</span><span>13119116922@163.com</span></li>
+              <li><span class="side-label">所在地</span><span>西安</span></li>
+            </ul>
+          </div>
+          <div class="side-block">
+            <h2 class="side-heading">教育背景</h2>
+            <p class="side-copy">湖南科技学院 · 艺术设计 · 学士</p>
+            <p class="side-copy side-muted">2008.09 - 2012.06</p>
+          </div>
+        </aside>
+
+        <div class="main">
+          <section class="section" aria-labelledby="experience-heading">
+            <h2 class="main-heading" id="experience-heading">工作经历 <small>Experience</small></h2>
+            <article class="entry"><header class="entry-head"><h3>UI 设计师</h3><span class="entry-company">北京慧博科技有限公司</span><time class="entry-date">2023.06 - 2026.04</time></header><p><strong>全域营销产品：</strong>负责云千载数据中台、集客多 CRM 与壁垒 SCRM 的业务界面和体验优化；建立设计规范与组件库，统一多系统的视觉语言与核心交互规则。</p><p><strong>小慧 AI 与积分系统：</strong>参与 AI 对话功能的体验设计，建立产品 IP 并延展至界面与品牌触点；重构积分系统 B 端操作框架、C 端商城的信息层级与视觉语言。</p><p><strong>营销互动：</strong>负责 C 端标准模板与定制活动设计，围绕不同品牌、主题和运营目标输出页面方案，并沉淀可复用的活动视觉与页面模板。</p></article>
+            <article class="entry"><header class="entry-head"><h3>UI 设计师（兼产品）</h3><span class="entry-company">陕西国信智飞科技有限公司</span><time class="entry-date">2019.07 - 2023.06</time></header><p>参与需求拆解与产品规划，通过竞品分析梳理业务流程、功能架构、信息架构和关键交互闭环，并配合完成招投标方案设计。</p><p>负责农房 e 办证、库房物资管理、家村行等产品的 UI/UX 全流程工作，覆盖 Web、App 与数据大屏，推进多终端方案落地和体验一致。</p></article>
+            <article class="entry"><header class="entry-head"><h3>UI 设计师</h3><span class="entry-company">西安创良在线商贸有限公司</span><time class="entry-date">2017.05 - 2019.05</time></header><p>负责母婴电商「环球辣妈」移动端界面设计与版本改版，重构首页、商品详情等核心页面的内容层级、视觉呈现和购买路径。</p><p>负责平台 H5、App 内运营活动及公众号引流内容的视觉设计，连接内容触点与商城承接页面，形成从内容引流到商品浏览的连续视觉体验。</p></article>
+            <article class="entry"><header class="entry-head"><h3>UI 设计师</h3><span class="entry-company">高新农牧业发展股份有限公司</span><time class="entry-date">2016.03 - 2017.02</time></header><p>负责农产品众筹平台 H5、商品详情页及包装宣传物料设计，并配合社群运营完成拉新、留存和转化相关页面，覆盖商品展示与社群传播触点。</p></article>
+            <article class="entry"><header class="entry-head"><h3>UI 设计师</h3><span class="entry-company">西安智讯策划咨询有限公司</span><time class="entry-date">2015.01 - 2016.03</time></header><p>负责万科「在线选房系统」Web 与 H5、「卓越 E+ 2.0」官网、H5 楼书及互动页面设计，并承担公众号与发布会现场视觉设计。</p></article>
+            <article class="entry"><header class="entry-head"><h3>网页设计</h3><span class="entry-company">西安普惠健康体检有限公司</span><time class="entry-date">2014.06 - 2014.12</time></header><p>负责天猫、京东商城首页与商品详情设计及公司官网改版，统一商品主图、详情页和商城首页的视觉规范，保持不同渠道的品牌呈现一致。</p></article>
+            <article class="entry"><header class="entry-head"><h3>平面设计</h3><span class="entry-company">深圳八八网络科技有限公司</span><time class="entry-date">2012.07 - 2013.11</time></header><p>参与门户网站「88db」首页改版、运营活动页、「88shop」建站官网和 EDM 推广设计，并使用 HTML/CSS 完成 EDM 与活动页实现。</p></article>
+          </section>
+          <section class="section skills-section" aria-labelledby="skills-heading">
+            <h2 class="section-title" id="skills-heading">能力结构 <small>Capabilities</small></h2>
+            <div class="skills-columns">
+              <div><h3>产品定义与复杂体验</h3><p>需求拆解、竞品分析、业务流程、功能架构、信息架构与交互闭环；覆盖后台、数据中台、CRM/SCRM 等复杂产品。</p></div>
+              <div><h3>设计系统与多端落地</h3><p>设计规范、组件库、视觉语言与落地走查；保障 Web、App、数据大屏及多产品体验一致，提升组件复用与协作效率。</p></div>
+              <div><h3>品牌运营与增长设计</h3><p>品牌识别、产品 IP、商城、H5 与营销活动；连接品牌表达、内容触点和业务转化，支持日常运营与主题传播。</p></div>
+              <div><h3>AI 协作与原型实现</h3><p>AI 辅助视觉探索、提示词工作流与 HTML/CSS 原型实现；用于方案探索、界面表达和设计验证。</p></div>
+            </div>
+          </section>
+        </div>
+      </article>
+    </main>
+
+    <script>document.querySelector("[data-print]")?.addEventListener("click", () => window.print());</script>
+  </body>
+</html>

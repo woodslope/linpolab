@@ -827,12 +827,23 @@
 
       .dark-card {
         position: relative;
+        display: block;
         min-height: var(--method-card-height);
         overflow: hidden;
         border-radius: var(--radius);
         background-color: #06070a;
         color: #fff;
         isolation: isolate;
+        text-decoration: none;
+      }
+
+      a.dark-card:focus-visible {
+        outline: 2px solid var(--dark-card-accent);
+        outline-offset: 4px;
+      }
+
+      a.dark-card:active {
+        transform: scale(0.99);
       }
 
       .dark-card::before,
@@ -1168,6 +1179,34 @@
         color: rgba(255, 255, 255, 0.72);
         font-size: var(--font-size-sm);
         line-height: 1.95;
+      }
+
+      .about-resume-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        margin-top: 20px;
+        padding: 0 0 5px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.46);
+        color: rgba(255, 255, 255, 0.9);
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-semibold);
+        line-height: 1.4;
+        text-decoration: none;
+        transition: border-color 180ms ease, color 180ms ease, gap 180ms ease;
+      }
+
+      .about-resume-link:hover,
+      .about-resume-link:focus-visible {
+        gap: 13px;
+        border-color: #fff;
+        color: #fff;
+      }
+
+      .about-resume-link:focus-visible {
+        border-radius: var(--radius-xs);
+        outline: 1px solid rgba(255, 255, 255, 0.5);
+        outline-offset: 4px;
       }
 
       .about-details {
@@ -2121,7 +2160,7 @@
                   <p class="profile-name">Linpo Wu</p>
                   <p class="profile-meta">
                     <span>UI/UX Designer</span>
-                    <span>10+ Years in Design</span>
+                    <span>13+ Years in Design</span>
                   </p>
                 </div>
               </div>
@@ -2223,12 +2262,12 @@
             </aside>
 
             <div class="card-grid methods-grid">
-              <article class="dark-card">
+              <a class="dark-card" href="methodologies/ai-design-workflow/index.html" aria-label="阅读方法论：从模糊需求到可验证方案">
                 <picture class="card-media" data-media style="--media-position: center 58%; --media-fallback: #131323">
                   <img data-src="assets/home-media/method-prompt-800.jpg" width="1000" height="666" alt="" decoding="async" />
                 </picture>
-                <h3>提示框架</h3>
-                <p>Prompt Framework</p>
+                <h3>从模糊需求到可验证方案</h3>
+                <p>五步拆解模糊需求，形成可验证的设计方案</p>
                 <div class="method-visual" aria-hidden="true">
                   <span class="orb"></span>
                   <span class="network-dot"></span>
@@ -2236,13 +2275,13 @@
                   <span class="network-dot"></span>
                   <span class="network-dot"></span>
                 </div>
-              </article>
+              </a>
               <article class="dark-card">
                 <picture class="card-media" data-media style="--media-position: center 54%; --media-fallback: #101820">
                   <img data-src="assets/home-media/method-visual-reverse-800.jpg" width="1000" height="666" alt="" decoding="async" />
                 </picture>
-                <h3>视觉逆向系统</h3>
-                <p>Visual Reverse System</p>
+                <h3>让 AI 视觉探索变得可控</h3>
+                <p>Controllable Visual Exploration</p>
                 <div class="method-visual" aria-hidden="true">
                   <div class="layers">
                     <span class="layer"></span>
@@ -2256,8 +2295,8 @@
                 <picture class="card-media" data-media style="--media-position: center 52%; --media-fallback: #111a21">
                   <img data-src="assets/home-media/method-ai-framework-800.jpg" width="1000" height="666" alt="" decoding="async" />
                 </picture>
-                <h3>AI 设计方法框架</h3>
-                <p>AI Design Method Framework</p>
+                <h3>把 AI 能力接入真实业务</h3>
+                <p>Designing AI for Business</p>
                 <div class="method-visual" aria-hidden="true">
                   <div class="method-graph"></div>
                   <span class="orb"></span>
@@ -2267,8 +2306,8 @@
                 <picture class="card-media" data-media style="--media-position: center 50%; --media-fallback: #111515">
                   <img data-src="assets/home-media/method-design-code-800.jpg" width="1000" height="666" alt="" decoding="async" />
                 </picture>
-                <h3>设计到代码工作流</h3>
-                <p>Design to Code Workflow</p>
+                <h3>我的 AI 设计到代码工作流</h3>
+                <p>Design to Code with AI</p>
                 <div class="method-visual" aria-hidden="true">
                   <div class="layers">
                     <span class="layer"></span>
@@ -2359,20 +2398,23 @@
               </div>
               <div class="about-copy">
                 <h3 class="about-name">Linpo Wu</h3>
-                <p class="about-meta">UI/UX Designer&nbsp;&nbsp;|&nbsp;&nbsp;10+ Years in Design</p>
+                <p class="about-meta">UI/UX Designer&nbsp;&nbsp;|&nbsp;&nbsp;13+ Years in Design</p>
                 <p class="about-desc">
-                  专注于品牌体验、产品设计、设计方法与 AI 工作流，拥有 10+ 年互联网设计经验。
+                  专注于复杂产品体验、UI/UX、设计系统与 AI 工作流，拥有 13+ 年设计经验。
                   长期关注设计系统构建、SOP 经验体系与智能协同实践。
                 </p>
+                <a class="about-resume-link" href="resume/index.html">
+                  查看完整简历 <span aria-hidden="true">↗</span>
+                </a>
               </div>
               <div class="about-details" aria-label="Designer profile details">
                 <p class="about-detail">
                   <strong>工作地点</strong>
-                  <span class="about-detail-value">深圳，中国</span>
+                  <span class="about-detail-value">西安，中国</span>
                 </p>
                 <p class="about-detail">
                   <strong>联系合作</strong>
-                  <a class="about-detail-value" href="mailto:hello@linpolab.com">hello@linpolab.com</a>
+                  <span class="about-detail-value">hello@linpolab.com</span>
                 </p>
               </div>
             </div>

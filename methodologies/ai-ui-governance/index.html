@@ -1,0 +1,1036 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>把 AI 能力接入真实业务｜LINPO LAB</title>
+    <meta name="description" content="一套从问题诊断、分流、试点到验证的 AI 辅助 UI 治理工作流，覆盖主题、组件、资产和设计系统迁移。" />
+    <meta name="author" content="Linpo Wu" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="把 AI 能力接入真实业务" />
+    <meta property="og:description" content="从问题诊断到主题、组件与资产迁移的 AI 辅助 UI 治理指南。" />
+    <style>
+      :root {
+        --page: #f4f4f1;
+        --paper: #ffffff;
+        --ink: #050505;
+        --text: #414346;
+        --muted: #6d6f73;
+        --line: rgba(0, 0, 0, 0.13);
+        --accent: #b7ff00;
+        --callout-bg: #f1f2ef;
+        --article-width: 720px;
+        --topbar-height: 56px;
+      }
+
+      * { box-sizing: border-box; }
+
+      html { scroll-behavior: smooth; }
+
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+      }
+
+      h2, h3 { scroll-margin-top: calc(var(--topbar-height) + 16px); }
+
+      body {
+        margin: 0;
+        padding-top: var(--topbar-height);
+        color: var(--ink);
+        background: var(--page);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+        font-size: 17px;
+        line-height: 1.85;
+        text-rendering: optimizeLegibility;
+      }
+
+      ::selection { color: var(--ink); background: var(--accent); }
+      img { display: block; max-width: 100%; }
+      a { color: inherit; }
+
+      .topbar {
+        position: fixed;
+        inset: 0 0 auto;
+        z-index: 30;
+        min-height: var(--topbar-height);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+        background: #000;
+      }
+
+      .topbar__inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        width: min(calc(100% - 40px), 1120px);
+        min-width: 0;
+        min-height: var(--topbar-height);
+        margin: 0 auto;
+      }
+
+      .brand,
+      .back {
+        flex: 0 0 auto;
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 13px;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+
+      .brand { color: #fff; font-weight: 800; letter-spacing: 0; }
+      .back:hover, .back:focus-visible { color: var(--accent); }
+      .brand:focus-visible, .back:focus-visible, .case-link:focus-visible {
+        border-radius: 4px;
+        outline: 2px solid var(--accent);
+        outline-offset: 4px;
+      }
+
+      .sheet {
+        width: min(calc(100% - 32px), 816px);
+        max-width: 100%;
+        min-width: 0;
+        min-height: 100vh;
+        margin: clamp(18px, 3.5vw, 32px) auto 0;
+        padding: clamp(48px, 8vw, 84px) clamp(22px, 7vw, 76px) 72px;
+        background: var(--paper);
+      }
+
+      .sheet > header {
+        margin-bottom: 40px;
+        padding-bottom: 28px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      h1, h2, h3, p { margin-top: 0; }
+
+      h1, h2, h3, p, li, a {
+        max-width: 100%;
+        overflow-wrap: break-word;
+      }
+
+      h1, h2, h3 {
+        color: var(--ink);
+        font-family: inherit;
+      }
+
+      h1 {
+        margin-bottom: 20px;
+        font-size: clamp(36px, 5vw, 48px);
+        line-height: 1.18;
+        letter-spacing: 0;
+        text-wrap: balance;
+      }
+
+      .subtitle {
+        max-width: 620px;
+        margin-bottom: 20px;
+        color: var(--text);
+        font-size: 19px;
+        line-height: 1.65;
+      }
+
+      .byline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 8px;
+        margin-bottom: 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .byline span + span::before {
+        margin-right: 8px;
+        color: var(--line);
+        content: "·";
+      }
+
+      .article > p,
+      .article > ul,
+      .article > ol,
+      .article > .image-block,
+      .article > blockquote {
+        width: min(100%, var(--article-width));
+        margin-right: auto;
+        margin-left: auto;
+      }
+
+      .article,
+      .article > *,
+      .sheet > header {
+        min-width: 0;
+        max-width: 100%;
+      }
+
+      .article p {
+        margin-bottom: 24px;
+        color: var(--text);
+        text-wrap: pretty;
+      }
+
+      .article a:not(.case-link) {
+        color: var(--ink);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 3px;
+      }
+
+      .article a:not(.case-link):hover {
+        color: var(--ink);
+        text-decoration-color: var(--accent);
+        text-decoration-thickness: 2px;
+      }
+
+      .article strong { color: var(--ink); }
+
+      .article blockquote.callout {
+        position: relative;
+        width: min(100%, var(--article-width));
+        margin: 36px auto;
+        padding: 8px 20px 8px 58px;
+        color: var(--ink);
+        font-size: 19px;
+        font-weight: 550;
+        line-height: 1.75;
+      }
+
+      .article blockquote.callout::before {
+        position: absolute;
+        top: -3px;
+        left: 0;
+        color: var(--accent);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 68px;
+        font-weight: 700;
+        line-height: 1;
+        content: "“";
+      }
+
+      .article blockquote.callout--boundary {
+        margin: 30px auto;
+        padding: 18px 22px;
+        border-left: 4px solid var(--accent);
+        background: var(--callout-bg);
+        color: var(--text);
+        font-size: inherit;
+        font-weight: 400;
+        line-height: inherit;
+      }
+
+      .article blockquote.callout--boundary::before { content: none; }
+
+      .article .callout-label {
+        white-space: nowrap;
+        color: var(--ink);
+      }
+
+      .article blockquote.callout p:last-child { margin-bottom: 0; }
+
+      .article h2 {
+        width: min(100%, var(--article-width));
+        max-width: 100%;
+        margin: 70px auto 24px;
+        padding-top: 11px;
+        border-top: 1px solid var(--line);
+        font-size: clamp(26px, 3.2vw, 32px);
+        line-height: 1.45;
+        line-break: strict;
+        overflow-wrap: normal;
+        word-break: normal;
+        text-wrap: pretty;
+      }
+
+      .article ul,
+      .article ol {
+        display: grid;
+        gap: 5px;
+        margin-top: -2px;
+        margin-bottom: 28px;
+        padding: 0;
+      }
+
+      .article ul {
+        list-style: none;
+      }
+
+      .article ol {
+        padding-left: 1.4em;
+        list-style-position: outside;
+      }
+
+      .article li {
+        position: relative;
+        padding-left: 18px;
+        color: var(--text);
+      }
+
+      .article li::before {
+        position: absolute;
+        top: 0.75em;
+        left: 0;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+        content: "";
+      }
+
+      .article ol li { padding-left: 5px; }
+      .article ol li::before { content: none; }
+      .article ol li p { margin-bottom: 10px; }
+      .article ol li p:last-child { margin-bottom: 0; }
+
+      .method-summary {
+        margin-top: 6px !important;
+      }
+
+      .method-summary li { margin-bottom: 8px; }
+
+      .image-block {
+        margin-top: 38px;
+        margin-bottom: 38px;
+      }
+
+      .image-block img {
+        display: block;
+        inline-size: 100%;
+        max-inline-size: 100%;
+        block-size: auto;
+        max-height: none;
+        object-fit: contain;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+      }
+
+      .image-link {
+        display: block;
+        border-radius: 6px;
+      }
+
+      .image-link:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 4px;
+      }
+
+      .image-link:hover img { border-color: rgba(0, 0, 0, 0.32); }
+
+      .image-caption {
+        display: block;
+        margin-top: 11px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.7;
+        text-align: center;
+      }
+
+      .case-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 6px;
+        color: var(--ink);
+        font-size: 15px;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .case-link:hover { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 3px; text-underline-offset: 4px; }
+
+      .footer {
+        width: min(calc(100% - 32px), 816px);
+        margin: 0 auto;
+        padding: 24px 0 34px;
+        color: var(--muted);
+        font-size: 11px;
+        text-align: center;
+      }
+
+      @media (max-width: 768px) {
+        .article blockquote.callout {
+          padding-right: 8px;
+          padding-left: 48px;
+          font-size: 18px;
+        }
+
+        .article blockquote.callout::before {
+          top: 0;
+          font-size: 58px;
+        }
+
+        .article blockquote.callout--boundary {
+          padding: 16px 18px;
+          font-size: inherit;
+        }
+      }
+
+      @media (max-width: 600px) {
+        body { font-size: 16px; }
+        .topbar__inner { width: calc(100% - 28px); }
+        .sheet { width: 100%; padding: 44px 24px 58px; }
+        .sheet > header { margin-bottom: 34px; padding-bottom: 24px; }
+        .article h2 { margin-top: 58px; }
+        .subtitle { font-size: 18px; }
+      }
+      .article > .table-wrap,
+      .article > pre {
+        width: min(100%, var(--article-width));
+        margin-right: auto;
+        margin-left: auto;
+      }
+
+      .article h3,
+      .article h4 {
+        width: min(100%, var(--article-width));
+        margin-right: auto;
+        margin-left: auto;
+        color: var(--ink);
+        line-height: 1.45;
+        text-wrap: pretty;
+      }
+
+      .article h3 { margin-top: 44px; margin-bottom: 16px; font-size: 21px; }
+      .article h4 { margin-top: 32px; margin-bottom: 12px; font-size: 18px; }
+
+      .article code {
+        padding: 0.12em 0.35em;
+        border-radius: 3px;
+        background: #eef0ed;
+        color: var(--ink);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        font-size: 0.88em;
+      }
+
+      .article pre.prompt-block {
+        overflow-x: auto;
+        margin-top: 28px;
+        margin-bottom: 32px;
+        padding: 20px 22px;
+        border-left: 4px solid var(--accent);
+        border-radius: 4px;
+        background: #111214;
+        color: #f3f4f0;
+        font: 13px/1.7 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        white-space: pre;
+        tab-size: 2;
+      }
+      .article pre.prompt-block code { padding: 0; background: transparent; color: inherit; font: inherit; }
+
+      .table-wrap {
+        overflow-x: auto;
+        margin-top: 30px;
+        margin-bottom: 34px;
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+      .article table { width: 100%; min-width: 620px; border-collapse: collapse; color: var(--text); font-size: 14px; line-height: 1.65; }
+      .article th, .article td { padding: 11px 12px; border-bottom: 1px solid rgba(0, 0, 0, 0.08); text-align: left; vertical-align: top; }
+      .article th { color: var(--ink); font-weight: 700; background: #f5f6f3; }
+      .article tr:last-child td { border-bottom: 0; }
+
+      @media (max-width: 600px) {
+        .article h3 { margin-top: 36px; font-size: 19px; }
+        .article h4 { margin-top: 26px; font-size: 17px; }
+        .article pre.prompt-block { margin-right: -8px; margin-left: -8px; padding: 16px; border-left-width: 3px; font-size: 12px; }
+        .article table { min-width: 560px; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar__inner">
+        <a class="brand" href="../../index.html">LINPO LAB</a>
+        <a class="back" href="../../index.html#methods">返回首页</a>
+      </div>
+    </header>
+
+    <article class="sheet">
+      <header id="overview">
+        <h1>AI 辅助 UI 治理：从问题诊断到主题、组件与资产迁移</h1>
+        <p class="subtitle">一套把 AI 从“改页面工具”变成可审计、可验证、可迁移的真实业务工作流。</p>
+        <p class="byline"><span>Linpo Wu</span><span>2026</span></p>
+      </header>
+
+      <div class="article">
+<p>AI 已经可以修改 CSS、补齐组件状态、调整响应式布局，也可以根据一套设计规范重做界面。真正困难的部分随之发生了变化：设计师如何让 AI 理解项目现状，如何控制修改范围，又如何确认改完以后真的更好。</p>
+
+<p>这类工作可以称为 UI 治理。它关注的不只是某个页面是否好看，还包括视觉规则是否一致、组件使用是否健康、交互状态是否完整、主题能否切换、旧资产能否迁移，以及设计规则能否长期被团队采用。</p>
+
+<p>AI 负责扫描、归纳、生成方案、执行受控修改和运行检查。设计师、产品经理和前端工程师仍然负责规则、取舍、业务边界和最终验收。</p>
+
+<p>本文把 UI 治理拆成一条可执行的工作流，保留九个常见执行场景的深度提示词，并补充三个经常被遗漏的长期治理机制。提示词不是独立的“咒语”，每组都要放回输入、权限、产物和验收的上下文中使用。</p>
+
+<h2>一、先理解 UI 治理的范围</h2>
+
+<p>UI 治理不是把所有页面改成同一种样式，也不是把扫描出来的每个异常值都替换掉。它更接近一套持续维护机制：先知道项目当前的事实，再判断哪些偏差值得处理，最后用可回归的方式完成修改。</p>
+
+<p>一个可以长期运行的治理流程，至少要同时看四件事：</p>
+
+<div class="table-wrap"><table><thead><tr><th>维度</th><th>需要回答的问题</th><th>常见证据</th></tr></thead><tbody><tr><td>视觉</td><td>颜色、排版、间距和布局是否有稳定规则</td><td>token、样式文件、页面截图</td></tr><tr><td>组件</td><td>组件语义、API、状态和粒度是否健康</td><td>JSX/TSX、组件文档、运行页面</td></tr><tr><td>运行</td><td>主题、响应式、键盘和错误状态是否可用</td><td>多视口截图、交互路径、对比度检查</td></tr><tr><td>生命周期</td><td>新旧规范、资产和文档如何迁移与废弃</td><td>版本记录、迁移清单、采用率数据</td></tr></tbody></table></div>
+
+<p>因此，UI 治理的对象已经超过了“视觉代码”。它是一套从规范到代码、从页面到组件、从当前版本到迁移过程的维护工作。</p>
+
+<h2>二、统一闭环：诊断、分流、试点、验证、沉淀</h2>
+
+<p>九个场景是任务入口，不是九个固定步骤。更稳定的执行顺序是：</p>
+
+<pre class="prompt-block"><code>建立基线
+  ↓
+视觉与组件双轨诊断
+  ↓
+人工确认问题、例外和优先级
+  ↓
+选择治理路径
+  ↓
+小范围试点
+  ↓
+代码、视觉与交互验证
+  ↓
+批量推广或回退
+  ↓
+规则、文档和迁移记录沉淀</code></pre>
+
+<h3>1. 建立基线</h3>
+
+<p>先记录项目技术栈、组件库版本、主题入口、关键路由、目标视口、设计规范来源和已有验证命令。能运行项目时，保存关键页面的基线截图；无法运行时，明确标记“只有代码证据，没有页面证据”。</p>
+
+<h3>2. 双轨诊断</h3>
+
+<p>视觉审计和组件审计可以并行运行。前者查看样式、布局、响应式风险，后者查看语义标签、组件 API、可访问性和组件粒度。两份报告都只提供证据和候选问题，不直接宣布所有异常都是缺陷。</p>
+
+<h3>3. 人工分流</h3>
+
+<p>由设计师、产品经理和前端共同确认：哪些问题要立即修复，哪些属于合理例外，哪些需要产品规则，哪些应该进入迁移计划。输出执行范围、优先级、风险等级和停止条件。</p>
+
+<h3>4. 试点与推广</h3>
+
+<p>基础组件、主题变量和公共 API 的改动先选择一到三个代表性页面试点。试点通过后再拆成独立批次扩展，不把“全项目改造”当成一次不可回退的操作。</p>
+
+<h3>5. 验证与沉淀</h3>
+
+<p>运行静态检查、构建和相关测试，保存多视口截图，实际操作关键路径，并记录未覆盖项。确认后的规则、例外、迁移映射和版本变化要回写到项目文档或 Skill 中。</p>
+
+<h2>三、九个执行场景与三个治理机制</h2>
+
+<h3>九个执行场景</h3>
+
+<div class="table-wrap"><table><thead><tr><th>分组</th><th>场景</th><th>主要任务</th><th>典型产物</th></tr></thead><tbody><tr><td>问题修复</td><td>1. 定点热修复</td><td>修复一个已复现的局部问题</td><td>最小代码改动、验证记录</td></tr><tr><td>问题修复</td><td>2. 交互体验补全</td><td>补齐反馈、异步和键盘状态</td><td>状态审计、补全计划</td></tr><tr><td>问题修复</td><td>6. 响应式适配治理</td><td>修复目标视口的溢出与坍塌</td><td>复现证据、修复计划</td></tr><tr><td>健康诊断</td><td>3. 智能视觉审计</td><td>找出视觉、布局和样式风险</td><td>带证据的审计报告</td></tr><tr><td>健康诊断</td><td>7. 组件规范审计</td><td>检查语义、API、A11y 和粒度</td><td>组件健康报告</td></tr><tr><td>规则建设</td><td>4. 老旧代码提纯</td><td>提取语义变量，尽量保持视觉不变</td><td>token 映射、分批计划</td></tr><tr><td>规则建设</td><td>8. 主题与 Token 适配</td><td>注入外部 token，建立主题覆盖层</td><td>token 文件、主题映射、对比度报告</td></tr><tr><td>规则建设</td><td>5. 设计系统对齐</td><td>更新页面与基础组件的视觉表现</td><td>试点页面、迁移批次、回归记录</td></tr><tr><td>迁移清理</td><td>9. 资产与废弃组件迁移</td><td>迁移图标、图片、旧组件和 API</td><td>映射表、回滚方案、人工清单</td></tr></tbody></table></div>
+
+<p>场景编号是稳定的任务 ID，不表示执行顺序。场景 8 和场景 5 也不是同一件事：场景 8 主要处理 token 和主题基础设施，场景 5 主要处理页面、组件和整体视觉表现。场景 9 内部再分为资产迁移与组件 API 迁移，两者的验证重点不同。</p>
+
+<h3>三个经常遗漏的长期治理机制</h3>
+
+<p>这三项不再额外编号为“场景”，因为它们贯穿九个执行场景，属于设计系统的长期运行机制。</p>
+
+<div class="table-wrap"><table><thead><tr><th>治理机制</th><th>解决的问题</th><th>建议频率</th><th>关键产物</th></tr></thead><tbody><tr><td>设计稿—代码漂移审计</td><td>Figma/设计文件与线上组件逐渐分叉</td><td>版本发布或定期抽检</td><td>漂移清单、优先级、责任人</td></tr><tr><td>文档与采用率治理</td><td>组件已经发布，却没人按规范使用</td><td>组件发布后持续检查</td><td>使用率、弃用率、文档缺口</td></tr><tr><td>版本与变更影响治理</td><td>token、组件或资产更新后影响范围不清楚</td><td>每次版本变更</td><td>变更日志、影响矩阵、迁移窗口</td></tr></tbody></table></div>
+
+<p>没有这三项，设计系统很容易出现“规范写在文档里，代码按另一套规则生长”的情况。它们也正是 AI 可以持续协助，但不能独自制定规则的部分。</p>
+
+<h3>可以作为专项扩展的领域</h3>
+
+<p>无障碍深度测试、国际化与 RTL 布局、字体和资源性能、动效与减少动态效果偏好，都值得治理。但它们需要不同的业务数据、运行环境和验收工具。当前文章把它们列为扩展检查项，不继续扩大场景编号；当项目确实有这些目标时，再为对应领域建立独立提示词和测试基线。</p>
+
+<h3>九场景速查</h3>
+
+<div class="table-wrap"><table><thead><tr><th>场景</th><th>一句话入口</th><th>首轮产物</th></tr></thead><tbody><tr><td>1. 定点热修复</td><td>修复 [文件/组件] 的 [可复现问题]，限制修改范围并验证</td><td>最小改动与验证记录</td></tr><tr><td>2. 交互体验补全</td><td>审计点击、异步、键盘和错误状态的缺口，只出方案</td><td>交互缺口清单</td></tr><tr><td>3. 智能视觉审计</td><td>扫描样式、布局、颜色、排版和响应式风险，只出报告</td><td>视觉问题地图</td></tr><tr><td>4. 老旧代码提纯</td><td>基于事实基线提取语义变量，保持视觉结果</td><td>token 映射与分批计划</td></tr><tr><td>5. 设计系统对齐</td><td>在试点范围内对齐目标设计系统，保留业务 API</td><td>规范差异与试点改造</td></tr><tr><td>6. 响应式适配治理</td><td>复现指定视口的溢出和坍塌，先定位再修复</td><td>响应式修复计划</td></tr><tr><td>7. 组件规范审计</td><td>检查语义、组件 API、A11y、粒度和弃用引用</td><td>组件健康报告</td></tr><tr><td>8. 主题与 Token 适配</td><td>根据 token 表建立语义变量、主题覆盖和对比度报告</td><td>token/主题映射与试点方案</td></tr><tr><td>9. 资产与废弃组件迁移</td><td>先建立资产/API 对照表，再分批迁移和回归</td><td>迁移矩阵与回滚方案</td></tr></tbody></table></div>
+
+<p>这张表只用于选入口。真正执行时，仍然要补上项目输入、允许范围、停止条件和验证命令。</p>
+
+<h2>四、选择 AI 的授权等级</h2>
+
+<p>工具可能叫 Standard、Plan、Goal，也可能使用别的名称。真正需要控制的是 AI 的授权范围：</p>
+
+<div class="table-wrap"><table><thead><tr><th>授权等级</th><th>AI 可以做什么</th><th>适用任务</th></tr></thead><tbody><tr><td>直接执行</td><td>在明确文件和行为范围内修改并验证</td><td>定点热修复、已确认的单文件修复</td></tr><tr><td>只分析后确认</td><td>先提交证据、方案和风险，不改代码</td><td>交互审计、视觉审计、组件审计、响应式定位、迁移规划</td></tr><tr><td>有界自主执行</td><td>在目录、规范、检查点和停止条件内分批推进</td><td>设计系统试点、Token 注入、已批准的批量迁移</td></tr></tbody></table></div>
+
+<p>任务越大，边界越要具体。目录、不可修改项、设计规范版本、验证命令、批次大小和停止条件都应写进提示词。不要用一句“把全项目改好”代替项目事实。</p>
+
+<h3>场景与授权建议</h3>
+
+<div class="table-wrap"><table><thead><tr><th>场景</th><th>首选授权</th><th>原因</th></tr></thead><tbody><tr><td>1. 定点热修复</td><td>直接执行</td><td>问题、文件和期望效果都已明确</td></tr><tr><td>2. 交互体验补全</td><td>只分析后确认</td><td>状态背后可能有产品规则</td></tr><tr><td>3. 智能视觉审计</td><td>只分析后确认</td><td>需要区分异常候选与合理例外</td></tr><tr><td>4. 老旧代码提纯</td><td>只分析后确认</td><td>影响面广，需要建立基线和变量语义</td></tr><tr><td>5. 设计系统对齐</td><td>有界自主执行</td><td>适合试点后分批推进，不能无边界全量修改</td></tr><tr><td>6. 响应式适配治理</td><td>只分析后确认</td><td>必须先真实复现，并回归相邻视口</td></tr><tr><td>7. 组件规范审计</td><td>只分析后确认</td><td>语义和 API 问题需要结合项目封装判断</td></tr><tr><td>8. 主题与 Token 适配</td><td>只分析后确认</td><td>token 映射、对比度和主题回退需要人工确认</td></tr><tr><td>9. 资产与废弃组件迁移</td><td>只分析后确认</td><td>路径、Props、回调和资源匹配不能盲目覆盖</td></tr></tbody></table></div>
+
+<p>即使使用有界自主执行，也应把任务拆成可回退的批次。授权等级描述的是修改权限，不代表 AI 可以跳过试点和验收。</p>
+
+<h2>五、运行提示词前的项目输入</h2>
+
+<p>正式运行任何场景前，先提供下面这组上下文：</p>
+
+<pre class="prompt-block"><code>【项目上下文】
+- 项目技术栈：[例如 React + TypeScript + CSS Modules]
+- UI 组件体系及版本：[例如 Ant Design 5 / 自研组件库]
+- 样式组织方式：[CSS Variables、SCSS、CSS-in-JS、Tailwind 等]
+- 设计规范来源：[Design Tokens、Figma 文件、品牌手册或现有页面基线]
+- 主题机制：[class、data-theme、prefers-color-scheme 或尚未建立]
+- 本次允许检查和修改的目录：[明确目录]
+- 本次禁止修改的目录：[第三方代码、生成文件、历史归档等]
+- 关键页面及访问方式：[路由或页面入口]
+- 目标视口和浏览器：[例如 390、768、1440，Chrome/Safari]
+- 项目验证命令：[lint、类型检查、测试、构建、截图检查]
+- 已知合理例外：[图表色板、品牌活动页、1px 边框、光学校正等]
+- 工作树要求：[保留现有改动，不提交、不推送、不部署]</code></pre>
+
+<p>如果项目没有设计系统，要明确要求 AI 先整理候选规则，不能自行套用外部系统。外部规范必须注明来源和版本；没有来源的“标准色”只能当作待确认建议。</p>
+
+<h2>六、问题修复组：场景 1、2、6</h2>
+
+<h3>场景 1：定点热修复</h3>
+
+<h4>什么时候用</h4>
+
+<p>问题已经稳定复现，影响文件和期望效果明确，例如 Safari 下按钮文字贴边、弹窗遮挡底部操作区、禁用图标仍可点击。热修复只做最小充分改动，不顺手整理周边代码。</p>
+
+<h4>深度提示词</h4>
+
+<pre class="prompt-block"><code>任务：修复 [页面/文件路径] 中 [组件名] 的 [具体问题]。
+
+【问题证据】
+- 复现环境：[浏览器、设备或视口]
+- 复现步骤：[步骤 1、步骤 2、步骤 3]
+- 当前现象：[准确描述]
+- 期望效果：[目标尺寸、位置、状态或参考页面]
+
+【允许范围】
+- 可以修改：[文件或目录]
+- 不得修改：[文件或目录]
+- 保留现有设计变量、组件 API 和业务逻辑。
+- 不升级依赖，不改变其他视口表现，不顺带重构无关代码。
+
+【执行要求】
+1. 先读取相关组件、样式和测试，确认根因。
+2. 用最小改动修复，不用全局覆盖掩盖局部问题。
+3. 如果实际现象与描述不一致，停止修改并报告。
+4. 完成后运行 [验证命令]。
+5. 在 [目标视口] 复查问题页面及默认、hover、disabled、loading 状态。
+
+【输出要求】
+- 根因和代码证据
+- 实际修改文件
+- 验证结果
+- 未覆盖的浏览器、页面或状态风险</code></pre>
+
+<h4>验收重点</h4>
+
+<p>除问题点外，检查同一组件的相邻状态和其他调用页面。局部选择器优先级过高是热修复常见的长期副作用。</p>
+
+<h3>场景 2：交互体验补全</h3>
+
+<h4>什么时候用</h4>
+
+<p>页面功能基本完整，但点击反馈、异步状态、焦点样式、错误恢复或操作完成提示缺失。第一轮只做审计和方案，因为重复提交、乐观更新、撤销和二次确认都可能涉及产品规则。</p>
+
+<h4>深度提示词</h4>
+
+<pre class="prompt-block"><code>任务：对 [目录/页面范围] 进行交互体验审计，输出补全方案，本轮不修改代码。
+
+【项目上下文】
+- 技术栈：[填写]
+- 自有组件目录：[填写]
+- 第三方组件库：[填写]
+- 已有反馈组件：[Toast、Message、Dialog、Skeleton 等]
+- 已知产品规则：[填写]
+
+【审计维度】
+1. 可点击元素：检查 button、a、自有交互组件和 role=&quot;button&quot; 是否具备 hover、active、focus-visible、disabled。
+2. 异步操作：检查提交、加载、上传、删除和生成任务是否有 loading、防重复、成功、失败和重试反馈。
+3. 状态可理解性：检查空状态、无权限、网络错误、数据为空和操作完成后的提示。
+4. 键盘操作：检查原生语义、Tab 顺序、Enter/Space 触发、焦点回落，以及弹窗关闭后的焦点处理。
+5. 高风险操作：标记删除、覆盖、发布和批量修改的确认或撤销缺口，不自行决定产品策略。
+
+【过滤规则】
+- 忽略 node_modules、dist、build、生成文件和第三方组件内部实现。
+- 纯装饰元素不强行添加交互样式。
+- 不默认要求乐观更新；只有业务允许回滚时才列为候选方案。
+
+【输出格式】
+按文件或组件分组，列出文件路径、代码或页面证据、缺失状态、用户影响、建议方案、优先级、置信度和需要产品/技术确认的事项。
+
+【执行限制】
+只输出审计报告。无法从代码确认的行为标记为“待运行验证”，不要推测成事实。</code></pre>
+
+<h4>验收重点</h4>
+
+<p>实际操作页面，检查键盘、重复提交、失败恢复、焦点回落和成功反馈。静态扫描无法覆盖完整体验。</p>
+
+<h3>场景 6：响应式适配治理</h3>
+
+<h4>什么时候用</h4>
+
+<p>页面在特定视口出现横向滚动、内容遮挡、卡片挤压、表格无法阅读或操作区掉出屏幕。先复现，再决定使用宽度约束、换行、滚动、折叠还是信息重排。</p>
+
+<h4>深度提示词</h4>
+
+<pre class="prompt-block"><code>任务：专项治理 [页面/目录] 在 [目标视口] 下的响应式问题。先复现和定位，再输出计划；未经确认不修改代码。
+
+【范围】
+- 目标页面：[路由或入口]
+- 目标视口：[例如 375、768]
+- 桌面回归视口：[例如 1024、1440]
+- 只处理：横向溢出、内容遮挡、关键布局坍塌、不可操作区域。
+- 不处理：颜色、字体风格、品牌视觉和无关交互重构。
+
+【复现与根因】
+1. 在目标视口记录横向滚动、裁切、重叠、异常换行和操作不可达位置。
+2. 保存截图或 DOM 证据，定位组件和样式来源。
+3. 检查固定宽度、min-width、固定列数、flex 子项 min-width、grid 最小宽度、长文本、媒体固有尺寸、breakpoint 顺序和 absolute/fixed 元素。
+4. 页面无法运行时，只标记“风险候选”，不写成已复现问题。
+
+【修复原则】
+- 不用 overflow: hidden 隐藏仍需阅读或操作的内容。
+- 只有组件允许换行时才使用 flex-wrap。
+- 表格根据业务选择横向滚动、列优先级、折叠或卡片化。
+- 移动端修复必须做桌面回归，共享样式变更需要检查其他调用页。
+
+【输出格式】
+每项包含页面、视口、复现步骤、证据、根因、涉及文件、建议修改、选择理由、其他视口影响、验收条件和人工确认项。
+
+【执行限制】
+只输出修复计划，不修改代码。影响桌面端或改变信息层级的方案标记为“需设计确认”。</code></pre>
+
+<h4>验收重点</h4>
+
+<p>至少检查问题视口、相邻视口和桌面视口，并用长标题、空数据、长数据和多语言内容复查。</p>
+
+<h2>七、健康诊断组：场景 3、7</h2>
+
+<h3>场景 3：智能视觉审计</h3>
+
+<h4>什么时候用</h4>
+
+<p>页面已经出现风格分叉，但团队还不能说明问题集中在哪里；或者准备提纯、Token 注入和 Redesign 前，需要先建立事实基线。</p>
+
+<h4>深度提示词</h4>
+
+<pre class="prompt-block"><code>任务：对 [目录范围] 做 UI 视觉与样式治理审计，输出带证据的报告，本轮不修改代码。
+
+【事实来源优先级】
+1. 项目已有 Design Tokens、主题变量和组件规范；
+2. 已确认的 Figma/品牌规范；
+3. 已上线关键页面中的稳定共性；
+4. 只有项目明确要求时，才对照 [外部设计系统及版本]。
+
+【审计维度】
+一、布局与定位：统计 absolute、fixed、负 margin、固定高度和高 z-index，排除合理浮层；标记可能在内容增长、语言变化或缩放时错位的实现。
+二、尺寸与间距：统计 padding、margin、gap、width、height、radius，结合现有 token 判断重复语义；非 4/8 倍数只作为异常候选。
+三、色彩：合并大小写、缩写和等价表示后统计硬编码色值、透明度和渐变，区分品牌色、语义色、中性色和数据色板；不按频率直接命名主色。
+四、字体：统计 font-family、font-size、font-weight、line-height、letter-spacing 组合，找出同一语义的多套组合；不要为了凑五档字号强行压缩。
+五、组件一致性：检查按钮、输入框、卡片、弹窗、标签和表格是否存在无意分叉。
+六、响应式风险：检查固定宽高、nowrap、长文本、图片比例和表格容器，能运行页面时在 [视口列表] 记录真实问题。
+
+【过滤与边界】
+- 忽略 node_modules、dist、build、coverage 和生成文件。
+- 已知合理例外：[填写]。
+- 代码异常值不等于页面缺陷；无法确认时降低置信度。
+- 只审计视觉和呈现，不修改业务逻辑。
+
+【输出格式】
+1. 项目事实摘要；
+2. 高、中、低风险总览；
+3. 分类型问题清单，每项含文件路径、当前实现、对照规则、影响、证据、置信度和建议；
+4. 合理例外与暂不处理项；
+5. 建议优先试点的 1—3 个组件或页面。
+
+【执行限制】
+只出报告，不修改代码。同源问题可以合并统计，但必须保留可追溯的文件清单。</code></pre>
+
+<h4>验收重点</h4>
+
+<p>报告至少要回答：问题在哪里、为什么算问题、修复后影响什么。只有“发现很多硬编码值”的统计还没有进入治理。</p>
+
+<h3>场景 7：组件规范审计</h3>
+
+<h4>什么时候用</h4>
+
+<p>页面样式看起来相似，但组件语义、API、可访问性或内部复杂度已经开始分叉。此场景只审计 JSX/TSX 和组件使用，不修改业务逻辑。</p>
+
+<h4>深度提示词</h4>
+
+<pre class="prompt-block"><code>任务：对 [目录范围] 进行组件使用规范、语义健康度与可访问性基础审计，只输出报告，不修改代码。
+
+【项目输入】
+- 实际 UI 框架及版本：[Ant Design、MUI、自研组件等]
+- 标准按钮、链接、表单、弹窗和图标组件：[填写]
+- 已知合理例外：[填写]
+- 组件文档或规范来源：[填写]
+
+【审计维度】
+1. 语义化：找出用 div/span 模拟按钮或链接的交互元素，检查 a 是否有有效 href，检查列表是否使用正确 ul/ol/li 结构。先排除项目已有的语义封装。
+2. 框架 API：按实际版本检查高风险 API 误用，例如 Table 缺少稳定 rowKey、Modal 嵌套、Form 字段与校验规则不匹配、size 变体无序扩散。缺少某个属性只能作为风险候选，不能直接判定错误。
+3. A11y 基础项：检查 img 的 alt、交互元素的可聚焦性、键盘触发、焦点管理、必要的 role 和 aria 属性。不能仅凭静态 JSX 宣布完整符合 WCAG。
+4. 组件粒度：标记超长且状态复杂的文件、深层条件渲染和重复业务分支，输出重构候选，不以行数阈值直接判定必须拆分。
+5. 弃用与重复：扫描 @deprecated 组件、旧 API、同一功能的多套封装和跨目录重复实现。
+
+【过滤规则】
+- 忽略 node_modules、dist、build、.next、工具函数和生成文件。
+- 全局布局中的必要容器不按普通业务组件判定。
+- 第三方组件内部不审计，但检查项目是否错误覆盖其 API 或状态。
+
+【输出格式】
+按语义、API、A11y、粒度、弃用与重复分组。每项包含文件路径及行号、代码片段、规则依据、用户或维护影响、风险等级、置信度、建议替换方案和是否需要人工确认。
+
+【执行限制】
+只出审计报告，严禁修改 JSX、TSX、样式和业务逻辑。</code></pre>
+
+<h4>验收重点</h4>
+
+<p>需要结合运行页面、键盘操作和项目组件文档复核。<code>div onClick</code>、文件很长或缺少某个属性都不应被 AI 自动改成统一答案。</p>
+
+<h2>八、规则与系统建设组：场景 4、8、5</h2>
+
+<h3>场景 4：老旧代码提纯</h3>
+
+<h4>什么时候用</h4>
+
+<p>视觉暂时不准备调整，但样式代码大量复制，颜色、间距和字号难以维护。目标是改善结构，尽量保持现有视觉。</p>
+
+<h4>深度提示词</h4>
+
+<pre class="prompt-block"><code>任务：为 [目录范围] 制定视觉代码提纯方案。本轮只建立事实基线、变量模型和分批计划，不直接修改业务文件。
+
+【目标】
+- 降低重复硬编码和样式分叉；
+- 优先复用已有变量和组件；
+- 保持当前视觉与交互结果，暂不进行 Redesign。
+
+【事实基线】
+1. 定位主题文件、CSS Variables、SCSS 变量、Tailwind 配置或组件主题配置。
+2. 统计 color、background、border、spacing、radius、font-size、line-height 等值及组合。
+3. 合并 #fff/#ffffff/rgb(255 255 255) 等等价写法。
+4. 区分全局高频、局部高频和单次例外；能运行页面时记录关键视口基线截图。
+
+【语义映射】
+- 根据使用位置提出 --color-text-primary、--color-border-default、--color-surface-raised、--space-control-x 等候选。
+- 同一个物理值可以对应不同语义变量。
+- 无法确认语义的值进入人工命名清单，不按出现次数随意命名。
+
+【分批与验证】
+- 按组件或页面拆批，第一批选择高使用量、低业务风险组件。
+- 每批列出原值、候选变量、使用语义、涉及文件和预计替换数量。
+- 标记图表、活动页、富文本、第三方覆盖等高风险区域。
+- 为每批列出静态检查、构建/测试、截图页面、人工状态和停止条件。
+
+【输出要求】
+事实摘要、高频值统计、变量表、分批计划、高风险文件、合理例外、验证与回退方案。
+
+【执行限制】
+不引入外部设计系统，不为了消除硬编码创建只使用一次且无语义价值的变量。</code></pre>
+
+<h4>验收重点</h4>
+
+<p>变量数量减少不是唯一目标。要确认同类组件是否共享规则、变量名能否说明用途，以及替换后是否有可回退的视觉基线。</p>
+
+<h3>场景 8：主题适配与 Token 注入</h3>
+
+<h4>什么时候用</h4>
+
+<p>设计团队已经提供外部 token 表，需要把它注入现有项目，或者需要建立浅色/深色、品牌换肤和高对比度主题。场景 8 处理的是变量与主题基础设施，页面视觉升级仍属于场景 5。</p>
+
+<h4>深度提示词</h4>
+
+<pre class="prompt-block"><code>任务：基于 [Token JSON/JS 文件] 为 [项目范围] 建立语义化 token 和 [浅色/深色/品牌] 主题。本轮先输出映射与试点方案，不批量修改业务组件。
+
+【Token 输入】
+- token 来源和版本：[填写]
+- primitive token 与 semantic token 的层级：[说明或要求先分析]
+- 当前主题机制：[class、data-theme、prefers-color-scheme 等]
+- 目标主题：[light、dark、high-contrast、brand 等]
+- 允许修改范围：[填写]
+
+【执行步骤】
+1. 读取 token schema，区分原始色值、语义值、组件值和状态值。
+2. 建立“现有值/变量 → 新 token → CSS 变量”的映射表；颜色要区分品牌、背景、文字、边框、成功、警告、错误和数据色板。
+3. 检查 spacing、radius、typography、elevation 等非颜色 token 的单位、语义和兼容性。
+4. 设计浅色与深色覆盖层，说明主题切换机制、默认主题和未定义 token 的回退规则。
+5. 检查文字/背景、边框/背景、图标/背景和交互状态的对比度；对比度不足标记“需人工校验”，不自动篡改品牌色。
+6. 选择 [1—3 个代表性页面] 试点，检查默认、hover、focus-visible、disabled、loading、error 和图表状态。
+
+【输出要求】
+1. token schema 与版本摘要；
+2. theme.css/tokens.css 候选定义；
+3. 深色或高对比度覆盖文件；
+4. 原值 → 新语义变量映射表；
+5. 对比度和主题状态风险清单；
+6. 试点范围、验证命令、批量推广条件和回退方案。
+
+【执行限制】
+只出方案和变量定义，不修改业务组件逻辑。内联样式需要拆出时先列出影响，不直接全量改写。</code></pre>
+
+<h4>验收重点</h4>
+
+<p>主题切换要在真实页面验证，不能只检查变量文件。浅色与深色都要覆盖组件状态、图表、图片、阴影和边框；对比度报告也不能代替人工检查品牌表达。</p>
+
+<h3>场景 5：设计系统对齐与 Redesign</h3>
+
+<h4>什么时候用</h4>
+
+<p>项目已经确认更新视觉规范，目标设计系统、品牌方向、范围和负责人明确。外部系统提供参考，不替团队决定品牌、信息层级和业务场景。</p>
+
+<h4>深度提示词</h4>
+
+<pre class="prompt-block"><code>任务：在明确边界内推进 [项目/目录] 的视觉 Redesign，使其对齐 [目标设计系统、品牌规范及版本]。
+
+【已确认输入】
+- 设计规范来源和版本：[填写]
+- 品牌不可替换项：[Logo、主色、插画、数据色板等]
+- 目标页面、暂不改造页面、代表性试点页面：[填写]
+- 需要保留的业务逻辑、数据结构、路由和公共组件 API：[填写]
+
+【阶段一：差异分析】
+读取现有 token、基础组件和试点页面，列出颜色、排版、间距、圆角、阴影、布局和交互状态差异，并区分 token 可解决、基础组件需修改和逐页处理的问题。本阶段不改代码。
+
+【阶段二：规范映射】
+建立当前规则 → 目标规则的映射，覆盖颜色语义、排版角色、spacing、radius、elevation、基础组件和 hover/active/focus-visible/disabled/loading/error 状态。无法安全映射的值进入人工确认清单。
+
+【阶段三：试点执行】
+只修改试点范围，保留业务逻辑和公共 API。每批运行 [命令]，在 [视口列表] 截图，记录预期与非预期差异。达到试点验收点后停止，等待设计与前端确认。
+
+【推广条件】
+试点视觉方向已确认、基础组件回归通过、合理例外已登记、剩余页面可拆批、每批都有验证页面和停止条件。
+
+【验证与停止】
+静态扫描用于发现未映射值，不以硬编码归零为唯一标准。构建、相关测试和多视口检查通过。规范冲突、公共 API 变化、视觉差异无法解释或超出目录时停止当前批次。
+
+【最终输出】
+完成批次、文件清单、token/组件变更、验证结果、合理例外、未完成项、人工决策问题和回退方式。</code></pre>
+
+<h4>验收重点</h4>
+
+<p>Redesign 的完成标准是规范层级在真实业务页面中成立，并且剩余页面有可控迁移路径，不是所有数字都被强行改成同一组倍数。</p>
+
+<h2>九、迁移与清理组：场景 9</h2>
+
+<h3>场景 9A：图标与图片资产迁移</h3>
+
+<pre class="prompt-block"><code>任务：将 [目录/页面范围] 的旧图标和图片资产迁移到 [目标图标库/资产目录]。本轮只输出迁移计划和首批示例，不批量覆盖业务文件。
+
+【扫描范围】
+- &lt;img src&gt;、背景 url()、SVG 内联、旧图标库类名、旧 Icon 组件和动态资源路径。
+- 忽略 node_modules、第三方库自带图标和已登记的品牌特殊资产。
+
+【匹配与风险】
+1. 建立旧路径/类名 → 新组件或新路径的映射表。
+2. 检查名称、语义、视觉重量、线宽、内边距、尺寸、比例和颜色继承。
+3. 保持布局尺寸和可操作区域稳定；不同图标库无法保证像素完全相同，差异进入人工复查清单。
+4. 检查 alt、装饰性图片 alt=&quot;&quot;、懒加载、加载失败和资源许可来源。
+5. 无法自动匹配的资产标记为人工映射，不用相似名称盲目替换。
+
+【输出要求】
+- 资产映射表
+- 组件调用替换示例
+- 需要截图复查的页面和视口
+- 资源路径、加载和可访问性风险
+- 首批迁移范围、回滚方式和人工待确认项</code></pre>
+
+<h3>场景 9B：废弃组件与 API 迁移</h3>
+
+<pre class="prompt-block"><code>任务：将 [旧组件列表或 @deprecated 组件] 迁移到 [新组件/API]。本轮先输出影响分析、Props 对照和首批迁移方案，不直接全量替换。
+
+【扫描范围】
+- @deprecated JSDoc、旧组件导出、旧 Props、旧事件名、旧样式入口和文档示例。
+- 忽略第三方库内部实现，保留项目现有未提交改动。
+
+【影响分析】
+1. 列出每个调用点、路由、页面状态和使用频率。
+2. 建立旧 Props → 新 Props、旧事件 → 新回调、旧默认值 → 新默认值的对照表。
+3. 检查受控/非受控模式、异步状态、表单校验、焦点管理、错误处理和业务回调是否保持一致。
+4. 识别无法一对一映射的 API，标记需人工重写的调用点。
+5. 设计兼容层、分批迁移和回滚路径，说明何时删除旧组件。
+
+【验证要求】
+- 运行类型检查、相关测试和构建。
+- 在代表性页面完成默认、加载、错误、禁用和边界数据操作。
+- 检查公共 API、路由和埋点是否改变。
+
+【输出要求】
+调用点清单、Props/API 对照表、首批文件、测试与截图计划、人工清单、回滚方案和旧组件删除条件。</code></pre>
+
+<h3>场景 9 的共同边界</h3>
+
+<p>迁移不是查找替换。资产迁移要验证视觉和资源行为，组件迁移要验证状态、回调和 API。两类任务都应先做一小批，确认映射稳定后再扩大范围。</p>
+
+<h2>十、三个长期治理机制的提示词</h2>
+
+<h3>机制 A：设计稿—代码漂移审计</h3>
+
+<pre class="prompt-block"><code>任务：对 [设计文件/组件库/关键页面] 做设计稿与代码实现漂移审计，只输出报告。
+
+请先确认设计文件版本、代码分支、组件映射和比较页面。按颜色、排版、间距、组件状态、内容规则、响应式和交互路径分组。每项列出设计证据、代码证据、差异类型（设计变更、实现缺陷、文档过期或合理例外）、影响、置信度、责任人和建议动作。无法从现有材料确认的内容标记待补证据，不要把截图差异直接判定为实现错误。</code></pre>
+
+<h3>机制 B：文档与采用率治理</h3>
+
+<pre class="prompt-block"><code>任务：检查 [组件库/代码仓库] 的组件文档、示例和实际采用情况，输出维护报告，不修改代码。
+
+扫描组件导出、使用次数、废弃标记、文档链接、示例覆盖和常见错误用法。区分“组件不存在”“文档缺失”“文档与 API 不一致”“已有组件未被采用”“业务变体合理存在”。输出使用率、重复实现、文档缺口、弃用风险、优先级、建议补充的示例和需要产品/设计确认的规则。不要以调用次数单独判断组件质量。</code></pre>
+
+<h3>机制 C：版本与变更影响治理</h3>
+
+<pre class="prompt-block"><code>任务：评估 [token/组件/资产包] 从 [旧版本] 升级到 [新版本] 的影响，只输出迁移与发布计划。
+
+读取变更日志、导出 API、token 差异、使用方清单和已知弃用项。建立“变更项 → 受影响组件/页面 → 风险 → 验证方式 → 迁移批次”的矩阵。分别标记视觉变化、行为变化、类型/构建变化、性能变化和文档变化。给出兼容层、灰度或回滚方案、旧版本保留期限、删除条件和发布后观察项。无法确认的影响不得写成已验证结果。</code></pre>
+
+<p>这些机制把一次性改造变成可追踪的维护过程。它们适合接入版本发布、组件发布和定期体检，而不是每次临时写一段大提示词。</p>
+
+<h2>十一、统一验收、回退与人工确认</h2>
+
+<h3>四层验收</h3>
+
+<ol><li>静态检查：发现超范围文件、未映射 token、危险选择器、重复实现和弃用引用。</li><li>构建与测试：运行 lint、类型检查、单元测试、构建和相关集成测试。</li><li>多视口视觉检查：对照基线检查布局、尺寸、字体换行、颜色、主题和层级。</li><li>交互与人工验收：实际完成关键任务，检查默认、hover、focus-visible、disabled、loading、error、空数据、权限和键盘路径。</li></ol>
+
+<h3>通用验收提示词</h3>
+
+<pre class="prompt-block"><code>请对本次 UI 治理改动进行验收，不继续扩大修改范围。
+
+1. 列出实际修改文件，确认没有超出约定目录。
+2. 运行 [lint / typecheck / test / build 命令]，记录完整结果。
+3. 在 [关键页面] 的 [视口列表] 检查溢出、遮挡、换行、对齐、主题和组件状态。
+4. 对照 [设计规范、token 版本或改造前截图]，区分预期差异、非预期差异和无法判断项。
+5. 实际操作 [关键任务]，检查键盘、焦点、加载、失败恢复、权限和回调行为。
+6. 汇总已通过、失败、未覆盖、需人工确认和建议回退的项目。
+7. 不要因为构建通过或静态扫描数量下降就宣布视觉和体验全部通过。</code></pre>
+
+<h3>三类必须停止的情况</h3>
+
+<ul role="list"><li>规范来源或版本相互冲突。</li><li>修改可能改变业务逻辑、权限、公共 API、埋点或数据语义。</li><li>视觉差异无法解释、映射无法确认，或没有可回退的基线。</li></ul>
+
+<p>遇到这些情况，AI 应输出人工决策清单，而不是继续扩大修改。</p>
+
+<h2>十二、让 AI 长期理解项目设计规则</h2>
+
+<p>单次提示词适合解决一次任务。长期治理需要把下面内容写入 Design Tokens、组件规范、项目说明文件或 Skill：</p>
+
+<ul role="list"><li>规则来源与版本；</li><li>适用目录、页面和技术栈；</li><li>颜色、排版、间距、组件状态和主题的语义；</li><li>设计稿、代码和文档的映射方式；</li><li>合理例外与禁止自动修改的区域；</li><li>构建、测试、截图和人工检查命令；</li><li>变更、迁移、弃用和删除条件；</li><li>冲突、权限和无法判断时的停止条件。</li></ul>
+
+<p>一份好的 Skill 是项目工作手册，不是流行风格清单。它能降低重复解释成本，让 AI 的行为更容易审查，但无法替代设计师对品牌、信息层级和局部取舍的判断。</p>
+
+<h2>十三、三类角色如何分工</h2>
+
+<div class="table-wrap"><table><thead><tr><th>角色</th><th>主要责任</th><th>不能交给 AI 单独决定的内容</th></tr></thead><tbody><tr><td>UI/UX 设计师</td><td>定义视觉与体验标准，处理例外，验收结果</td><td>品牌取舍、信息层级、体验质量</td></tr><tr><td>产品经理</td><td>明确业务规则、优先级和成功标准</td><td>权限、状态、失败处理和业务影响</td></tr><tr><td>前端工程师</td><td>控制技术边界，审查实现，维护测试与回归能力</td><td>架构、性能、兼容性、公共 API 和发布风险</td></tr><tr><td>AI</td><td>扫描、归纳、生成方案、执行受控修改、运行检查</td><td>最终产品判断和上线责任</td></tr></tbody></table></div>
+
+<p>设计师的工作重点会更多落在规则、判断和验收上。前端减少的是重复样式劳动，增加的是对 AI 代码和全局影响的审查。产品需要把“大一点”“更有质感”这类描述转成可以确认的业务目标和体验标准。</p>
+
+<h2>十四、常见组合路径</h2>
+
+<h3>视觉与组件双轨诊断 → 分流</h3>
+
+<p>并行运行场景 3 和场景 7，得到视觉、布局、语义、API 和 A11y 的问题地图。评审后把问题分为立即修复、规则建设、迁移清理、待产品确认和合理例外。</p>
+
+<h3>提纯或 Token 试点 → 主题与 Redesign</h3>
+
+<p>视觉暂时不变时先运行场景 4；已有外部 token 时先运行场景 8。基础变量稳定后，再用场景 5 更新页面和基础组件。每一步都保留截图与回退点。</p>
+
+<h3>资产迁移 → 组件迁移 → 旧版本下线</h3>
+
+<p>先完成图标和图片映射，再迁移废弃组件 API。两类迁移都通过首批页面验证后，才扩大范围。旧资产和旧组件要等使用方清零、文档更新和回归完成后再删除。</p>
+
+<h3>响应式或交互问题 → 局部修复 → 版本治理</h3>
+
+<p>场景 1、2、6 解决当前问题；如果同类问题持续出现，就把规则、组件或文档纳入设计系统治理机制，避免每次只做一次性补丁。</p>
+
+<h2>结语</h2>
+
+<p>AI 可以加快 UI 扫描、修改和验证，但它不会自动理解项目真正需要的设计。提示词的价值，在于把任务范围、事实来源、权限、产物和验收标准说清楚。</p>
+
+<p>当设计稿、token、组件、页面、资产和版本变化都能被追踪时，AI 才能从一次性的改页面工具，变成进入真实产品流程的 UI 治理助手。</p>
+
+<p>对设计师来说，值得建立的能力不是让 AI 无限扩大修改范围，而是把设计判断转化成可以审计的规则，把规则拆成可以执行的任务，再用真实页面和用户操作确认结果。</p>
+      </div>
+    </article>
+
+    <footer class="footer">© 2026 LINPO LAB</footer>
+  </body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "methodology:ai-visual-exploration",
+  "type": "methodology",
+  "slug": "ai-visual-exploration",
+  "title": "让 AI 视觉探索变得可控",
+  "route": "methodologies/ai-visual-exploration/index.html",
+  "entry": "index.html",
+  "status": "published",
+  "producer": { "skill": "linpolab-methodology-page", "kind": "methodology" },
+  "homepage": { "section": "methods", "order": 2, "visible": true },
+  "runtime": null
+}

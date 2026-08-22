@@ -38,7 +38,13 @@ REPO_MAP.md
 content-registry.json
 manifest.json
 docs/
-methodologies/
+# Methodology runtime pages are public; keep local package metadata ignored.
+methodologies/_template/
+methodologies/*/manifest.json
+methodologies/*/PAGE_SPEC.md
+methodologies/*/BUILD_INFO.md
+methodologies/*/assets/images/screenshots.json
+methodologies/*/assets/fonts/
 runtimes/
 tools/
 assets/home-media/README.md

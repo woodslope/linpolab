@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>让 AI 视觉探索变得可控｜LINPO LAB</title>
+    <meta name="description" content="以 VisPath 为例，说明如何通过固定创作约束、单变量探索、批次比较与方向细化，让 AI 视觉探索变得可控。" />
+    <meta name="author" content="Linpo Wu" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="让 AI 视觉探索变得可控" />
+    <meta property="og:description" content="VisPath：单变量视觉方向工作流。" />
+    <meta property="og:image" content="assets/images/20260714-04-batch-comparison.png" />
+    <style>
+      :root {
+        --page: #f4f4f1;
+        --paper: #ffffff;
+        --ink: #050505;
+        --text: #414346;
+        --muted: #6d6f73;
+        --line: rgba(0, 0, 0, 0.13);
+        --accent: #b7ff00;
+        --callout-bg: #f1f2ef;
+        --article-width: 720px;
+        --topbar-height: 56px;
+      }
+
+      * { box-sizing: border-box; }
+
+      html { scroll-behavior: smooth; }
+
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+      }
+
+      h2, h3 { scroll-margin-top: calc(var(--topbar-height) + 16px); }
+
+      body {
+        margin: 0;
+        padding-top: var(--topbar-height);
+        color: var(--ink);
+        background: var(--page);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+        font-size: 17px;
+        line-height: 1.85;
+        text-rendering: optimizeLegibility;
+      }
+
+      ::selection { color: var(--ink); background: var(--accent); }
+      img { display: block; max-width: 100%; }
+      a { color: inherit; }
+
+      .topbar {
+        position: fixed;
+        inset: 0 0 auto;
+        z-index: 30;
+        min-height: var(--topbar-height);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+        background: #000;
+      }
+
+      .topbar__inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        width: min(calc(100% - 40px), 1120px);
+        min-width: 0;
+        min-height: var(--topbar-height);
+        margin: 0 auto;
+      }
+
+      .brand,
+      .back {
+        flex: 0 0 auto;
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 13px;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+
+      .brand { color: #fff; font-weight: 800; letter-spacing: 0; }
+      .back:hover, .back:focus-visible { color: var(--accent); }
+      .brand:focus-visible, .back:focus-visible, .case-link:focus-visible {
+        border-radius: 4px;
+        outline: 2px solid var(--accent);
+        outline-offset: 4px;
+      }
+
+      .sheet {
+        width: min(calc(100% - 32px), 816px);
+        max-width: 100%;
+        min-width: 0;
+        min-height: 100vh;
+        margin: clamp(18px, 3.5vw, 32px) auto 0;
+        padding: clamp(48px, 8vw, 84px) clamp(22px, 7vw, 76px) 72px;
+        background: var(--paper);
+      }
+
+      .sheet > header {
+        margin-bottom: 40px;
+        padding-bottom: 28px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      h1, h2, h3, p { margin-top: 0; }
+
+      h1, h2, h3, p, li, a {
+        max-width: 100%;
+        overflow-wrap: break-word;
+      }
+
+      h1, h2, h3 {
+        color: var(--ink);
+        font-family: inherit;
+      }
+
+      h1 {
+        margin-bottom: 20px;
+        font-size: clamp(36px, 5vw, 48px);
+        line-height: 1.18;
+        letter-spacing: 0;
+        text-wrap: balance;
+      }
+
+      .subtitle {
+        max-width: 620px;
+        margin-bottom: 20px;
+        color: var(--text);
+        font-size: 19px;
+        line-height: 1.65;
+      }
+
+      .byline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 8px;
+        margin-bottom: 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .byline span + span::before {
+        margin-right: 8px;
+        color: var(--line);
+        content: "·";
+      }
+
+      .article > p,
+      .article > ul,
+      .article > ol,
+      .article > .image-block,
+      .article > blockquote {
+        width: min(100%, var(--article-width));
+        margin-right: auto;
+        margin-left: auto;
+      }
+
+      .article,
+      .article > *,
+      .sheet > header {
+        min-width: 0;
+        max-width: 100%;
+      }
+
+      .article p {
+        margin-bottom: 24px;
+        color: var(--text);
+        text-wrap: pretty;
+      }
+
+      .article a:not(.case-link) {
+        color: var(--ink);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 3px;
+      }
+
+      .article a:not(.case-link):hover {
+        color: var(--ink);
+        text-decoration-color: var(--accent);
+        text-decoration-thickness: 2px;
+      }
+
+      .article strong { color: var(--ink); }
+
+      .article blockquote.callout {
+        position: relative;
+        width: min(100%, var(--article-width));
+        margin: 36px auto;
+        padding: 8px 20px 8px 58px;
+        color: var(--ink);
+        font-size: 19px;
+        font-weight: 550;
+        line-height: 1.75;
+      }
+
+      .article blockquote.callout::before {
+        position: absolute;
+        top: -3px;
+        left: 0;
+        color: var(--accent);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 68px;
+        font-weight: 700;
+        line-height: 1;
+        content: "“";
+      }
+
+      .article blockquote.callout--boundary {
+        margin: 30px auto;
+        padding: 18px 22px;
+        border-left: 4px solid var(--accent);
+        background: var(--callout-bg);
+        color: var(--text);
+        font-size: inherit;
+        font-weight: 400;
+        line-height: inherit;
+      }
+
+      .article blockquote.callout--boundary::before { content: none; }
+
+      .article .callout-label {
+        white-space: nowrap;
+        color: var(--ink);
+      }
+
+      .article blockquote.callout p:last-child { margin-bottom: 0; }
+
+      .article h2 {
+        width: min(100%, var(--article-width));
+        max-width: 100%;
+        margin: 70px auto 24px;
+        padding-top: 11px;
+        border-top: 1px solid var(--line);
+        font-size: clamp(26px, 3.2vw, 32px);
+        line-height: 1.45;
+        line-break: strict;
+        overflow-wrap: normal;
+        word-break: normal;
+        text-wrap: pretty;
+      }
+
+      .article ul,
+      .article ol {
+        display: grid;
+        gap: 5px;
+        margin-top: -2px;
+        margin-bottom: 28px;
+        padding: 0;
+      }
+
+      .article ul {
+        list-style: none;
+      }
+
+      .article ol {
+        padding-left: 1.4em;
+        list-style-position: outside;
+      }
+
+      .article li {
+        position: relative;
+        padding-left: 18px;
+        color: var(--text);
+      }
+
+      .article li::before {
+        position: absolute;
+        top: 0.75em;
+        left: 0;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+        content: "";
+      }
+
+      .article ol li { padding-left: 5px; }
+      .article ol li::before { content: none; }
+      .article ol li p { margin-bottom: 10px; }
+      .article ol li p:last-child { margin-bottom: 0; }
+
+      .method-summary {
+        margin-top: 6px !important;
+      }
+
+      .method-summary li { margin-bottom: 8px; }
+
+      .image-block {
+        margin-top: 38px;
+        margin-bottom: 38px;
+      }
+
+      .image-block img {
+        display: block;
+        inline-size: 100%;
+        max-inline-size: 100%;
+        block-size: auto;
+        max-height: none;
+        object-fit: contain;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+      }
+
+      .image-link {
+        display: block;
+        border-radius: 6px;
+      }
+
+      .image-link:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 4px;
+      }
+
+      .image-link:hover img { border-color: rgba(0, 0, 0, 0.32); }
+
+      .image-caption {
+        display: block;
+        margin-top: 11px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.7;
+        text-align: center;
+      }
+
+      .case-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 6px;
+        color: var(--ink);
+        font-size: 15px;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .case-link:hover { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 3px; text-underline-offset: 4px; }
+
+      .footer {
+        width: min(calc(100% - 32px), 816px);
+        margin: 0 auto;
+        padding: 24px 0 34px;
+        color: var(--muted);
+        font-size: 11px;
+        text-align: center;
+      }
+
+      @media (max-width: 768px) {
+        .article blockquote.callout {
+          padding-right: 8px;
+          padding-left: 48px;
+          font-size: 18px;
+        }
+
+        .article blockquote.callout::before {
+          top: 0;
+          font-size: 58px;
+        }
+
+        .article blockquote.callout--boundary {
+          padding: 16px 18px;
+          font-size: inherit;
+        }
+      }
+
+      @media (max-width: 600px) {
+        body { font-size: 16px; }
+        .topbar__inner { width: calc(100% - 28px); }
+        .sheet { width: 100%; padding: 44px 24px 58px; }
+        .sheet > header { margin-bottom: 34px; padding-bottom: 24px; }
+        .article h2 { margin-top: 58px; }
+        .subtitle { font-size: 18px; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar__inner">
+        <a class="brand" href="../../index.html">LINPO LAB</a>
+        <a class="back" href="../../index.html#methods">返回首页</a>
+      </div>
+    </header>
+
+    <article class="sheet">
+      <header id="overview">
+        <h1>让 AI 视觉探索变得可控</h1>
+        <p class="subtitle">以 VisPath 为例，把随机试图整理成固定约束、单变量探索、同批比较和方向细化的视觉工作流。</p>
+        <p class="byline"><span>Linpo Wu</span><span>2026</span></p>
+      </header>
+
+      <div class="article">
+        <p>AI 生图把“得到一张图”的门槛降得很低，却没有自动解决视觉探索的问题。</p>
+
+        <p>同一段提示词里同时改变风格、构图、材质、光线和色彩，最后得到的每张图都有差异，却很难判断差异究竟来自哪里。下一轮继续修改时，上一轮的判断也很难被保留下来。设计师常常不是缺少灵感，而是缺少一个能比较、能追溯、能继续细化的探索过程。</p>
+
+        <p>我做 VisPath，是想验证一个更具体的问题：<strong>如果把创作约束固定下来，每次只改变一个视觉维度，AI 是否可以从“随机试图”变成“方向实验”？</strong></p>
+
+        <p>这套方法不承诺模型始终生成理想结果，也不替设计师完成审美判断。它控制的是探索过程，让每次尝试都知道自己改变了什么，也知道下一步为什么继续。</p>
+
+        <p><strong>VisPath 把一次视觉探索拆成六个动作：</strong></p>
+
+        <ol class="method-summary">
+          <li><strong>输入：</strong>提交原始提示词或参考图，说明主体、场景和使用目的。</li>
+          <li><strong>固定：</strong>锁定主体、场景、比例、信息区域和输出分辨率等创作约束。</li>
+          <li><strong>变体：</strong>本轮只选择一个视觉变量，例如设计风格、材质质感或构图镜头。</li>
+          <li><strong>方案：</strong>让 AI 根据固定条件生成多套结构化提示词方向。</li>
+          <li><strong>比较：</strong>在同一批次查看真实结果、参数和提示词快照。</li>
+          <li><strong>细化：</strong>选择值得继续的方向，沿着它再次生成，而不是重新开始盲试。</li>
+        </ol>
+
+        <p>这六步不是为了把创作变成机械流程，而是给每一次视觉判断留下可回看的上下文。</p>
+
+        <h2>一、视觉探索为什么容易失控</h2>
+
+        <p>传统的 AI 生图尝试通常从一句较长的描述开始。设计师会不断增加形容词、替换参考图、调整比例，再根据结果继续修改。问题在于，多个变量经常被同时改变：画面风格变了，主体位置也变了；材质变了，光线和色彩也跟着变了。</p>
+
+        <p>这样得到的结果不能构成可靠比较。即使其中一张更接近目标，也很难说明它是因为哪一个判断成立。下一轮提示词往往是在上一轮的印象上继续堆叠，而不是沿着清楚的方向迭代。</p>
+
+        <p>所以，视觉探索的第一个问题不是“还能生成什么”，而是：<strong>这次生成与上次生成，到底只改变了什么？</strong></p>
+
+        <blockquote class="callout">
+          <p>可控不等于限制创意，而是让每一次变化都能被命名、被比较、被继续使用。</p>
+        </blockquote>
+
+        <h2>二、先固定创作约束，再选择本轮变量</h2>
+
+        <p>VisPath 的输入阶段把原始提示词、参考图、创作类型、生成数量、输出分辨率和画面比例放在同一处确认。更重要的是，它把“固定条件”和“探索变量”分开处理。</p>
+
+        <p>以一张城市植物夜展的 3:4 发布主视觉为例，主体、场景、信息区域、比例和分辨率都可以先锁定。本轮只选择“设计风格”，而不是同时改变风格、构图和材质。</p>
+
+        <p><strong>固定条件至少要回答这些问题：</strong></p>
+
+        <ul role="list">
+          <li>画面中不能改变的主体是什么？</li>
+          <li>场景、用途和信息区域是否已经确定？</li>
+          <li>参考图、画面比例和输出尺寸是否需要保持一致？</li>
+          <li>哪些限制是业务或发布要求，不能被模型自由发挥？</li>
+        </ul>
+
+        <p>探索变量则只回答一个问题：<strong>本轮要观察哪一个视觉判断？</strong></p>
+
+        <p>界面中可以选择设计风格、卡通 / 角色风格、色彩风格、版式风格、构图与镜头、材质与质感、信息密度或品牌气质。选项很多，但一次只激活一个维度，其他条件继续保持不变。</p>
+
+        <figure class="image-block">
+          <a class="image-link" href="assets/images/20260714-01-complex-prompt-input.png" target="_blank" rel="noopener" aria-label="查看 VisPath 输入阶段原图">
+            <img src="assets/images/20260714-01-complex-prompt-input.png" width="2880" height="1800" alt="VisPath 输入阶段，将原始提示词、固定输出条件与单一探索变量分开设置" />
+          </a>
+          <figcaption class="image-caption">输入阶段把主体、场景、比例和输出条件固定下来，本轮只选择一个视觉变量。点击图片查看原图。</figcaption>
+        </figure>
+
+        <p>固定条件的价值，是让不同结果拥有相同的比较基准。它不是把提示词写得更长，而是提前声明哪些内容不应在本轮漂移。</p>
+
+        <h2>三、一次只改变一个视觉变量</h2>
+
+        <p>单变量探索是 VisPath 最重要的工作约束。</p>
+
+        <p>如果本轮选择“设计风格”，AI 可以分别生成极简编辑方向、透明材质方向、实验拼贴方向和夜间摄影方向；主体、场景、比例和信息区域仍然保持一致。这样，设计师比较的是视觉语言的差异，而不是四组完全不同的画面。</p>
+
+        <p>如果下一轮要研究构图，就回到同一组固定条件，只切换到“构图与镜头”。如果要研究材质，则保持构图判断不变，单独观察玻璃、纸张、金属或其他材质如何影响画面。</p>
+
+        <p><strong>这种做法带来两个实际好处：</strong></p>
+
+        <ul role="list">
+          <li><strong>判断更清楚：</strong>结果差异可以归因到一个明确维度，评审时更容易讨论“哪一种方向更接近目标”。</li>
+          <li><strong>迭代更稳定：</strong>选中某个方向后，可以沿着它继续细化，不必把所有条件重新拼回提示词。</li>
+        </ul>
+
+        <p>单变量不意味着每次只能生成一张图。它允许同一变量生成多套候选，让“变量比较”和“结果数量”分别承担不同职责。</p>
+
+        <h2>四、先生成可检查的方案，再调用图片模型</h2>
+
+        <p>VisPath 没有让图片模型直接从一段原始描述开始生图，而是先生成多套结构化的提示词方案。每套方案都要说明两件事：本轮改变了什么，以及哪些条件仍然固定。</p>
+
+        <p>这一步把“模型觉得可以怎么画”转换成了“设计师可以先检查哪些方向”。在真正调用图片接口前，设计师可以查看方案名称、变化说明和完整提示词，筛掉不符合目标或越过约束的方向。</p>
+
+        <p><strong>同一组城市植物夜展条件下形成了四套候选：</strong></p>
+
+        <ul role="list">
+          <li><strong>极简编辑方向：</strong>以留白、柔和棚拍和克制材质建立高级编辑感。</li>
+          <li><strong>透明材质方向：</strong>以折射、液态玻璃和冷光层次强化沉浸式未来感。</li>
+          <li><strong>实验拼贴方向：</strong>以纸张纤维、网点和几何切片建立文化展览气质。</li>
+          <li><strong>夜间摄影方向：</strong>以真实温室、湿润植物和电影光线制造沉浸氛围。</li>
+        </ul>
+
+        <p>它们不一定都是最终答案，但每套方向都有名称、有变化依据，也保留了共同的固定条件。</p>
+
+        <figure class="image-block">
+          <a class="image-link" href="assets/images/20260714-02-four-prompt-plans.png" target="_blank" rel="noopener" aria-label="查看 VisPath 提示词方案原图">
+            <img src="assets/images/20260714-02-four-prompt-plans.png" width="2880" height="1800" alt="VisPath 方案阶段生成四套包含变化说明和固定条件的视觉方向" />
+          </a>
+          <figcaption class="image-caption">方案阶段先生成四套可检查的视觉方向，设计师可以查看完整提示词后再选择生成。点击图片查看原图。</figcaption>
+        </figure>
+
+        <p>这一步也明确了 AI 的职责边界：AI 可以扩展方向、组织提示词和说明变化，但是否符合品牌、用途和发布要求，仍然由设计师判断。</p>
+
+        <h2>五、把同一批次的结果放在一起比较</h2>
+
+        <p>真正调用图片接口后，VisPath 把结果按批次组织，而不是只保留一张“最好看”的图片。</p>
+
+        <p>结果画板会保留每个方向的真实图片、批次编号、完成状态、请求尺寸、实际返回尺寸、比例、提示词快照和继续细化入口。这样，设计师回看某一张图时，仍然知道它来自哪一次探索、使用了什么条件，以及它改变的是哪个变量。</p>
+
+        <p>批次记录还有一个作用：把失败或未完成的结果也纳入过程，而不是只展示成功截图。当前页面可以显示生成中、已完成和失败状态；实际的接口稳定性、异步任务恢复和远程图片有效期，仍需要在更大样本中继续验证。</p>
+
+        <figure class="image-block">
+          <a class="image-link" href="assets/images/20260714-03-result-board.png" target="_blank" rel="noopener" aria-label="查看 VisPath 生成画板原图">
+            <img src="assets/images/20260714-03-result-board.png" width="2880" height="1800" alt="VisPath 结果画板按批次保留四个视觉方向、生成状态、参数与继续细化入口" />
+          </a>
+          <figcaption class="image-caption">结果画板保留同批次的图片、状态、参数和提示词快照，让结果可以被追溯。点击图片查看原图。</figcaption>
+        </figure>
+
+        <h2>六、比较的不是“哪张最好看”，而是哪条路径值得继续</h2>
+
+        <p>同批次比较让四个方向处于相同视觉尺度下。设计师可以先看主体是否稳定，再看构图、材质、氛围和信息区域是否符合目标。</p>
+
+        <p><strong>比较时我会先问：</strong></p>
+
+        <ol>
+          <li>固定主体是否在不同方向中保持清楚？</li>
+          <li>本轮变量是否真的形成了可辨识的差异？</li>
+          <li>画面是否仍然满足比例、用途和信息区域等硬约束？</li>
+          <li>哪些变化值得继续细化，哪些只是偶然的模型效果？</li>
+        </ol>
+
+        <p>这不是让 AI 自动打分，而是让设计师在同一批结果里做更有依据的选择。对比窗口保留四张图片和方向名称，支持点击查看大图，适合快速判断一整批结果的关系。</p>
+
+        <figure class="image-block">
+          <a class="image-link" href="assets/images/20260714-04-batch-comparison.png" target="_blank" rel="noopener" aria-label="查看 VisPath 批次对比原图">
+            <img src="assets/images/20260714-04-batch-comparison.png" width="2880" height="1800" alt="VisPath 批次对比将四个视觉方向放在同一尺度下查看" />
+          </a>
+          <figcaption class="image-caption">批次对比把四个方向放在同一尺度下，便于检查构图、材质和氛围差异。点击图片查看原图。</figcaption>
+        </figure>
+
+        <h2>七、沿选中的方向继续细化</h2>
+
+        <p>选中方向后，下一步不是重新输入一段全新的提示词，而是沿着已经确认的变量继续推进。</p>
+
+        <p>例如，设计师选择了“透明材质方向”，可以继续研究玻璃的折射强度、冷光层次和主体内部的生态细节；选择“实验拼贴方向”，则可以继续调整纸张纤维、网点密度和几何切片的比例。</p>
+
+        <p>继续细化时仍然需要区分两件事：哪些判断已经被选中，哪些内容只是下一轮假设。结果画板里的“基于此结果细化”入口保留了上一次的上下文，减少重复输入，也让方向变化更容易追踪。</p>
+
+        <blockquote class="callout callout--boundary">
+          <p><strong class="callout-label">边界：</strong>“沿方向细化”不等于模型会自动保持身份一致。主体形态、细节和构图仍可能漂移，必要时要重新检查固定条件、参考图和输出限制。</p>
+        </blockquote>
+
+        <h2>AI 和设计师各自负责什么</h2>
+
+        <p><strong>在这套工作流里，AI 适合承担：</strong></p>
+
+        <ul role="list">
+          <li>把原始描述整理成结构化的提示词蓝图</li>
+          <li>根据一个视觉变量扩展多个候选方向</li>
+          <li>生成完整提示词和变化说明</li>
+          <li>批量调用图片接口并记录返回状态</li>
+          <li>保存批次、参数和结果，帮助回看和继续细化</li>
+        </ul>
+
+        <p><strong>设计师仍然负责：</strong></p>
+
+        <ul role="list">
+          <li>决定主体、用途、品牌和发布约束</li>
+          <li>判断本轮应该研究哪个变量</li>
+          <li>检查候选方向是否越过固定条件</li>
+          <li>比较结果是否真正服务目标，而不是只追求视觉刺激</li>
+          <li>决定哪个方向进入下一轮，以及哪些证据还不够</li>
+        </ul>
+
+        <blockquote class="callout">
+          <p>AI 可以扩大视觉搜索范围，但“哪个方向值得继续”仍然是设计判断，不是模型输出里的默认结论。</p>
+        </blockquote>
+
+        <h2>可以复用的检查清单</h2>
+
+        <p>下一次使用 AI 做视觉探索时，可以先检查这六件事：</p>
+
+        <ul role="list">
+          <li><strong>固定条件：</strong>主体、场景、用途、比例、信息区域和输出限制是否写清楚？</li>
+          <li><strong>单一变量：</strong>本轮是否只改变一个视觉维度？</li>
+          <li><strong>方案说明：</strong>每个方向是否明确写出“本轮变化”和“固定条件”？</li>
+          <li><strong>同批比较：</strong>候选结果是否在同一批次、同一视觉尺度下查看？</li>
+          <li><strong>过程证据：</strong>是否保留提示词、参数、状态和结果，而不是只保存最终图片？</li>
+          <li><strong>继续细化：</strong>选中方向后，下一轮是否沿着同一上下文推进？</li>
+        </ul>
+
+        <h2>这套方法的适用边界</h2>
+
+        <p><strong>适合使用：</strong>视觉方向还不明确、需要探索多种风格、希望减少提示词盲试，或需要与客户、产品和团队共同比较视觉方案的项目。</p>
+
+        <p><strong>不必完整使用：</strong>目标、风格和画面规则都已经确定，只需要完成低风险的局部执行时，可以直接使用固定提示词和必要的结果检查。</p>
+
+        <p><strong>当前可以验证：</strong>复杂输入可以拆成固定条件与单一变量，多个提示词方向可以被选择、生成、比较和继续细化。</p>
+
+        <blockquote class="callout callout--boundary">
+          <p><strong class="callout-label">不能证明：</strong>第三方接口长期稳定、不同模型输出始终一致、某种方向一定更符合审美，也不能替代人工评审、品牌判断和真实发布验证。</p>
+        </blockquote>
+
+        <p>对我来说，AI 视觉工作流的价值不在于让模型替我做决定，而在于让每一次探索都留下可检查的理由。固定什么、改变什么、比较什么、为什么继续，都可以被说清楚。</p>
+
+        <p><a class="case-link" href="../../experiments/vispath/index.html">查看 VisPath 视觉路径实验 →</a></p>
+      </div>
+    </article>
+
+    <footer class="footer">© 2026 LINPO LAB</footer>
+  </body>
+</html>
